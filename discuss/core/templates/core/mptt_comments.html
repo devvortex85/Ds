@@ -81,11 +81,11 @@
                     </div>
                     {% endif %}
                     
-                    <!-- Nested comments using MPTT - fixed nesting padding -->
+                    <!-- Nested comments using flat structure for mobile - no more recursive indentation -->
                     {% if not root_comment.is_leaf_node %}
-                    <div class="replies mt-3 ps-3 border-start">
-                        {% recursetree root_comment.get_descendants %}
-                        <div class="reply mb-3">
+                    <div class="nested-comments mt-3">
+                        {% for node in root_comment.get_descendants %}
+                        <div class="nested-reply mb-3 {% if node.level > 2 %}deep-nested{% endif %}">
                             <div class="d-flex">
                                 <!-- Reply Voting -->
                                 <div class="vote-column text-center me-2">
@@ -167,17 +167,10 @@
                                         </form>
                                     </div>
                                     {% endif %}
-                                    
-                                    <!-- Children of this node will be rendered by recursetree - fixed nesting -->
-                                    {% if not node.is_leaf_node %}
-                                        <div class="children mt-3 ps-2 border-start">
-                                            {{ children }}
-                                        </div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                        {% endrecursetree %}
+                        {% endfor %}
                     </div>
                     {% endif %}
                 </div>
