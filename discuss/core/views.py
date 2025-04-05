@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from el_pagination.decorators import page_template
 from taggit.models import Tag
 # from notifications.signals import notify  # Temporarily disabled
-import watson
+from watson import search as watson
 
 from .models import Profile, Community, Post, Comment, Vote
 from .forms import (
