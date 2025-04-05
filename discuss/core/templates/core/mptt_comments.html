@@ -81,12 +81,15 @@
                     </div>
                     {% endif %}
                     
-                    <!-- Nested comments using flat structure for mobile - no more recursive indentation -->
+                    <!-- Nested comments using color-coded nesting indicator -->
                     {% if not root_comment.is_leaf_node %}
                     <div class="nested-comments mt-3">
                         {% for node in root_comment.get_descendants %}
-                        <div class="nested-reply mb-3 {% if node.level > 2 %}deep-nested{% endif %}">
+                        <div class="nested-reply mb-3">
                             <div class="d-flex">
+                                <!-- Add color-coded nesting indicator based on parent -->
+                                <div class="nesting-indicator nesting-color-{{ node.parent_id|nesting_color }}"></div>
+                                
                                 <!-- Reply Voting -->
                                 <div class="vote-column text-center me-2">
                                     {% if user.is_authenticated %}

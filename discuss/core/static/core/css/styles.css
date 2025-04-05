@@ -7,6 +7,14 @@
     --dark-color: #212529;
     --light-color: #f8f9fa;
     --body-bg: #f5f5f5;
+    
+    /* Nesting colors */
+    --nesting-color-0: #0d6efd; /* primary/blue */
+    --nesting-color-1: #198754; /* success/green */
+    --nesting-color-2: #dc3545; /* danger/red */
+    --nesting-color-3: #ffc107; /* warning/yellow */
+    --nesting-color-4: #9c27b0; /* purple */
+    --nesting-color-5: #17a2b8; /* info/teal */
 }
 
 /* Body and general styles */
@@ -253,36 +261,60 @@ footer a:hover {
     opacity: 0.5;
 }
 
-/* Comment nesting redesign for better mobile support */
+/* Comment nesting with color coding */
 .nested-comments {
     margin-top: 1rem;
-    border-left: 2px solid #e9ecef;
     padding-left: 0.5rem;
 }
 
 .nested-reply {
     padding: 0.5rem 0;
     border-bottom: 1px solid #f8f8f8;
+    position: relative;
+    margin-left: 10px; /* Space for the nesting indicator */
 }
 
 .nested-reply:last-child {
     border-bottom: none;
 }
 
-.deep-nested {
-    position: relative;
-}
-
-.deep-nested::before {
-    content: '';
+/* Color-coded nesting indicators */
+.nesting-indicator {
     position: absolute;
-    left: -8px;
+    left: -10px;
     top: 0;
-    height: 100%;
-    width: 2px;
-    background-color: rgba(13, 110, 253, 0.2);
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background-color: var(--primary-color);
 }
 
+/* Different colors for different nesting levels */
+.nesting-color-0 {
+    background-color: var(--nesting-color-0);
+}
+
+.nesting-color-1 {
+    background-color: var(--nesting-color-1);
+}
+
+.nesting-color-2 {
+    background-color: var(--nesting-color-2);
+}
+
+.nesting-color-3 {
+    background-color: var(--nesting-color-3);
+}
+
+.nesting-color-4 {
+    background-color: var(--nesting-color-4);
+}
+
+.nesting-color-5 {
+    background-color: var(--nesting-color-5);
+}
+
+/* Reply styling */
 .reply-form {
     background-color: #f8f9fa;
     padding: 0.75rem;
@@ -320,6 +352,12 @@ footer a:hover {
     
     .nested-reply .reply-content {
         font-size: 0.85rem;
+    }
+    
+    /* Ensure nesting indicator is visible on small screens */
+    .nesting-indicator {
+        width: 3px;
+        left: -8px;
     }
 }
 
