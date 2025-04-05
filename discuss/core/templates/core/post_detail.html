@@ -68,7 +68,7 @@
                 
                 <div class="post-actions d-flex mt-3">
                     {% if user.is_authenticated %}
-                        <button class="btn btn-outline-primary btn-sm me-2" onclick="document.getElementById('comment-form').focus()">
+                        <button class="btn btn-outline-primary btn-sm me-2" onclick="document.getElementById('content_id_content') && document.getElementById('content_id_content').focus()">
                             <i class="fas fa-comment-alt me-1"></i> Comment
                         </button>
                     {% else %}

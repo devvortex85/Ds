@@ -30,12 +30,19 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <small class="text-muted">{{ reputation_level }}</small>
-                        {% for level_threshold, level_name in profile_user.profile.REPUTATION_LEVELS %}
-                            {% if level_threshold > profile_user.profile.karma %}
-                                <small class="text-muted">{{ level_threshold }} points to "{{ level_name }}"</small>
-                                {% break %}
-                            {% endif %}
-                        {% endfor %}
+                        <small class="text-muted">
+                            {% with next_level=False %}
+                                {% for level in profile_user.profile.REPUTATION_LEVELS %}
+                                    {% if level.0 > profile_user.profile.karma and not next_level %}
+                                        {{ level.0 }} points to "{{ level.1 }}"
+                                        {% with next_level=True %}{% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not next_level %}
+                                    Max level reached
+                                {% endif %}
+                            {% endwith %}
+                        </small>
                     </div>
                 </div>
             </div>
