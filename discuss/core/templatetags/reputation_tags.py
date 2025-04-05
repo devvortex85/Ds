@@ -73,3 +73,8 @@ def country_flag(user):
         f'title="{country_name}" class="country-flag" '
         f'style="height: 10px; width: auto; margin-left: 3px; margin-right: 2px; vertical-align: baseline; display: inline-block;">'
     )
+
+@register.filter
+def nesting_color(parent_id):
+    """Return a color index for nested comments based on parent_id."""
+    return parent_id % 6  # Cycle through 6 different colors
