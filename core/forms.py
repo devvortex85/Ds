@@ -20,7 +20,15 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio']
+        fields = ['bio', 'display_name', 'country', 'website', 'interests', 'avatar']
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Tell the community about yourself', 'rows': 3}),
+            'display_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your display name (optional)'}),
+            'country': forms.Select(attrs={'class': 'form-control form-select'}),
+            'website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Your website (optional)'}),
+            'interests': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your interests separated by commas'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
 class CommunityForm(forms.ModelForm):
     class Meta:
@@ -35,21 +43,23 @@ class CommunityForm(forms.ModelForm):
 class TextPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post title'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Post content', 'rows': 6}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tags (comma separated)'}),
         }
     
 class LinkPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'url']
+        fields = ['title', 'url', 'tags']
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post title'}),
             'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tags (comma separated)'}),
         }
 
 class CommentForm(forms.ModelForm):

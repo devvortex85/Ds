@@ -241,3 +241,141 @@ footer a:hover {
 .reply-content {
     font-size: 0.9rem;
 }
+
+/* Reputation System Styling */
+.reputation-badge {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.reputation-level {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+    display: inline-block;
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.reputation-progress {
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.reputation-progress-bar {
+    height: 100%;
+    background-color: var(--success-color);
+}
+
+/* Reputation colors */
+.reputation-level-new {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.reputation-level-regular {
+    background-color: #17a2b8; /* info */
+    color: white;
+}
+
+.reputation-level-established {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.reputation-level-trusted {
+    background-color: #ffc107; /* warning */
+    color: #212529;
+}
+
+.reputation-level-expert {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.reputation-level-leader {
+    background-color: #9c27b0; /* purple */
+    color: white;
+}
+
+.reputation-level-legend {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Navbar badge styling */
+.navbar .reputation-badge {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    vertical-align: top;
+    margin-left: 0.25rem;
+}
+
+/* Country flag styling */
+.country-flag {
+    width: 16px;
+    height: 12px;
+    object-fit: contain;
+    border: 1px solid #e9ecef;
+    border-radius: 2px;
+    vertical-align: middle;
+}
+
+/* Nested comment styling */
+.nested-comments {
+    margin-left: 1rem;
+}
+
+.nesting-indicator {
+    width: 3px;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+.nesting-color-0 {
+    background-color: #007bff; /* primary */
+}
+
+.nesting-color-1 {
+    background-color: #6c757d; /* secondary */
+}
+
+.nesting-color-2 {
+    background-color: #17a2b8; /* info */
+}
+
+.nesting-color-3 {
+    background-color: #28a745; /* success */
+}
+
+.nesting-color-4 {
+    background-color: #ffc107; /* warning */
+}
+
+.nesting-color-5 {
+    background-color: #dc3545; /* danger */
+}
+
+/* Nested reply styling */
+.nested-reply {
+    padding-left: 5px;
+}
+
+.nested-reply .vote-count {
+    font-size: 0.8rem;
+}
+
+.nested-reply .vote-btn {
+    font-size: 0.8rem;
+}
+
+.nested-reply .reply-body {
+    font-size: 0.9rem;
+}

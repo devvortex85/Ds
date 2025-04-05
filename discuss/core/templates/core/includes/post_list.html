@@ -37,6 +37,9 @@
                     <a href="{% url 'community_detail' post.community.id %}" class="community-link">d/{{ post.community.name }}</a>
                     <span class="text-muted">• Posted by 
                         <a href="{% url 'profile' post.author.username %}" class="user-link">u/{{ post.author.username }}</a>
+                        {% if post.author.profile.country %}
+                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                        {% endif %}
                         {{ post.created_at|timesince }} ago
                     </span>
                 </div>

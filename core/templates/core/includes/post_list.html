@@ -1,4 +1,4 @@
-{% load el_pagination_tags %}
+{% load el_pagination_tags reputation_tags %}
 
 {% paginate posts %}
 {% for post in posts %}
@@ -8,7 +8,7 @@
             <!-- Votes section -->
             <div class="vote-controls me-3">
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'upvote' %}" class="vote-btn upvote-btn {% if user_post_votes|get_item:post.id == 1 %}active{% endif %}" data-post-id="{{ post.id }}" data-vote-type="upvote">
+                <a href="{% url 'vote_post' post.id 'upvote' %}" class="vote-btn upvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active{% endif %}" data-post-id="{{ post.id }}" data-vote-type="upvote">
                     <i class="fas fa-arrow-up"></i>
                 </a>
                 {% else %}
@@ -20,7 +20,7 @@
                 <div class="vote-count" id="post-{{ post.id }}-votes">{{ post.vote_count }}</div>
                 
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'downvote' %}" class="vote-btn downvote-btn {% if user_post_votes|get_item:post.id == -1 %}active{% endif %}" data-post-id="{{ post.id }}" data-vote-type="downvote">
+                <a href="{% url 'vote_post' post.id 'downvote' %}" class="vote-btn downvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active{% endif %}" data-post-id="{{ post.id }}" data-vote-type="downvote">
                     <i class="fas fa-arrow-down"></i>
                 </a>
                 {% else %}
@@ -34,9 +34,12 @@
             <div class="post-content">
                 <!-- Post header info -->
                 <div class="post-meta mb-2">
-                    <a href="{% url 'community_detail' post.community.id %}" class="community-link">c/{{ post.community.name }}</a>
+                    <a href="{% url 'community_detail' post.community.id %}" class="community-link">d/{{ post.community.name }}</a>
                     <span class="text-muted">• Posted by 
                         <a href="{% url 'profile' post.author.username %}" class="user-link">u/{{ post.author.username }}</a>
+                        {% if post.author.profile.country %}
+                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                        {% endif %}
                         {{ post.created_at|timesince }} ago
                     </span>
                 </div>
@@ -46,7 +49,7 @@
                     <a href="{% url 'post_detail' post.id %}" class="post-title-link">{{ post.title }}</a>
                     {% if post.post_type == 'link' %}
                     <small><a href="{{ post.url }}" target="_blank" class="text-muted url-link">
-                        <i class="fas fa-external-link-alt"></i> {{ post.url|urlize }}
+                        <i class="fas fa-external-link-alt"></i> {{ post.url|truncatechars:30 }}
                     </a></small>
                     {% endif %}
                 </h5>
@@ -61,7 +64,7 @@
                 <!-- Post footer actions -->
                 <div class="post-actions mt-2">
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-comment"></i> {{ post.comments.count }} Comments
+                        <i class="fas fa-comment"></i> {{ post.comment_count|default:0 }} Comments
                     </a>
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-share"></i> Share
