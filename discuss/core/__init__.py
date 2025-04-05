@@ -25,9 +25,21 @@ def create_default_tags():
 def ready():
     """
     Function called by Django when the application is ready.
-    We use this to initialize our default tags.
+    We use this to initialize our default tags and register models for watson search.
     """
     # Avoid importing models at module level to prevent AppRegistryNotReady exception
     import django
     if django.apps.apps.ready:
         create_default_tags()
+        
+        # Import search adapters to register models with Watson
+        try:
+            from . import search_adapters
+            print("✓ Watson search adapters registered")
+            
+            # Rebuild search index
+            from watson import search as watson
+            watson.rebuild()
+            print("✓ Watson search index rebuilt")
+        except Exception as e:
+            print(f"Error setting up Watson search: {str(e)}")

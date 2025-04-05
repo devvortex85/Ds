@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'taggit',    # For adding tags to profiles and content
     'django_countries',  # For country selection in profiles
     'mptt',      # For improved hierarchical comment trees
+    'watson',    # For advanced full-text search
 ]
 
 MIDDLEWARE = [

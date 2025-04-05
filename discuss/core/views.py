@@ -2,18 +2,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum, Case, When, F, IntegerField
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from el_pagination.decorators import page_template
 from taggit.models import Tag
 # from notifications.signals import notify  # Temporarily disabled
+import watson
 
 from .models import Profile, Community, Post, Comment, Vote
 from .forms import (
     UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
     CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm
 )
+from .filters import PostFilter
 
 @page_template('core/includes/post_list.html')
 def home(request, template='core/index.html', extra_context=None):
@@ -606,3 +608,37 @@ def search(request):
         'all_tags': all_tags
     }
     return render(request, 'core/search_results.html', context)
+
+def advanced_search(request):
+    """Advanced search with full-text search and filtering capabilities"""
+    # Get search query from request
+    search_query = request.GET.get('search', '')
+    
+    # Get popular communities for sidebar
+    popular_communities = Community.objects.annotate(
+        member_count=Count('members')
+    ).order_by('-member_count')[:5]
+    
+    # Get popular tags for sidebar
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:10]
+    
+    # Initialize filter for posts
+    post_filter = PostFilter(request.GET, queryset=Post.objects.all())
+    
+    # Prepare context
+    context = {
+        'filter': post_filter,
+        'popular_communities': popular_communities,
+        'all_tags': all_tags,
+        'full_text_results': [],
+    }
+    
+    # Perform full-text search if query exists
+    if search_query:
+        # Use watson for full-text search across multiple models
+        full_text_results = watson.search(search_query)
+        context['full_text_results'] = full_text_results
+    
+    return render(request, 'core/advanced_search.html', context)
