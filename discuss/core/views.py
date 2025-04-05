@@ -22,16 +22,23 @@ def home(request, template='core/index.html', extra_context=None):
     user_communities = []
     popular_communities = Community.objects.annotate(member_count=Count('members')).order_by('-member_count')[:5]
     
+    # Get user's votes on posts
+    user_post_votes = {}
     if request.user.is_authenticated:
         user_communities = request.user.communities.all()
+        post_votes = Vote.objects.filter(user=request.user, post__in=posts)
+        for vote in post_votes:
+            user_post_votes[vote.post.id] = vote.value
     
     search_form = SearchForm()
     
     context = {
         'posts': posts,
+        'page_obj': posts,  # Adding this for pagination in template
         'user_communities': user_communities,
         'popular_communities': popular_communities,
         'search_form': search_form,
+        'user_post_votes': user_post_votes,
     }
     
     if extra_context is not None:
