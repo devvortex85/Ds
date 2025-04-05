@@ -232,7 +232,8 @@ def create_link_post(request, community_id):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = post.comments.all()
+    # Only get top-level comments (those without a parent)
+    comments = post.comments.filter(parent=None).order_by('created_at')
     
     user_post_vote = None
     if request.user.is_authenticated:
@@ -281,12 +282,30 @@ def add_comment(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = post
-            comment.save()
+        # Check if this is a reply to another comment
+        parent_id = request.POST.get('parent_id')
+        
+        # Use the form if it's a top-level comment, or get content directly if it's a reply
+        if parent_id:
+            content = request.POST.get('content')
+            if content:
+                parent_comment = get_object_or_404(Comment, pk=parent_id)
+                comment = Comment(
+                    content=content,
+                    author=request.user,
+                    post=post,
+                    parent=parent_comment
+                )
+                comment.save()
+                messages.success(request, 'Your reply has been added!')
+        else:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.post = post
+                comment.save()
+                messages.success(request, 'Your comment has been added!')
             
             # Notify the post author about the new comment - Temporarily disabled
             # if post.author != request.user:
@@ -316,8 +335,6 @@ def add_comment(request, post_id):
             #         description=f'{request.user.username} also commented on: {post.title}',
             #         data={'url': f'/posts/{post.pk}/'}
             #     )
-            
-            messages.success(request, 'Your comment has been added!')
     
     return redirect('post_detail', pk=post_id)
 

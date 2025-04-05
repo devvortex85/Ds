@@ -127,7 +127,7 @@ function setActiveNavItem() {
     });
 }
 
-// Setup comment form AJAX submissions
+// Setup comment form AJAX submissions and reply functionality
 function setupCommentForms() {
     const commentForms = document.querySelectorAll('form[action*="comment"]');
     
@@ -135,6 +135,45 @@ function setupCommentForms() {
         form.addEventListener('submit', function(e) {
             // For now, we'll use the standard form submission
             // In a future enhancement, this could be converted to AJAX
+        });
+    });
+    
+    // Setup reply toggle functionality
+    const replyButtons = document.querySelectorAll('.reply-toggle');
+    replyButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.getAttribute('data-comment-id');
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            
+            // Toggle visibility of the reply form
+            if (replyForm.style.display === 'none') {
+                // Hide any other open reply forms first
+                document.querySelectorAll('.reply-form').forEach(form => {
+                    form.style.display = 'none';
+                });
+                
+                // Show this form
+                replyForm.style.display = 'block';
+                // Focus on the textarea
+                const textarea = replyForm.querySelector('textarea');
+                if (textarea) {
+                    textarea.focus();
+                }
+            } else {
+                replyForm.style.display = 'none';
+            }
+        });
+    });
+    
+    // Setup cancel reply buttons
+    const cancelButtons = document.querySelectorAll('.cancel-reply');
+    cancelButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.getAttribute('data-comment-id');
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            replyForm.style.display = 'none';
         });
     });
 }
