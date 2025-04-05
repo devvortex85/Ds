@@ -1,0 +1,500 @@
+/* Main color scheme */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --body-bg: #f5f5f5;
+    
+    /* Nesting colors */
+    --nesting-color-0: #0d6efd; /* primary/blue */
+    --nesting-color-1: #198754; /* success/green */
+    --nesting-color-2: #dc3545; /* danger/red */
+    --nesting-color-3: #ffc107; /* warning/yellow */
+    --nesting-color-4: #9c27b0; /* purple */
+    --nesting-color-5: #17a2b8; /* info/teal */
+}
+
+/* Body and general styles */
+body {
+    background-color: var(--body-bg);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Navbar styles */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Card styling */
+.card {
+    margin-bottom: 1.5rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+/* Voting buttons */
+.vote-column {
+    min-width: 40px;
+}
+
+.vote-btn {
+    color: var(--secondary-color);
+    transition: color 0.2s;
+}
+
+.vote-btn:hover {
+    color: var(--dark-color);
+}
+
+.upvote-btn.voted {
+    color: var(--success-color);
+}
+
+.downvote-btn.voted {
+    color: var(--danger-color);
+}
+
+.vote-count {
+    font-size: 1rem;
+}
+
+/* Post styling */
+.post-meta, .comment-meta {
+    font-size: 0.85rem;
+}
+
+.post-content img, .comment-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Community badges */
+.community-badge {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Avatar styles */
+.avatar {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar-xs img {
+    width: 24px;
+    height: 24px;
+}
+
+img.avatar {
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.user-reputation .badge {
+    font-size: 0.7rem;
+}
+
+/* Profile section */
+.profile-avatar {
+    color: var(--primary-color);
+}
+
+.bio-section {
+    border-left: 3px solid var(--primary-color);
+}
+
+.interests-section .badge {
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Comment styles */
+.comment-item {
+    border-left: 2px solid #e9ecef;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .vote-column {
+        min-width: 30px;
+    }
+    
+    .vote-count {
+        font-size: 0.9rem;
+    }
+    
+    h5.card-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* Footer styles */
+footer {
+    margin-top: 2rem;
+}
+
+footer a:hover {
+    text-decoration: underline !important;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Sidebar styling */
+@media (min-width: 992px) {
+    .sidebar-sticky {
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+/* Custom pagination styling */
+.pagination .page-link {
+    color: var(--primary-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Community and user list items */
+.list-group-item-action:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Post and comment actions */
+.post-actions a, .comment-actions a {
+    color: var(--secondary-color);
+    transition: color 0.2s;
+}
+
+.post-actions a:hover, .comment-actions a:hover {
+    color: var(--dark-color);
+}
+
+/* Search bar styling */
+.navbar .input-group .form-control {
+    border-right: none;
+}
+
+.navbar .input-group .btn {
+    border-left: none;
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.navbar .input-group .btn:hover {
+    color: var(--primary-color);
+}
+
+/* Navbar avatar styling */
+.nav-avatar {
+    width: 22px;
+    height: 22px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Tab navigation */
+.nav-tabs .nav-link {
+    color: var(--secondary-color);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Alert customization */
+.alert {
+    border-radius: 0.375rem;
+}
+
+/* Empty state styling */
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Comment nesting with color coding */
+.nested-comments {
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+}
+
+.nested-reply {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f8f8;
+    position: relative;
+    margin-left: 10px; /* Space for the nesting indicator */
+}
+
+.nested-reply:last-child {
+    border-bottom: none;
+}
+
+/* Color-coded nesting indicators */
+.nesting-indicator {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background-color: var(--primary-color);
+}
+
+/* Different colors for different nesting levels */
+.nesting-color-0 {
+    background-color: var(--nesting-color-0);
+}
+
+.nesting-color-1 {
+    background-color: var(--nesting-color-1);
+}
+
+.nesting-color-2 {
+    background-color: var(--nesting-color-2);
+}
+
+.nesting-color-3 {
+    background-color: var(--nesting-color-3);
+}
+
+.nesting-color-4 {
+    background-color: var(--nesting-color-4);
+}
+
+.nesting-color-5 {
+    background-color: var(--nesting-color-5);
+}
+
+/* Reply styling */
+.reply-form {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.reply-toggle:hover, .reply-toggle:focus {
+    text-decoration: none;
+}
+
+.reply-meta {
+    font-size: 0.75rem;
+    word-break: break-word;
+}
+
+.reply-content {
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+/* Mobile optimizations for voting elements */
+@media (max-width: 576px) {
+    .nested-comments .vote-column {
+        min-width: 22px;
+        margin-right: 0.3rem;
+    }
+    
+    .nested-comments .vote-count {
+        font-size: 0.75rem;
+    }
+    
+    .nested-reply .reply-meta {
+        font-size: 0.7rem;
+    }
+    
+    .nested-reply .reply-content {
+        font-size: 0.85rem;
+    }
+    
+    /* Ensure nesting indicator is visible on small screens */
+    .nesting-indicator {
+        width: 3px;
+        left: -8px;
+    }
+}
+
+/* Reputation System Styling */
+.reputation-badge {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.reputation-level {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+    display: inline-block;
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.reputation-progress {
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.reputation-progress-bar {
+    height: 100%;
+    background-color: var(--success-color);
+}
+
+/* Reputation colors */
+.reputation-level-new {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.reputation-level-regular {
+    background-color: #17a2b8; /* info */
+    color: white;
+}
+
+.reputation-level-established {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.reputation-level-trusted {
+    background-color: #ffc107; /* warning */
+    color: #212529;
+}
+
+.reputation-level-expert {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.reputation-level-leader {
+    background-color: #9c27b0; /* purple */
+    color: white;
+}
+
+.reputation-level-legend {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Navbar badge styling */
+.navbar .reputation-badge {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    vertical-align: top;
+    margin-left: 0.25rem;
+}
+
+/* Country flag styling */
+.country-flag {
+    width: 32px;
+    height: 24px;
+    object-fit: contain;
+    border: 1px solid #e9ecef;
+    border-radius: 2px;
+    vertical-align: middle;
+}
+
+/* Nested comment styling */
+.nested-comments {
+    margin-left: 1rem;
+}
+
+.nesting-indicator {
+    width: 3px;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+.nesting-color-0 {
+    background-color: #007bff; /* primary */
+}
+
+.nesting-color-1 {
+    background-color: #6c757d; /* secondary */
+}
+
+.nesting-color-2 {
+    background-color: #17a2b8; /* info */
+}
+
+.nesting-color-3 {
+    background-color: #28a745; /* success */
+}
+
+.nesting-color-4 {
+    background-color: #ffc107; /* warning */
+}
+
+.nesting-color-5 {
+    background-color: #dc3545; /* danger */
+}
+
+/* Nested reply styling */
+.nested-reply {
+    padding-left: 5px;
+}
+
+.nested-reply .vote-count {
+    font-size: 0.8rem;
+}
+
+.nested-reply .vote-btn {
+    font-size: 0.8rem;
+}
+
+.nested-reply .reply-body {
+    font-size: 0.9rem;
+}
