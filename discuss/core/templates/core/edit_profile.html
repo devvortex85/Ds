@@ -15,7 +15,7 @@
                 <div class="mb-2">
                     {% avatar user 150 %}
                 </div>
-                <a href="{% url 'avatar_change' %}" class="btn btn-sm btn-outline-primary">Change Avatar</a>
+                <a href="{% url 'avatar:change' %}" class="btn btn-sm btn-outline-primary">Change Avatar</a>
             </div>
             <div class="col-md-9">
                 <h5>Profile Information</h5>
@@ -143,10 +143,10 @@
     <div class="card-body">
         <p>Customize how you appear to the community:</p>
         <div class="list-group">
-            <a href="{% url 'avatar_change' %}" class="list-group-item list-group-item-action">
+            <a href="{% url 'avatar:change' %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-image me-2"></i> Upload new avatar
             </a>
-            <a href="{% url 'avatar_delete' %}" class="list-group-item list-group-item-action">
+            <a href="{% url 'avatar:delete' %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-trash-alt me-2"></i> Delete current avatar
             </a>
         </div>
