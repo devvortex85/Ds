@@ -13,6 +13,7 @@ urlpatterns = [
     path('markdownx/', include('markdownx.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('allauth.urls')),
+    path('avatar/', include('avatar.urls')),
     # path('inbox/notifications/', include(notifications.urls, namespace='notifications')),  # Temporarily disabled
     path('', include('core.urls')),
 ]

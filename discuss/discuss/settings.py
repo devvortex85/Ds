@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     # 'notifications',  # Temporarily disabled due to compatibility issues
     'el_pagination',
     # 'cacheops',  # Temporarily disabled due to compatibility issues
+    'avatar',    # For profile pictures and avatars
+    'taggit',    # For adding tags to profiles and content
+    'django_countries',  # For country selection in profiles
 ]
 
 MIDDLEWARE = [
@@ -214,3 +217,19 @@ CACHEOPS = {
     'auth.*': {'ops': ('fetch', 'get'), 'timeout': 60*60},
     '*.*': {'ops': (), 'timeout': 60*60},  # Disable caching for all other models
 }
+
+# Django Avatar settings
+AVATAR_GRAVATAR_DEFAULT = 'identicon'
+AVATAR_DEFAULT_URL = 'avatar/default.png'
+AVATAR_MAX_SIZE = 1024 * 1024
+AVATAR_THUMB_FORMAT = 'PNG'
+AVATAR_STORAGE_DIR = 'avatars'
+AVATAR_CLEANUP_DELETED = True
+AVATAR_PROVIDERS = (
+    'avatar.providers.PrimaryAvatarProvider',
+    'avatar.providers.GravatarAvatarProvider',
+    'avatar.providers.DefaultAvatarProvider',
+)
+
+# Django Taggit settings
+TAGGIT_CASE_INSENSITIVE = True

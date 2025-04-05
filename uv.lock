@@ -114,6 +114,32 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/4b/08/8557880768ba4d5966195ee5e57c69d8b9425c62ffb80293e2ad36dffb83/django_allauth-65.7.0.tar.gz", hash = "sha256:eb060692150f39e1529893c2de5f9b46e1dab51153ff6cca7ad72c7c125259ea", size = 1640126 }
 
 [[package]]
+name = "django-appconf"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/61/a9/dcf95ff3fa0620b6818fc02276fbbb8926e7f286039b6d015e56e8b7af39/django-appconf-1.1.0.tar.gz", hash = "sha256:9fcead372f82a0f21ee189434e7ae9c007cbb29af1118c18251720f3d06243e4", size = 15986 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/62/9e/f3a899991e4aaae4b69c1aa187ba4a32e34742475c91eb13010ee7fbe9db/django_appconf-1.1.0-py3-none-any.whl", hash = "sha256:7abd5a163ff57557f216e84d3ce9dac36c37ffce1ab9a044d3d53b7c943dd10f", size = 6389 },
+]
+
+[[package]]
+name = "django-avatar"
+version = "8.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django-appconf" },
+    { name = "dnspython" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/58/ad/c741b3665b42266c43e96eb65121ef4e51c4b0295deeef45291a30dfd450/django_avatar-8.0.1.tar.gz", hash = "sha256:2c4550489be08e9e5fe47b6c82afaba111a9c20d83957d5b660c63ea3b0eb5f2", size = 45955 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/d8/1de3ce92b7280de7157a86abd98c1f58a5e2a224627460d147cedea3a209/django_avatar-8.0.1-py3-none-any.whl", hash = "sha256:30dd9735890802c7e5c416e707cf049c35f78b86a0f95f60a7dd8ee6de0f0f72", size = 67255 },
+]
+
+[[package]]
 name = "django-cacheops"
 version = "7.1"
 source = { registry = "https://pypi.org/simple" }
@@ -125,6 +151,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/77/b6/b75807d706f7f1fca659627c2da21b70941c1f832a974fa922c05ff5e659/django_cacheops-7.1.tar.gz", hash = "sha256:ec079abb968557321ee208c6274820231820f98ca6377dda971f04981bc2ab52", size = 72352 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/e8/4de8b0fecffdc1b30fc23d5d157c217f094c53614247bb1f68db03f35ef8/django_cacheops-7.1-py2.py3-none-any.whl", hash = "sha256:7d5e0f42e41ab4a8052130d33d9f3b26c47bef944ef2df0a64db92d70e51d87e", size = 44881 },
+]
+
+[[package]]
+name = "django-countries"
+version = "7.6.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0b/c3/ddb94bb50455ae80ff90ddb5affcc28f7e7a48f9c9852cf8bb8fe712fec0/django-countries-7.6.1.tar.gz", hash = "sha256:c772d4e3e54afcc5f97a018544e96f246c6d9f1db51898ab0c15cd57e19437cf", size = 675623 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7e/46/b6931858e5161e5d9166bfcfde3af0b7d60ba89e4f7dd8f033e591c68794/django_countries-7.6.1-py3-none-any.whl", hash = "sha256:1ed20842fe0f6194f91faca21076649513846a8787c9eb5aeec3cbe1656b8acc", size = 864507 },
 ]
 
 [[package]]
@@ -204,6 +243,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/36/18/1b42038963d8b0aeeb380a24ff86a650067833cf6d2d87b678be2d27c609/django-notifications-hq-1.8.3.tar.gz", hash = "sha256:0f4b216bb382b7c7c4eef273eb211e59c1c6a0ea38cba6077415ac031d330725", size = 32238 }
 
 [[package]]
+name = "django-taggit"
+version = "6.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/34/a6/f1beaf8f552fe90c153cc039316ebab942c23dfbc88588dde081fefca816/django_taggit-6.1.0.tar.gz", hash = "sha256:c4d1199e6df34125dd36db5eb0efe545b254dec3980ce5dd80e6bab3e78757c3", size = 38151 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6b/34/4185c345530b91d05cb82e05d07148f481a5eb5dc2ac44e092b3daa6f206/django_taggit-6.1.0-py3-none-any.whl", hash = "sha256:ab776264bbc76cb3d7e49e1bf9054962457831bd21c3a42db9138b41956e4cf0", size = 75749 },
+]
+
+[[package]]
 name = "django-watson"
 version = "1.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -222,6 +273,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7d/97/112c5a72e6917949b6d8a18ad6c6e72c46da4290c8f36ee5f1c1dcbc9901/djangorestframework-3.16.0.tar.gz", hash = "sha256:f022ff46613584de994c0c6a4aebbace5fd700555fbe9d33b865ebf173eba6c9", size = 1068408 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/3e/2448e93f4f87fc9a9f35e73e3c05669e0edd0c2526834686e949bb1fd303/djangorestframework-3.16.0-py3-none-any.whl", hash = "sha256:bea7e9f6b96a8584c5224bfb2e4348dfb3f8b5e34edbecb98da258e892089361", size = 1067305 },
+]
+
+[[package]]
+name = "dnspython"
+version = "2.7.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b5/4a/263763cb2ba3816dd94b08ad3a33d5fdae34ecb856678773cc40a3605829/dnspython-2.7.0.tar.gz", hash = "sha256:ce9c432eda0dc91cf618a5cedf1a4e142651196bbcd2c80e89ed5a907e5cfaf1", size = 345197 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/68/1b/e0a87d256e40e8c888847551b20a017a6b98139178505dc7ffb96f04e954/dnspython-2.7.0-py3-none-any.whl", hash = "sha256:b4c34b7d10b51bcc3a5071e7b8dee77939f1e878477eeecc965e9835f63c6c86", size = 313632 },
 ]
 
 [[package]]
@@ -384,12 +444,15 @@ dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-allauth" },
+    { name = "django-avatar" },
     { name = "django-cacheops" },
+    { name = "django-countries" },
     { name = "django-debug-toolbar" },
     { name = "django-el-pagination" },
     { name = "django-filter" },
     { name = "django-markdownx" },
     { name = "django-notifications-hq" },
+    { name = "django-taggit" },
     { name = "django-watson" },
     { name = "djangorestframework" },
     { name = "pillow" },
@@ -402,12 +465,15 @@ requires-dist = [
     { name = "dj-database-url", specifier = ">=2.3.0" },
     { name = "django", specifier = ">=5.2" },
     { name = "django-allauth", specifier = ">=65.7.0" },
+    { name = "django-avatar", specifier = ">=8.0.1" },
     { name = "django-cacheops", specifier = ">=7.1" },
+    { name = "django-countries", specifier = ">=7.6.1" },
     { name = "django-debug-toolbar", specifier = ">=5.1.0" },
     { name = "django-el-pagination", specifier = ">=4.1.2" },
     { name = "django-filter", specifier = ">=25.1" },
     { name = "django-markdownx", specifier = ">=4.0.7" },
     { name = "django-notifications-hq", specifier = ">=1.8.3" },
+    { name = "django-taggit", specifier = ">=6.1.0" },
     { name = "django-watson", specifier = ">=1.6.3" },
     { name = "djangorestframework", specifier = ">=3.16.0" },
     { name = "pillow", specifier = ">=11.1.0" },

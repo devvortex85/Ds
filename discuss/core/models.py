@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django_countries.fields import CountryField
+from taggit.managers import TaggableManager
 
 class Profile(models.Model):
     REPUTATION_LEVELS = [
@@ -19,6 +21,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     karma = models.IntegerField(default=0)
+    country = CountryField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    display_name = models.CharField(max_length=50, blank=True)
+    
+    # User interests as tags
+    interests = TaggableManager(blank=True, verbose_name="Interests", 
+                               help_text="A comma-separated list of topics you're interested in")
     
     def __str__(self):
         return f'{self.user.username} Profile'

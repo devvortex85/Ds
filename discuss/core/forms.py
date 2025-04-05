@@ -20,7 +20,13 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio']
+        fields = ['bio', 'display_name', 'country', 'website', 'interests']
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Tell the community about yourself', 'rows': 3}),
+            'display_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your display name (optional)'}),
+            'website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Your website (optional)'}),
+            'interests': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your interests separated by commas'}),
+        }
 
 class CommunityForm(forms.ModelForm):
     class Meta:
