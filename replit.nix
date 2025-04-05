@@ -1,5 +1,6 @@
 {pkgs}: {
   deps = [
+    pkgs.zip
     pkgs.postgresql
     pkgs.nettools
     pkgs.zlib
