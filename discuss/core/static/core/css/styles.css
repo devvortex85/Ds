@@ -1,0 +1,210 @@
+/* Main color scheme */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --body-bg: #f5f5f5;
+}
+
+/* Body and general styles */
+body {
+    background-color: var(--body-bg);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Navbar styles */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Card styling */
+.card {
+    margin-bottom: 1.5rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+/* Voting buttons */
+.vote-column {
+    min-width: 40px;
+}
+
+.vote-btn {
+    color: var(--secondary-color);
+    transition: color 0.2s;
+}
+
+.vote-btn:hover {
+    color: var(--dark-color);
+}
+
+.upvote-btn.voted {
+    color: var(--success-color);
+}
+
+.downvote-btn.voted {
+    color: var(--danger-color);
+}
+
+.vote-count {
+    font-size: 1rem;
+}
+
+/* Post styling */
+.post-meta, .comment-meta {
+    font-size: 0.85rem;
+}
+
+.post-content img, .comment-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Community badges */
+.community-badge {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Profile section */
+.profile-avatar {
+    color: var(--primary-color);
+}
+
+/* Comment styles */
+.comment-item {
+    border-left: 2px solid #e9ecef;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .vote-column {
+        min-width: 30px;
+    }
+    
+    .vote-count {
+        font-size: 0.9rem;
+    }
+    
+    h5.card-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* Footer styles */
+footer {
+    margin-top: 2rem;
+}
+
+footer a:hover {
+    text-decoration: underline !important;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Sidebar styling */
+@media (min-width: 992px) {
+    .sidebar-sticky {
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+/* Custom pagination styling */
+.pagination .page-link {
+    color: var(--primary-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Community and user list items */
+.list-group-item-action:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Post and comment actions */
+.post-actions a, .comment-actions a {
+    color: var(--secondary-color);
+    transition: color 0.2s;
+}
+
+.post-actions a:hover, .comment-actions a:hover {
+    color: var(--dark-color);
+}
+
+/* Search bar styling */
+.navbar .input-group .form-control {
+    border-right: none;
+}
+
+.navbar .input-group .btn {
+    border-left: none;
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.navbar .input-group .btn:hover {
+    color: var(--primary-color);
+}
+
+/* Tab navigation */
+.nav-tabs .nav-link {
+    color: var(--secondary-color);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Alert customization */
+.alert {
+    border-radius: 0.375rem;
+}
+
+/* Empty state styling */
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
