@@ -230,6 +230,11 @@ AVATAR_PROVIDERS = (
     'avatar.providers.GravatarAvatarProvider',
     'avatar.providers.DefaultAvatarProvider',
 )
+# Redirect to profile page after avatar changes
+AVATAR_CHANGE_REDIRECT_URL = 'profile'
 
 # Django Taggit settings
 TAGGIT_CASE_INSENSITIVE = True
+
+# Django Countries settings
+COUNTRIES_FLAG_URL = 'https://flagcdn.com/16x12/{code}.png'
