@@ -1,5 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
+from django_countries.fields import Country
 
 register = template.Library()
 
@@ -55,3 +56,20 @@ def get_item(dictionary, key):
     if dictionary is None:
         return None
     return dictionary.get(key)
+
+@register.filter
+def country_flag(user):
+    """
+    Display a country flag for a user if they have a country set in their profile.
+    """
+    if not hasattr(user, 'profile') or not user.profile.country:
+        return ''
+    
+    country = user.profile.country
+    country_name = Country(country).name
+    
+    return mark_safe(
+        f'<img src="{country.flag}" alt="{country_name}" '
+        f'title="{country_name}" class="country-flag" '
+        f'style="height: 12px; width: auto; margin-left: 4px; vertical-align: middle;">'
+    )
