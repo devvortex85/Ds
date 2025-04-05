@@ -15,4 +15,5 @@ dependencies = [
     "django-watson>=1.6.3",
     "django-allauth>=65.7.0",
     "django-markdownx>=4.0.7",
+    "requests>=2.32.3",
 ]

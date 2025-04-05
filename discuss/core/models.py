@@ -7,9 +7,26 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
+    karma = models.IntegerField(default=0)
     
     def __str__(self):
         return f'{self.user.username} Profile'
+        
+    def update_karma(self):
+        """Calculate and update karma based on post and comment votes"""
+        # Get points from posts (1 point per upvote)
+        post_karma = sum([
+            post.votes.filter(value=1).count() for post in self.user.posts.all()
+        ])
+        
+        # Get points from comments (1 point per upvote)
+        comment_karma = sum([
+            comment.votes.filter(value=1).count() for comment in self.user.comments.all()
+        ])
+        
+        # Update karma
+        self.karma = post_karma + comment_karma
+        self.save()
 
 # Create a Profile for each new user
 @receiver(post_save, sender=User)
