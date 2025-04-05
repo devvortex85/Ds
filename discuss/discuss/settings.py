@@ -29,7 +29,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',  # Required for django-allauth
+    
+    # Installed apps
     'core',
+    
+    # Third-party packages
+    'rest_framework',
+    'markdownx',
+    'debug_toolbar',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -40,7 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+# Debug Toolbar
+INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']
 
 ROOT_URLCONF = 'discuss.urls'
 
@@ -116,3 +129,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
+# Markdownx settings
+MARKDOWNX_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # 5MB
+MARKDOWNX_MEDIA_PATH = 'markdownx/'
+
+# Search settings will be configured later

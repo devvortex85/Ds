@@ -4,5 +4,15 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
+    "django-notifications-hq>=1.8.3",
     "django>=5.2",
+    "pillow>=11.1.0",
+    "django-el-pagination>=4.1.2",
+    "django-debug-toolbar>=5.1.0",
+    "django-cacheops>=7.1",
+    "django-filter>=25.1",
+    "djangorestframework>=3.16.0",
+    "django-watson>=1.6.3",
+    "django-allauth>=65.7.0",
+    "django-markdownx>=4.0.7",
 ]
