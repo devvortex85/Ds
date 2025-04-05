@@ -62,6 +62,14 @@ MIDDLEWARE = [
 # Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']
 
+# CSRF Settings for Replit
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.replit.dev',  # Trust all Replit domains
+    'https://*.replit.app',
+    'http://localhost:5000',
+    'http://127.0.0.1:5000',
+]
+
 ROOT_URLCONF = 'discuss.urls'
 
 TEMPLATES = [
