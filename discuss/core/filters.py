@@ -64,6 +64,8 @@ class PostFilter(django_filters.FilterSet):
         choices=PERIOD_CHOICES,
         label='Time Period',
         method='filter_period',
+        empty_label=None,
+        initial='',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
@@ -71,6 +73,7 @@ class PostFilter(django_filters.FilterSet):
     min_votes = django_filters.NumberFilter(
         method='filter_min_votes',
         label='Minimum Votes',
+        initial=0,
         widget=forms.NumberInput(attrs={'placeholder': 'Min votes', 'class': 'form-control'})
     )
     
