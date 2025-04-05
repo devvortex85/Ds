@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Avatar functionality is now directly implemented in the Profile model
     'taggit',  # Django-taggit app
     'django_countries',  # Django-countries app
+    'watson',  # Django-watson for full-text search
 ]
 
 MIDDLEWARE = [
@@ -179,7 +180,11 @@ REST_FRAMEWORK = {
 MARKDOWNX_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # 5MB
 MARKDOWNX_MEDIA_PATH = 'markdownx/'
 
-# Search settings will be configured later
+# Django Watson search settings
+WATSON_BACKEND = 'watson.backends.PostgresSearchBackend'
+WATSON_SEARCH_PARAM_NAME = 'q'  # URL parameter for search
+WATSON_POSTGRES_SEARCH_LANGUAGE = 'english'  # Default language for PostgreSQL search
+# Models registered for search will be defined in core/apps.py
 
 # django-allauth configuration
 SITE_ID = 1

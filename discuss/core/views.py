@@ -443,27 +443,69 @@ def vote_comment(request, pk, vote_type):
 
 def search(request):
     query = request.GET.get('query', '')
-    search_results = []
+    posts = []
+    communities = []
+    users = []
+    tags = []
     
     if query:
-        # Perform the search using django-watson
-        search_results = watson.filter(
+        # Perform full-text search using django-watson
+        # Search in posts
+        posts = watson.filter(
             Post.objects.select_related('author', 'community'),
             query
         )
+        
+        # Search in communities
+        communities = watson.filter(
+            Community.objects.all(),
+            query
+        )
+        
+        # Search in users
+        users = watson.filter(
+            User.objects.select_related('profile'),
+            query
+        )
+        
+        # Search in tags (via custom logic since Tags are not registered with Watson)
+        tags = Tag.objects.filter(name__icontains=query)
+    
+    # Prepare search result counts
+    posts_count = len(posts) if hasattr(posts, '__len__') else 0
+    communities_count = len(communities) if hasattr(communities, '__len__') else 0
+    users_count = len(users) if hasattr(users, '__len__') else 0
+    tags_count = len(tags) if hasattr(tags, '__len__') else 0
+    
+    result_counts = {
+        'posts': posts_count,
+        'communities': communities_count,
+        'users': users_count,
+        'tags': tags_count,
+        'total': posts_count + communities_count + users_count + tags_count
+    }
     
     return render(request, 'core/search_results.html', {
         'query': query,
-        'search_results': search_results
+        'posts': posts,
+        'communities': communities,
+        'users': users,
+        'tags': tags,
+        'result_counts': result_counts
     })
 
 def advanced_search(request):
     """Advanced search with full-text search and filtering capabilities"""
     search_query = request.GET.get('search', '')
     filtered_posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-created_at')
+    full_text_results = []
     
     # If search query is provided, use Watson for text search
     if search_query:
+        # Get full text search results across all registered models
+        full_text_results = watson.search(search_query, ranking=True)
+        
+        # Filter posts separately to apply additional filters later
         filtered_posts = watson.filter(filtered_posts, search_query)
     
     # Apply all filters from FilterSet
@@ -476,12 +518,19 @@ def advanced_search(request):
     # Get tags for filter dropdown
     tags = Tag.objects.annotate(count=Count('taggit_taggeditem_items')).order_by('-count')[:50]
     
+    # Get all tags for sidebar with usage count
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:30]  # Limit to top 30 tags
+    
     context = {
         'filter': post_filter,
         'communities': communities,
         'tags': tags,
+        'all_tags': all_tags,
         'posts': filtered_posts,
         'search_query': search_query,
+        'full_text_results': full_text_results
     }
     
     return render(request, 'core/advanced_search.html', context)
