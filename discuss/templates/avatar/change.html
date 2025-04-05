@@ -1,0 +1,84 @@
+{% extends 'core/base.html' %}
+{% load static avatar_tags %}
+
+{% block title %}Change Avatar | Discuss{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">Change Avatar</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <h5>Your current avatar:</h5>
+                <div class="mb-3 mt-3">
+                    {% avatar user 150 %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h5>Choose from existing avatars:</h5>
+                <form method="POST" action="{% url 'avatar:change' %}">
+                    {% csrf_token %}
+                    <div class="row mt-3 mb-4">
+                        {% for avatar in avatars %}
+                            <div class="col-auto mb-3">
+                                <label class="avatar-option">
+                                    <input type="radio" name="choice" value="{{ avatar.id }}" {% if avatar.primary %}checked="checked"{% endif %} />
+                                    <img src="{{ avatar.avatar_url }}" alt="Avatar" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Choose Selected Avatar</button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <h5>Upload a new avatar:</h5>
+                <form enctype="multipart/form-data" method="POST" action="{% url 'avatar:add' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ upload_avatar_form.avatar }}
+                        {% if upload_avatar_form.avatar.errors %}
+                            <div class="alert alert-danger mt-2">
+                                {{ upload_avatar_form.avatar.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            Images will be resized to fit. Maximum file size: 1MB.
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-success">Upload New Image</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'avatar:delete' %}" class="btn btn-outline-danger">Delete Avatar</a>
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline-secondary">Back to Profile</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">Avatar Tips</h5>
+    </div>
+    <div class="card-body">
+        <p>Make your profile stand out with a great avatar!</p>
+        <ul>
+            <li>Square images work best</li>
+            <li>Use a clear, recognizable image</li>
+            <li>JPG, PNG, and GIF formats are supported</li>
+            <li>Maximum file size is 1MB</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

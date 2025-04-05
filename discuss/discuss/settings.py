@@ -78,7 +78,9 @@ ROOT_URLCONF = 'discuss.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -228,10 +230,9 @@ AVATAR_CLEANUP_DELETED = True
 AVATAR_PROVIDERS = (
     'avatar.providers.PrimaryAvatarProvider',
     'avatar.providers.GravatarAvatarProvider',
-    'avatar.providers.DefaultAvatarProvider',
 )
 # Redirect to profile page after avatar changes
-AVATAR_CHANGE_REDIRECT_URL = 'profile'
+AVATAR_CHANGE_REDIRECT_URL = 'edit_profile'
 
 # Django Taggit settings
 TAGGIT_CASE_INSENSITIVE = True
