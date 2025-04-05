@@ -70,8 +70,50 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Save the user
+            user = form.save()
             username = form.cleaned_data.get('username')
+            
+            # Create default tags if they don't exist
+            default_tags = ['news', 'tech', 'politics']
+            for tag_name in default_tags:
+                if not Tag.objects.filter(name=tag_name).exists():
+                    Tag.objects.create(name=tag_name, slug=tag_name)
+            
+            # Create user's welcome post with default 'news' tag
+            # Find a community for the post, or create a default community if none exists
+            try:
+                # Try to find a general or news community
+                community = Community.objects.filter(
+                    Q(name__icontains='general') | Q(name__icontains='news')
+                ).first()
+                
+                # If no community exists, create one
+                if not community:
+                    community = Community.objects.create(
+                        name='General',
+                        description='General community for all Discuss users.'
+                    )
+                    
+                # Add the user to the community
+                community.members.add(user)
+                
+                # Create a welcome post
+                welcome_post = Post.objects.create(
+                    title=f'Hello from {username}!',
+                    content=f'Hi everyone! I just joined Discuss and I\'m looking forward to joining the conversation!',
+                    author=user,
+                    community=community,
+                    post_type='text'
+                )
+                
+                # Add the default 'news' tag to the post
+                welcome_post.tags.add('news')
+                
+            except Exception as e:
+                # Log the error but continue with registration
+                print(f"Error creating welcome post: {str(e)}")
+            
             messages.success(request, f'Account created for {username}! You can now log in.')
             return redirect('login')
     else:
@@ -217,6 +259,12 @@ def create_text_post(request, community_id):
             post.post_type = 'text'
             post.save()
             
+            # Get the form's tags or add default 'news' tag if none
+            form_tags = form.cleaned_data.get('tags')
+            if not form_tags:
+                post.tags.add('news')
+            form.save_m2m()  # Save the tags
+            
             # Notify community members about new post - Temporarily disabled
             # for member in community.members.exclude(id=request.user.id):
             #     notify.send(
@@ -257,6 +305,12 @@ def create_link_post(request, community_id):
             post.community = community
             post.post_type = 'link'
             post.save()
+            
+            # Get the form's tags or add default 'news' tag if none
+            form_tags = form.cleaned_data.get('tags')
+            if not form_tags:
+                post.tags.add('news')
+            form.save_m2m()  # Save the tags
             
             # Notify community members about new post - Temporarily disabled
             # for member in community.members.exclude(id=request.user.id):
