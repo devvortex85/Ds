@@ -81,10 +81,10 @@
                     </div>
                     {% endif %}
                     
-                    <!-- Nested comments using MPTT -->
+                    <!-- Nested comments using MPTT - Include all children, not just first level -->
                     {% if not root_comment.is_leaf_node %}
                     <div class="replies mt-3 ps-4 border-start">
-                        {% recursetree root_comment.get_children %}
+                        {% recursetree root_comment.get_descendants %}
                         <div class="reply mb-3">
                             <div class="d-flex">
                                 <!-- Reply Voting -->

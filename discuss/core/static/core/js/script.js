@@ -121,7 +121,7 @@ function setupVoting() {
         });
     });
     
-    // AJAX for comment votes
+    // AJAX for comment votes (both top-level and nested)
     const commentVoteButtons = document.querySelectorAll('.list-group-item .vote-btn, .reply .vote-btn');
     
     commentVoteButtons.forEach(button => {

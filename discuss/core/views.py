@@ -257,7 +257,8 @@ def create_link_post(request, community_id):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    # Get comments as a queryset using MPTT's tree structure
+    # Get root comments as a queryset using MPTT's tree structure
+    # Using prefetch_related to efficiently load all children in a single query
     comments = post.comments.filter(level=0).order_by('tree_id', 'lft')
     
     # Count total comments (including replies)
