@@ -638,7 +638,8 @@ def advanced_search(request):
     # Perform full-text search if query exists
     if search_query:
         # Use watson for full-text search across multiple models
-        full_text_results = watson.search.SearchEngine.search(search_query)
+        search_engine = watson.search.SearchEngine()
+        full_text_results = search_engine.search(search_query)
         context['full_text_results'] = full_text_results
     
     return render(request, 'core/advanced_search.html', context)
