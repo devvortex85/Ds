@@ -260,12 +260,25 @@ def post_detail(request, pk):
     # Only get top-level comments (those without a parent)
     comments = post.comments.filter(parent=None).order_by('created_at')
     
+    # Count total comments (including replies)
+    total_comments_count = post.comments.count()
+    
     user_post_vote = None
+    user_comment_votes = {}
+    
     if request.user.is_authenticated:
         # Check if the user has voted on this post
         user_vote = Vote.objects.filter(user=request.user, post=post).first()
         if user_vote:
             user_post_vote = user_vote.value
+            
+        # Get user votes on comments
+        comment_votes = Vote.objects.filter(
+            user=request.user, 
+            comment__in=post.comments.all()
+        )
+        for vote in comment_votes:
+            user_comment_votes[vote.comment_id] = vote.value
     
     # Comment form
     if request.method == 'POST' and request.user.is_authenticated:
@@ -274,6 +287,13 @@ def post_detail(request, pk):
             comment = comment_form.save(commit=False)
             comment.author = request.user
             comment.post = post
+            
+            # Check if this is a reply to another comment
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                parent_comment = get_object_or_404(Comment, id=parent_id)
+                comment.parent = parent_comment
+                
             comment.save()
             messages.success(request, 'Your comment has been added!')
             return redirect('post_detail', pk=post.pk)
@@ -285,6 +305,8 @@ def post_detail(request, pk):
         'comments': comments,
         'comment_form': comment_form,
         'user_post_vote': user_post_vote,
+        'user_comment_votes': user_comment_votes,
+        'total_comments_count': total_comments_count,
     }
     return render(request, 'core/post_detail.html', context)
 
