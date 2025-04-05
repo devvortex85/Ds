@@ -39,6 +39,12 @@ INSTALLED_APPS = [
     'markdownx',
     'debug_toolbar',
     'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 'notifications',  # Temporarily disabled due to compatibility issues
+    'el_pagination',
+    # 'cacheops',  # Temporarily disabled due to compatibility issues
 ]
 
 MIDDLEWARE = [
@@ -50,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Required by django-allauth
 ]
 
 # Debug Toolbar
@@ -120,6 +127,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Media files (User uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -145,3 +156,49 @@ MARKDOWNX_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # 5MB
 MARKDOWNX_MEDIA_PATH = 'markdownx/'
 
 # Search settings will be configured later
+
+# django-allauth configuration
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Allauth settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_LOGOUT_ON_GET = True
+
+# django-notifications-hq settings
+DJANGO_NOTIFICATIONS_CONFIG = {
+    'USE_JSONFIELD': True,
+}
+
+# django-el-pagination settings
+EL_PAGINATION_PER_PAGE = 10
+EL_PAGINATION_PAGE_OUT_OF_RANGE_404 = True
+
+# django-cacheops settings
+CACHEOPS_REDIS = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 1,
+}
+
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*60  # 1 hour cache timeout
+}
+
+CACHEOPS = {
+    # Cache all queries in core app for 1 hour
+    'core.*': {'ops': 'all', 'timeout': 60*60},
+    # Cache specific models for different durations
+    'auth.user': {'ops': {'fetch', 'get'}, 'timeout': 60*60},
+    'auth.*': {'ops': ('fetch', 'get'), 'timeout': 60*60},
+    '*.*': {'ops': (), 'timeout': 60*60},  # Disable caching for all other models
+}

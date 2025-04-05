@@ -29,6 +29,29 @@
             background: url("/static/el-pagination/img/loader.gif") no-repeat scroll center center transparent;
             height: 40px;
         }
+        .notification-dropdown {
+            min-width: 300px;
+            padding: 0;
+        }
+        .notification-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .notification-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+        .notification-item.unread {
+            background-color: #e6f7ff;
+        }
+        .notification-footer {
+            padding: 10px 15px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -64,6 +87,40 @@
                 <!-- User Account Links -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                        <!-- Notifications -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell me-1"></i>
+                                {% load notifications_tags %}
+                                {% notifications_unread as unread_count %}
+                                {% if unread_count %}
+                                    <span class="badge bg-danger">{{ unread_count }}</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end notification-dropdown">
+                                <li class="notification-header">
+                                    <strong>Notifications</strong>
+                                    {% if unread_count %}
+                                        <a href="{% url 'notifications:mark_all_as_read' %}" class="float-end text-decoration-none">Mark all as read</a>
+                                    {% endif %}
+                                </li>
+                                {% get_notifications as notifications_list %}
+                                {% for notification in notifications_list|slice:":5" %}
+                                    <li>
+                                        <a href="{{ notification.data.url }}" class="dropdown-item notification-item {% if not notification.read %}unread{% endif %}">
+                                            <small class="text-muted float-end">{{ notification.timesince }} ago</small>
+                                            <p class="mb-0">{{ notification.verb }}</p>
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li><div class="dropdown-item">No notifications yet</div></li>
+                                {% endfor %}
+                                <li class="notification-footer">
+                                    <a href="{% url 'notifications:all' %}" class="text-decoration-none">View all notifications</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user-circle me-1"></i>{{ user.username }}
@@ -165,6 +222,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom JS -->
     <script src="/static/core/js/scripts.js"></script>
+    <!-- El-pagination JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-endless-scroll/1.8.0/js/jquery.endless-scroll.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.endless_page_link').on('click', function() {
+                var page_template = $(this).closest('.endless_page_template');
+                if (!page_template.hasClass('endless_loading')) {
+                    var data = 'querystring_key=' + $(this).attr('rel').split(' ')[0];
+                    page_template.addClass('endless_loading');
+                    $.get($(this).attr('href'), data, function(data) {
+                        page_template.before(data);
+                        page_template.removeClass('endless_loading');
+                    });
+                    return false;
+                }
+                return false;
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

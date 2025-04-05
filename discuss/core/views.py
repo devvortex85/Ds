@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from el_pagination.decorators import page_template
+# from notifications.signals import notify  # Temporarily disabled
 
 from .models import Profile, Community, Post, Comment, Vote
 from .forms import (
@@ -12,12 +14,9 @@ from .forms import (
     CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm
 )
 
-def home(request):
+@page_template('core/includes/post_list.html')
+def home(request, template='core/index.html', extra_context=None):
     posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-created_at')
-    
-    paginator = Paginator(posts, 10)  # Show 10 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
     
     # Get the communities the user is a member of
     user_communities = []
@@ -29,12 +28,16 @@ def home(request):
     search_form = SearchForm()
     
     context = {
-        'page_obj': page_obj,
+        'posts': posts,
         'user_communities': user_communities,
         'popular_communities': popular_communities,
         'search_form': search_form,
     }
-    return render(request, 'core/index.html', context)
+    
+    if extra_context is not None:
+        context.update(extra_context)
+        
+    return render(request, template, context)
 
 def register(request):
     if request.method == 'POST':
@@ -100,13 +103,10 @@ def create_community(request):
         form = CommunityForm()
     return render(request, 'core/create_community.html', {'form': form})
 
-def community_detail(request, pk):
+@page_template('core/includes/post_list.html')
+def community_detail(request, pk, template='core/community_detail.html', extra_context=None):
     community = get_object_or_404(Community, pk=pk)
     posts = Post.objects.filter(community=community).annotate(comment_count=Count('comments')).order_by('-created_at')
-    
-    paginator = Paginator(posts, 10)  # Show 10 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
     
     is_member = False
     if request.user.is_authenticated:
@@ -114,16 +114,31 @@ def community_detail(request, pk):
     
     context = {
         'community': community,
-        'page_obj': page_obj,
+        'posts': posts,
         'is_member': is_member,
     }
-    return render(request, 'core/community_detail.html', context)
+    
+    if extra_context is not None:
+        context.update(extra_context)
+        
+    return render(request, template, context)
 
 @login_required
 def join_community(request, pk):
     community = get_object_or_404(Community, pk=pk)
     community.members.add(request.user)
     messages.success(request, f'You have joined {community.name}!')
+    
+    # Send notification to community creator - Temporarily disabled
+    # notify.send(
+    #     sender=request.user,
+    #     recipient=community.members.first(),  # Assuming the first member is the creator
+    #     verb=f'{request.user.username} joined your community {community.name}',
+    #     target=community,
+    #     description=f'{request.user.username} has joined your community {community.name}',
+    #     data={'url': f'/communities/{community.pk}/'}
+    # )
+    
     return redirect('community_detail', pk=pk)
 
 @login_required
@@ -150,6 +165,18 @@ def create_text_post(request, community_id):
             post.community = community
             post.post_type = 'text'
             post.save()
+            
+            # Notify community members about new post - Temporarily disabled
+            # for member in community.members.exclude(id=request.user.id):
+            #     notify.send(
+            #         sender=request.user,
+            #         recipient=member,
+            #         verb=f'New post in {community.name}',
+            #         target=post,
+            #         description=f'{request.user.username} posted in {community.name}: {post.title}',
+            #         data={'url': f'/posts/{post.pk}/'}
+            #     )
+                
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
     else:
@@ -179,6 +206,18 @@ def create_link_post(request, community_id):
             post.community = community
             post.post_type = 'link'
             post.save()
+            
+            # Notify community members about new post - Temporarily disabled
+            # for member in community.members.exclude(id=request.user.id):
+            #     notify.send(
+            #         sender=request.user,
+            #         recipient=member,
+            #         verb=f'New link in {community.name}',
+            #         target=post,
+            #         description=f'{request.user.username} shared a link in {community.name}: {post.title}',
+            #         data={'url': f'/posts/{post.pk}/'}
+            #     )
+                
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
     else:
@@ -248,6 +287,36 @@ def add_comment(request, post_id):
             comment.author = request.user
             comment.post = post
             comment.save()
+            
+            # Notify the post author about the new comment - Temporarily disabled
+            # if post.author != request.user:
+            #     notify.send(
+            #         sender=request.user,
+            #         recipient=post.author,
+            #         verb=f'New comment on your post',
+            #         target=post,
+            #         description=f'{request.user.username} commented on your post: {post.title}',
+            #         data={'url': f'/posts/{post.pk}/'}
+            #     )
+            
+            # Notify other commenters on the post - Temporarily disabled
+            # commented_users = Comment.objects.filter(post=post).exclude(
+            #     author=request.user
+            # ).exclude(
+            #     author=post.author
+            # ).values_list('author', flat=True).distinct()
+            
+            # for user_id in commented_users:
+            #     user = User.objects.get(id=user_id)
+            #     notify.send(
+            #         sender=request.user,
+            #         recipient=user,
+            #         verb=f'New activity on a post you commented on',
+            #         target=post,
+            #         description=f'{request.user.username} also commented on: {post.title}',
+            #         data={'url': f'/posts/{post.pk}/'}
+            #     )
+            
             messages.success(request, 'Your comment has been added!')
     
     return redirect('post_detail', pk=post_id)
