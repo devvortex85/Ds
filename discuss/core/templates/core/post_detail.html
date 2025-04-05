@@ -1,5 +1,5 @@
-{% load reputation_tags %}
 {% extends 'core/base.html' %}
+{% load reputation_tags %}
 
 {% block title %}{{ post.title }} | Discuss{% endblock %}
 
@@ -38,7 +38,7 @@
                 <div class="post-meta small text-muted mb-2">
                     <a href="{% url 'community_detail' post.community.id %}" class="fw-bold text-decoration-none">d/{{ post.community.name }}</a>
                     <span class="mx-1">•</span>
-                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}</a>
+                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }} {{ post.author.profile.karma|reputation_badge }}</a>
                     <span class="mx-1">•</span>
                     {{ post.created_at|timesince }} ago
                 </div>
@@ -143,7 +143,7 @@
                             <!-- Comment Content -->
                             <div class="comment-content flex-grow-1">
                                 <div class="comment-meta small text-muted mb-2">
-                                    <a href="{% url 'profile' comment.author.username %}" class="fw-bold text-decoration-none">u/{{ comment.author.username }}</a>
+                                    <a href="{% url 'profile' comment.author.username %}" class="fw-bold text-decoration-none">u/{{ comment.author.username }} {{ comment.author.profile.karma|reputation_badge }}</a>
                                     <span class="mx-1">•</span>
                                     {{ comment.created_at|timesince }} ago
                                 </div>
@@ -216,7 +216,7 @@
                                             <!-- Reply Content -->
                                             <div class="reply-content flex-grow-1">
                                                 <div class="reply-meta small text-muted mb-1">
-                                                    <a href="{% url 'profile' reply.author.username %}" class="fw-bold text-decoration-none">u/{{ reply.author.username }}</a>
+                                                    <a href="{% url 'profile' reply.author.username %}" class="fw-bold text-decoration-none">u/{{ reply.author.username }} {{ reply.author.profile.karma|reputation_badge }}</a>
                                                     <span class="mx-1">•</span>
                                                     {{ reply.created_at|timesince }} ago
                                                 </div>
@@ -288,24 +288,39 @@
                 <small class="text-muted">Member since {{ post.author.date_joined|date:"M Y" }}</small>
             </div>
         </div>
-        <div class="d-grid">
-            <a href="{% url 'profile' post.author.username %}" class="btn btn-outline-primary">View Profile</a>
-        </div>
+        {% if post.author.profile.bio %}
+            <p class="small mb-0">{{ post.author.profile.bio|truncatechars:100 }}</p>
+        {% endif %}
     </div>
 </div>
 
-<!-- Participation Rules -->
+<!-- Related Posts -->
 <div class="card">
     <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">Participation Guidelines</h5>
+        <h5 class="card-title mb-0">More from this Community</h5>
     </div>
-    <div class="card-body">
-        <ul class="list-unstyled mb-0">
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Be respectful to others</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Stay on topic</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Avoid duplicate comments</li>
-            <li><i class="fas fa-check-circle text-success me-2"></i> Upvote quality content</li>
-        </ul>
+    <div class="card-body p-0">
+        {% with related_posts=post.community.posts.all|slice:":5" %}
+            {% if related_posts %}
+                <div class="list-group list-group-flush">
+                    {% for related in related_posts %}
+                        {% if related.id != post.id %}
+                            <a href="{% url 'post_detail' related.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 text-truncate" style="max-width: 80%;">{{ related.title }}</h6>
+                                    <span class="badge bg-primary rounded-pill">{{ related.vote_count }}</span>
+                                </div>
+                                <small class="text-muted">Posted by u/{{ related.author.username }}</small>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="p-3">
+                    <p class="small mb-0">No other posts in this community yet.</p>
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
 </div>
 {% endblock %}
