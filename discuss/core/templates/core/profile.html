@@ -1,6 +1,5 @@
 {% extends 'core/base.html' %}
 {% load reputation_tags %}
-{% load avatar_tags %}
 
 {% block title %}{{ profile_user.username }} - Profile | Discuss{% endblock %}
 
@@ -9,7 +8,13 @@
     <div class="card-body">
         <div class="d-flex align-items-start">
             <div class="profile-avatar me-4 text-center">
-                {% avatar profile_user 128 %}
+                {% if profile_user.profile.avatar %}
+                    <img src="{{ profile_user.profile.avatar.url }}" class="rounded-circle" alt="{{ profile_user.username }}'s avatar" width="128" height="128">
+                {% else %}
+                    <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light" style="width: 128px; height: 128px;">
+                        <span class="display-4 text-secondary">{{ profile_user.username|first|upper }}</span>
+                    </div>
+                {% endif %}
                 <div class="user-reputation mt-2">
                     <span class="badge bg-primary">{{ reputation_level }}</span>
                 </div>
@@ -243,9 +248,6 @@
         <div class="list-group list-group-flush">
             <a href="{% url 'edit_profile' %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-edit me-2"></i> Edit Profile
-            </a>
-            <a href="{% url 'avatar:change' %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-image me-2"></i> Change Avatar
             </a>
             <a href="{% url 'create_community' %}" class="list-group-item list-group-item-action">
                 <i class="fas fa-plus-circle me-2"></i> Create a Community

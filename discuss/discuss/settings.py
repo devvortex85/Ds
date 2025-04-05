@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # 'notifications',  # Temporarily disabled due to compatibility issues
     'el_pagination',
     # 'cacheops',  # Temporarily disabled due to compatibility issues
-    'avatar',    # For profile pictures and avatars
+    # 'avatar',    # Replaced with native ImageField in Profile model
     'taggit',    # For adding tags to profiles and content
     'django_countries',  # For country selection in profiles
 ]
@@ -220,19 +220,9 @@ CACHEOPS = {
     '*.*': {'ops': (), 'timeout': 60*60},  # Disable caching for all other models
 }
 
-# Django Avatar settings
-AVATAR_GRAVATAR_DEFAULT = 'identicon'
-AVATAR_DEFAULT_URL = 'avatar/default.png'
-AVATAR_MAX_SIZE = 1024 * 1024
-AVATAR_THUMB_FORMAT = 'PNG'
-AVATAR_STORAGE_DIR = 'avatars'
-AVATAR_CLEANUP_DELETED = True
-AVATAR_PROVIDERS = (
-    'avatar.providers.PrimaryAvatarProvider',
-    'avatar.providers.GravatarAvatarProvider',
-)
-# Redirect to profile page after avatar changes
-AVATAR_CHANGE_REDIRECT_URL = 'edit_profile'
+# Custom Avatar settings (replaced django-avatar with direct ImageField)
+# Avatar images are now stored in the MEDIA_ROOT/avatars directory
+# and managed directly through the Profile model
 
 # Django Taggit settings
 TAGGIT_CASE_INSENSITIVE = True

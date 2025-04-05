@@ -13,7 +13,7 @@ urlpatterns = [
     path('markdownx/', include('markdownx.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('allauth.urls')),
-    path('avatar/', include('avatar.urls')),
+    # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
     # path('inbox/notifications/', include(notifications.urls, namespace='notifications')),  # Temporarily disabled
     path('', include('core.urls')),
 ]
@@ -24,6 +24,6 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
-    
-    # Serve media files in development
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Serve media files
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

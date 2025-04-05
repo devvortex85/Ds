@@ -18,11 +18,16 @@ class Profile(models.Model):
         (10000, 'Legend'),
     ]
     
+    def avatar_upload_path(instance, filename):
+        # File will be uploaded to MEDIA_ROOT/avatars/user_<id>/<filename>
+        return f'avatars/user_{instance.user.id}/{filename}'
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     karma = models.IntegerField(default=0)
     country = CountryField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
+    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
     display_name = models.CharField(max_length=50, blank=True)
     
     # User interests as tags

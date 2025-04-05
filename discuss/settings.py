@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # 'notifications',  # Temporarily disabled due to compatibility issues
     'el_pagination',
     # 'cacheops',  # Temporarily disabled due to compatibility issues
-    'avatar',  # Django-avatar app
+    # Avatar functionality is now directly implemented in the Profile model
     'taggit',  # Django-taggit app
     'django_countries',  # Django-countries app
 ]
@@ -227,16 +227,10 @@ CACHEOPS = {
     '*.*': {'ops': (), 'timeout': 60*60},  # Disable caching for all other models
 }
 
-# Django-avatar settings
-AVATAR_GRAVATAR_DEFAULT = 'identicon'
-AVATAR_DEFAULT_URL = 'avatar/default.png'
-AVATAR_MAX_AVATARS_PER_USER = 5
-AVATAR_MAX_SIZE = 1024 * 1024  # 1MB
-AVATAR_THUMB_FORMAT = 'PNG'
-AVATAR_THUMB_QUALITY = 90
-AVATAR_STORAGE_DIR = 'avatars'
-AVATAR_CLEANUP_DELETED = True
-AVATAR_CHANGE_REDIRECT_URL = 'edit_profile'
+# Custom avatar settings
+# Avatar is now implemented directly in the Profile model
+# Maximum avatar size: 1MB
+# Stored in MEDIA_ROOT/avatars/ directory
 
 # Django-countries settings
 COUNTRIES_FLAG_URL = 'https://flagicons.lipis.dev/flags/4x3/{code}.svg'

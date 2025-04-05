@@ -56,7 +56,11 @@
                 {% for user_profile in users %}
                     <div class="list-group-item p-3">
                         <div class="d-flex align-items-center">
+                            {% if user_profile.profile.avatar %}
+                            <img src="{{ user_profile.profile.avatar.url }}" alt="{{ user_profile.username }}" class="rounded-circle me-3" width="40" height="40">
+                            {% else %}
                             <i class="fas fa-user-circle fa-2x text-primary me-3"></i>
+                            {% endif %}
                             <div class="user-info flex-grow-1">
                                 <h5 class="mb-1">
                                     <a href="{% url 'profile' user_profile.username %}" class="text-decoration-none">u/{{ user_profile.username }}</a>
