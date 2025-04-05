@@ -6,6 +6,7 @@ from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from el_pagination.decorators import page_template
+from taggit.models import Tag
 # from notifications.signals import notify  # Temporarily disabled
 
 from .models import Profile, Community, Post, Comment, Vote
@@ -16,7 +17,18 @@ from .forms import (
 
 @page_template('core/includes/post_list.html')
 def home(request, template='core/index.html', extra_context=None):
-    posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-created_at')
+    # Initialize queryset
+    posts_query = Post.objects.annotate(comment_count=Count('comments'))
+    
+    # Filter by tag if specified in GET parameters
+    tag_slug = request.GET.get('tag')
+    tag_name = None
+    if tag_slug:
+        posts_query = posts_query.filter(tags__slug=tag_slug)
+        tag_name = get_object_or_404(Post.tags.through.tag_model, slug=tag_slug).name
+    
+    # Order the posts by creation date
+    posts = posts_query.order_by('-created_at')
     
     # Get the communities the user is a member of
     user_communities = []
@@ -32,6 +44,11 @@ def home(request, template='core/index.html', extra_context=None):
     
     search_form = SearchForm()
     
+    # Get popular tags with post count
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:10]  # Get top 10 tags
+    
     context = {
         'posts': posts,
         'page_obj': posts,  # Adding this for pagination in template
@@ -39,6 +56,9 @@ def home(request, template='core/index.html', extra_context=None):
         'popular_communities': popular_communities,
         'search_form': search_form,
         'user_post_votes': user_post_votes,
+        'active_tag': tag_name,
+        'tag_slug': tag_slug,
+        'all_tags': all_tags,
     }
     
     if extra_context is not None:
@@ -135,12 +155,18 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
         for vote in post_votes:
             user_post_votes[vote.post.id] = vote.value
     
+    # Get popular tags with post count
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:10]  # Get top 10 tags
+    
     context = {
         'community': community,
         'posts': posts,
         'is_member': is_member,
         'user_post_votes': user_post_votes,
         'page_obj': posts,  # Adding this for the community_detail template
+        'all_tags': all_tags,
     }
     
     if extra_context is not None:
@@ -301,6 +327,11 @@ def post_detail(request, pk):
     else:
         comment_form = CommentForm()
     
+    # Get popular tags for sidebar
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:10]  # Get top 10 tags
+    
     context = {
         'post': post,
         'comments': comments,
@@ -308,6 +339,7 @@ def post_detail(request, pk):
         'user_post_vote': user_post_vote,
         'user_comment_votes': user_comment_votes,
         'total_comments_count': total_comments_count,
+        'all_tags': all_tags,
     }
     return render(request, 'core/post_detail.html', context)
 
@@ -484,8 +516,9 @@ def search(request):
         # Search for posts
         posts = Post.objects.filter(
             Q(title__icontains=query) | 
-            Q(content__icontains=query)
-        ).order_by('-created_at')
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)  # Add tag search
+        ).distinct().order_by('-created_at')
         
         # Search for communities
         communities = Community.objects.filter(
@@ -495,16 +528,27 @@ def search(request):
         
         # Search for users
         users = User.objects.filter(username__icontains=query)
+        
+        # Search for tags
+        tags = Tag.objects.filter(name__icontains=query)
     else:
         posts = []
         communities = []
         users = []
+        tags = []
+    
+    # Get popular tags for sidebar
+    all_tags = Tag.objects.annotate(
+        num_times=Count('taggit_taggeditem_items')
+    ).order_by('-num_times')[:10]  # Get top 10 tags
     
     context = {
         'query': query,
         'posts': posts,
         'communities': communities,
         'users': users,
-        'search_form': SearchForm(initial={'query': query})
+        'tags': tags,
+        'search_form': SearchForm(initial={'query': query}),
+        'all_tags': all_tags
     }
     return render(request, 'core/search_results.html', context)

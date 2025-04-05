@@ -150,6 +150,16 @@
                                 </div>
                                 {% endif %}
                                 
+                                {% if post.tags.all %}
+                                <div class="post-tags mt-2 mb-2">
+                                    {% for tag in post.tags.all %}
+                                        <a href="{% url 'home' %}?tag={{ tag.slug }}" class="badge bg-light text-dark text-decoration-none">
+                                            <i class="fas fa-tag me-1"></i>{{ tag.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
                                 <div class="post-actions mt-2">
                                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-comment-alt me-1"></i> Comments

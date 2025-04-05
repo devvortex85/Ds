@@ -43,21 +43,23 @@ class CommunityForm(forms.ModelForm):
 class TextPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post title'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Post content', 'rows': 6}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tags (comma separated)'}),
         }
     
 class LinkPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'url']
+        fields = ['title', 'url', 'tags']
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post title'}),
             'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tags (comma separated)'}),
         }
 
 class CommentForm(forms.ModelForm):

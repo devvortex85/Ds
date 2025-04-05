@@ -143,6 +143,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='posts')
+    tags = TaggableManager(blank=True, help_text="A comma-separated list of tags.")
     
     def __str__(self):
         return self.title
