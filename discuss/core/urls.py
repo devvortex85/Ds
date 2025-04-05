@@ -10,8 +10,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     
     # User profile
-    path('profile/<str:username>/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.profile, name='profile'),
     
     # Communities
     path('communities/', views.community_list, name='community_list'),
