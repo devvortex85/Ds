@@ -238,4 +238,4 @@ AVATAR_CHANGE_REDIRECT_URL = 'edit_profile'
 TAGGIT_CASE_INSENSITIVE = True
 
 # Django Countries settings
-COUNTRIES_FLAG_URL = 'https://flagcdn.com/16x12/{code}.png'
+COUNTRIES_FLAG_URL = 'https://flagicons.lipis.dev/flags/4x3/{code}.svg'

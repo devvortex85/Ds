@@ -34,7 +34,7 @@
                         {% if profile_user.profile.country %}
                             <span class="mx-2">|</span>
                             <i class="fas fa-globe me-1"></i> 
-                            <img src="{{ profile_user.profile.country.flag }}" alt="{{ profile_user.profile.country.code }}" class="me-1" style="width: 16px; height: 12px;" /> 
+                            <img src="{{ profile_user.profile.country.flag }}" alt="{{ profile_user.profile.country.code }}" class="country-flag me-1" /> 
                             {{ profile_user.profile.country.name }}
                         {% endif %}
                         {% if profile_user.profile.website %}

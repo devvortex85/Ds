@@ -405,3 +405,13 @@ img.avatar {
     height: 100%;
     object-fit: cover;
 }
+
+/* Country flag styling */
+.country-flag {
+    width: 32px;
+    height: 24px;
+    object-fit: contain;
+    border: 1px solid #e9ecef;
+    border-radius: 2px;
+    vertical-align: middle;
+}

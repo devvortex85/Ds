@@ -14,6 +14,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('allauth.urls')),
     # path('inbox/notifications/', include(notifications.urls, namespace='notifications')),  # Temporarily disabled
+    # Use our custom avatar URLs before the default ones
+    path('avatar/', include('core.custom_avatar.urls', namespace='avatar')),
     path('', include('core.urls')),
 ]
 
