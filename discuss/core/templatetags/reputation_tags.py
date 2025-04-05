@@ -71,5 +71,5 @@ def country_flag(user):
     return mark_safe(
         f'<img src="{country.flag}" alt="{country_name}" '
         f'title="{country_name}" class="country-flag" '
-        f'style="height: 12px; width: auto; margin-left: 4px; vertical-align: middle;">'
+        f'style="height: 10px; width: auto; margin-left: 3px; margin-right: 2px; vertical-align: baseline; display: inline-block;">'
     )
