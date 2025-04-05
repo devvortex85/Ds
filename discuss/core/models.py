@@ -3,8 +3,19 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 class Profile(models.Model):
+    REPUTATION_LEVELS = [
+        (0, 'New User'),
+        (100, 'Regular'),
+        (500, 'Established Member'),
+        (1000, 'Trusted Contributor'),
+        (2500, 'Expert'),
+        (5000, 'Community Leader'),
+        (10000, 'Legend'),
+    ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     karma = models.IntegerField(default=0)
@@ -14,19 +25,70 @@ class Profile(models.Model):
         
     def update_karma(self):
         """Calculate and update karma based on post and comment votes"""
-        # Get points from posts (1 point per upvote)
-        post_karma = sum([
+        # Get points from posts (1 point per upvote, -1 per downvote)
+        post_upvotes = sum([
             post.votes.filter(value=1).count() for post in self.user.posts.all()
         ])
-        
-        # Get points from comments (1 point per upvote)
-        comment_karma = sum([
-            comment.votes.filter(value=1).count() for comment in self.user.comments.all()
+        post_downvotes = sum([
+            post.votes.filter(value=-1).count() for post in self.user.posts.all()
         ])
         
-        # Update karma
-        self.karma = post_karma + comment_karma
+        # Get points from comments (1 point per upvote, -1 per downvote)
+        comment_upvotes = sum([
+            comment.votes.filter(value=1).count() for comment in self.user.comments.all()
+        ])
+        comment_downvotes = sum([
+            comment.votes.filter(value=-1).count() for comment in self.user.comments.all()
+        ])
+        
+        # Post creation bonus (2 points per post)
+        post_creation_karma = self.user.posts.count() * 2
+        
+        # Comment creation bonus (1 point per comment)
+        comment_creation_karma = self.user.comments.count() * 1
+        
+        # Calculate total karma
+        self.karma = (post_upvotes - post_downvotes) + (comment_upvotes - comment_downvotes) + post_creation_karma + comment_creation_karma
+        
+        # Ensure karma is never negative for new users
+        if self.karma < 0 and self.user.date_joined.date() > (timezone.now().date() - timezone.timedelta(days=30)):
+            self.karma = 0
+            
         self.save()
+        
+    def get_reputation_level(self):
+        """Return the user's reputation level based on karma"""
+        level_name = self.REPUTATION_LEVELS[0][1]  # Default level
+        
+        for karma_threshold, name in self.REPUTATION_LEVELS:
+            if self.karma >= karma_threshold:
+                level_name = name
+            else:
+                break
+                
+        return level_name
+    
+    def get_reputation_progress(self):
+        """Return progress to the next reputation level"""
+        current_level_karma = 0
+        next_level_karma = float('inf')
+        
+        # Find current and next level thresholds
+        for i, (karma_threshold, _) in enumerate(self.REPUTATION_LEVELS):
+            if self.karma >= karma_threshold:
+                current_level_karma = karma_threshold
+                if i < len(self.REPUTATION_LEVELS) - 1:
+                    next_level_karma = self.REPUTATION_LEVELS[i+1][0]
+            else:
+                break
+        
+        # If at max level
+        if next_level_karma == float('inf'):
+            return 100
+        
+        # Calculate progress percentage
+        progress = ((self.karma - current_level_karma) / (next_level_karma - current_level_karma)) * 100
+        return min(100, max(0, progress))  # Ensure between 0-100%
 
 # Create a Profile for each new user
 @receiver(post_save, sender=User)

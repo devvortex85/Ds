@@ -57,11 +57,20 @@ def profile(request, username):
     comments = Comment.objects.filter(author=user).order_by('-created_at')
     communities = user.communities.all()
     
+    # Update the user's karma to ensure it's current
+    user.profile.update_karma()
+    
+    # Get the user's reputation level and progress
+    reputation_level = user.profile.get_reputation_level()
+    reputation_progress = user.profile.get_reputation_progress()
+    
     context = {
         'profile_user': user,
         'posts': posts,
         'comments': comments,
         'communities': communities,
+        'reputation_level': reputation_level,
+        'reputation_progress': reputation_progress,
     }
     return render(request, 'core/profile.html', context)
 
@@ -377,6 +386,9 @@ def vote_post(request, pk, vote_type):
         Vote.objects.create(user=request.user, post=post, value=vote_value)
         message = 'Vote recorded.'
     
+    # Update karma for the post author
+    post.author.profile.update_karma()
+    
     # If AJAX request, return JSON response
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
@@ -411,6 +423,9 @@ def vote_comment(request, pk, vote_type):
         # Create a new vote
         Vote.objects.create(user=request.user, comment=comment, value=vote_value)
         message = 'Vote recorded.'
+    
+    # Update karma for the comment author
+    comment.author.profile.update_karma()
     
     # If AJAX request, return JSON response
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
