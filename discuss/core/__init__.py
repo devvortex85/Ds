@@ -34,12 +34,12 @@ def ready():
         
         # Import search adapters to register models with Watson
         try:
-            from . import search_adapters
-            print("✓ Watson search adapters registered")
-            
-            # Rebuild search index
-            from watson import search as watson
-            watson.rebuild()
-            print("✓ Watson search index rebuilt")
+            # Use explicit import of registration function to avoid circular imports
+            from .search_adapters import register_search_models
+            success = register_search_models()
+            if success:
+                print("✓ Watson search adapters registered and index built")
+            else:
+                print("✗ Watson search registration failed")
         except Exception as e:
             print(f"Error setting up Watson search: {str(e)}")

@@ -442,40 +442,99 @@ def vote_comment(request, pk, vote_type):
     return redirect('post_detail', pk=comment.post.id)
 
 def search(request):
+    """
+    Perform a search across multiple models using django-watson
+    with a fallback to basic Django Q objects if Watson fails.
+    """
+    import logging
+    logger = logging.getLogger(__name__)
+    
     query = request.GET.get('query', '')
     posts = []
     communities = []
     users = []
     tags = []
+    using_fallback = False
     
     if query:
-        # Perform full-text search using django-watson
-        # Search in posts
-        posts = watson.filter(
-            Post.objects.select_related('author', 'community'),
-            query
-        )
+        try:
+            # Try full-text search using django-watson's unified search
+            # This returns a SearchResults object with model instances from all registered models
+            search_results = watson.search(query, ranking=True)
+            
+            # Track the number of results we find
+            result_count = 0
+            
+            # Process search results and categorize them by model type
+            for result in search_results:
+                result_count += 1
+                model_obj = result.object
+                
+                # Categorize results by model type
+                if isinstance(model_obj, Post):
+                    posts.append(model_obj)
+                elif isinstance(model_obj, Community):
+                    communities.append(model_obj)
+                elif isinstance(model_obj, User):
+                    users.append(model_obj)
+                elif isinstance(model_obj, Profile):
+                    # Add the user associated with this profile if not already added
+                    if model_obj.user not in users:
+                        users.append(model_obj.user)
+            
+            # If we got no results at all, try fallback search
+            if result_count == 0:
+                raise Exception("Watson search returned no results, using fallback")
+                
+        except Exception as e:
+            # Log the error
+            logger.error(f"Watson search failed: {str(e)}. Using fallback search.")
+            
+            # Set flag for template to show message
+            using_fallback = True
+            
+            # Fallback search using Q objects
+            posts = Post.objects.filter(
+                Q(title__icontains=query) | 
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct().select_related('author', 'community').order_by('-created_at')
+            
+            communities = Community.objects.filter(
+                Q(name__icontains=query) | 
+                Q(description__icontains=query)
+            ).order_by('name')
+            
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(profile__bio__icontains=query)
+            ).distinct().select_related('profile')
         
-        # Search in communities
-        communities = watson.filter(
-            Community.objects.all(),
-            query
-        )
-        
-        # Search in users
-        users = watson.filter(
-            User.objects.select_related('profile'),
-            query
-        )
-        
-        # Search in tags (via custom logic since Tags are not registered with Watson)
+        # Always search tags directly (not registered with Watson)
         tags = Tag.objects.filter(name__icontains=query)
     
-    # Prepare search result counts
-    posts_count = len(posts) if hasattr(posts, '__len__') else 0
-    communities_count = len(communities) if hasattr(communities, '__len__') else 0
-    users_count = len(users) if hasattr(users, '__len__') else 0
-    tags_count = len(tags) if hasattr(tags, '__len__') else 0
+    # Prepare search result counts for the template
+    try:
+        posts_count = len(posts) if isinstance(posts, list) else posts.count()
+    except (TypeError, AttributeError):
+        posts_count = 0
+        
+    try:
+        communities_count = len(communities) if isinstance(communities, list) else communities.count()
+    except (TypeError, AttributeError):
+        communities_count = 0
+        
+    try:
+        users_count = len(users) if isinstance(users, list) else users.count()
+    except (TypeError, AttributeError):
+        users_count = 0
+        
+    try:
+        tags_count = len(tags) if isinstance(tags, list) else tags.count()
+    except (TypeError, AttributeError):
+        tags_count = 0
     
     result_counts = {
         'posts': posts_count,
@@ -485,37 +544,80 @@ def search(request):
         'total': posts_count + communities_count + users_count + tags_count
     }
     
+    # Add a message if we're using fallback search
+    if using_fallback and request.user.is_authenticated and request.user.is_staff:
+        messages.warning(request, "Using basic search instead of full-text search. Please rebuild the search index.")
+    
     return render(request, 'core/search_results.html', {
         'query': query,
         'posts': posts,
         'communities': communities,
         'users': users,
         'tags': tags,
-        'result_counts': result_counts
+        'result_counts': result_counts,
+        'using_fallback': using_fallback
     })
 
 def advanced_search(request):
     """Advanced search with full-text search and filtering capabilities"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     search_query = request.GET.get('search', '')
     filtered_posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-created_at')
     full_text_results = []
+    using_fallback = False
+    search_error = None
     
-    # If search query is provided, use Watson for text search
+    # If search query is provided, try Watson for text search
     if search_query:
-        # Get full text search results across all registered models
-        full_text_results = watson.search(search_query, ranking=True)
-        
-        # Filter posts separately to apply additional filters later
-        filtered_posts = watson.filter(filtered_posts, search_query)
+        try:
+            # Get full text search results across all registered models
+            full_text_results = watson.search(search_query, ranking=True)
+            
+            # Filter posts separately to apply additional filters later
+            filtered_posts = watson.filter(filtered_posts, search_query)
+            
+            # Check if we have results
+            if len(full_text_results) == 0 and filtered_posts.count() == 0:
+                # If empty results, use fallback
+                raise Exception("Watson search returned no results, using fallback")
+                
+        except Exception as e:
+            # Log the error
+            logger.error(f"Watson advanced search failed: {str(e)}. Using fallback search.")
+            search_error = str(e)
+            
+            # Set flag for template to show message
+            using_fallback = True
+            
+            # Fallback search using Q objects for posts
+            filtered_posts = Post.objects.filter(
+                Q(title__icontains=search_query) | 
+                Q(content__icontains=search_query) |
+                Q(tags__name__icontains=search_query) |
+                Q(author__username__icontains=search_query) |
+                Q(community__name__icontains=search_query)
+            ).distinct().annotate(comment_count=Count('comments')).order_by('-created_at')
+            
+            # Empty full_text_results as we can't use it in fallback mode
+            full_text_results = []
     
     # Apply all filters from FilterSet
     post_filter = PostFilter(request.GET, queryset=filtered_posts)
     filtered_posts = post_filter.qs
     
-    # Get communities for filter dropdown
-    communities = Community.objects.all()
+    # Add a message if we're using fallback search
+    if using_fallback and request.user.is_authenticated and request.user.is_staff:
+        messages.warning(
+            request, 
+            f"Using basic search instead of full-text search. Error: {search_error}. Please rebuild the search index."
+        )
     
-    # Get tags for filter dropdown
+    # Get communities for filter dropdown
+    communities = Community.objects.all().order_by('name')
+    
+    # Get tags for filter dropdown - limit to most used tags
     tags = Tag.objects.annotate(count=Count('taggit_taggeditem_items')).order_by('-count')[:50]
     
     # Get all tags for sidebar with usage count
@@ -530,7 +632,9 @@ def advanced_search(request):
         'all_tags': all_tags,
         'posts': filtered_posts,
         'search_query': search_query,
-        'full_text_results': full_text_results
+        'full_text_results': full_text_results,
+        'using_fallback': using_fallback,
+        'search_error': search_error
     }
     
     return render(request, 'core/advanced_search.html', context)
