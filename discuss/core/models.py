@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
+from mptt.models import MPTTModel, TreeForeignKey
 
 class Profile(models.Model):
     REPUTATION_LEVELS = [
@@ -158,12 +159,12 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
     
     def __str__(self):
         return f'Comment by {self.author.username} on {self.post.title}'
@@ -174,8 +175,11 @@ class Comment(models.Model):
         down_votes = self.votes.filter(value=-1).count()
         return up_votes - down_votes
     
+    class MPTTMeta:
+        order_insertion_by = ['created_at']
+    
     class Meta:
-        ordering = ['created_at']
+        ordering = ['tree_id', 'lft']
 
 class Vote(models.Model):
     VOTE_CHOICES = [

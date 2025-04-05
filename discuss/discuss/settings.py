@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # 'avatar',    # Replaced with native ImageField in Profile model
     'taggit',    # For adding tags to profiles and content
     'django_countries',  # For country selection in profiles
+    'mptt',      # For improved hierarchical comment trees
 ]
 
 MIDDLEWARE = [

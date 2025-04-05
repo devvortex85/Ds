@@ -257,8 +257,8 @@ def create_link_post(request, community_id):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    # Only get top-level comments (those without a parent)
-    comments = post.comments.filter(parent=None).order_by('created_at')
+    # Get comments as a queryset using MPTT's tree structure
+    comments = post.comments.filter(level=0).order_by('tree_id', 'lft')
     
     # Count total comments (including replies)
     total_comments_count = post.comments.count()
@@ -344,6 +344,7 @@ def add_comment(request, post_id):
                     parent=parent_comment
                 )
                 comment.save()
+                # MPTT will automatically handle the tree structure
                 messages.success(request, 'Your reply has been added!')
         else:
             form = CommentForm(request.POST)
