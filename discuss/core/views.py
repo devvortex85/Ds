@@ -121,10 +121,19 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
     if request.user.is_authenticated:
         is_member = community.members.filter(id=request.user.id).exists()
     
+    # Get user's votes on posts
+    user_post_votes = {}
+    if request.user.is_authenticated:
+        post_votes = Vote.objects.filter(user=request.user, post__in=posts)
+        for vote in post_votes:
+            user_post_votes[vote.post.id] = vote.value
+    
     context = {
         'community': community,
         'posts': posts,
         'is_member': is_member,
+        'user_post_votes': user_post_votes,
+        'page_obj': posts,  # Adding this for the community_detail template
     }
     
     if extra_context is not None:
