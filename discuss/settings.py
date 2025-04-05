@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     # 'notifications',  # Temporarily disabled due to compatibility issues
     'el_pagination',
     # 'cacheops',  # Temporarily disabled due to compatibility issues
+    'avatar',  # Django-avatar app
+    'taggit',  # Django-taggit app
+    'django_countries',  # Django-countries app
 ]
 
 MIDDLEWARE = [
@@ -75,7 +78,7 @@ ROOT_URLCONF = 'discuss.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,12 +96,25 @@ WSGI_APPLICATION = 'discuss.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import dj_database_url
+
+# Use PostgreSQL in production or when DATABASE_URL is provided
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -210,3 +226,17 @@ CACHEOPS = {
     'auth.*': {'ops': ('fetch', 'get'), 'timeout': 60*60},
     '*.*': {'ops': (), 'timeout': 60*60},  # Disable caching for all other models
 }
+
+# Django-avatar settings
+AVATAR_GRAVATAR_DEFAULT = 'identicon'
+AVATAR_DEFAULT_URL = 'avatar/default.png'
+AVATAR_MAX_AVATARS_PER_USER = 5
+AVATAR_MAX_SIZE = 1024 * 1024  # 1MB
+AVATAR_THUMB_FORMAT = 'PNG'
+AVATAR_THUMB_QUALITY = 90
+AVATAR_STORAGE_DIR = 'avatars'
+AVATAR_CLEANUP_DELETED = True
+AVATAR_CHANGE_REDIRECT_URL = 'edit_profile'
+
+# Django-countries settings
+COUNTRIES_FLAG_URL = 'https://flagicons.lipis.dev/flags/4x3/{code}.svg'
