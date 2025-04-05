@@ -40,7 +40,7 @@
                             <i class="fas fa-user me-1"></i>
                         {% endif %}
                         <a href="{% url 'profile' root_comment.author.username %}" class="fw-bold text-decoration-none">{{ root_comment.author.username }}</a>
-                        {{ root_comment.author|country_flag }} 
+                         
                         {{ root_comment.author.profile.karma|reputation_badge }}
                         <span class="mx-1">•</span>
                         {{ root_comment.created_at|timesince }} ago
@@ -124,7 +124,7 @@
                                             <i class="fas fa-user me-1"></i>
                                         {% endif %}
                                         <a href="{% url 'profile' node.author.username %}" class="fw-bold text-decoration-none">{{ node.author.username }}</a>
-                                        {{ node.author|country_flag }} 
+                                         
                                         {{ node.author.profile.karma|reputation_badge }}
                                         <span class="mx-1">•</span>
                                         {{ node.created_at|timesince }} ago

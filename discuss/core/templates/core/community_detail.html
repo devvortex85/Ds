@@ -90,7 +90,7 @@
                             <!-- Post Content -->
                             <div class="post-content flex-grow-1">
                                 <div class="post-meta small text-muted mb-2">
-                                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }} {{ post.author|country_flag }}</a>
+                                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}</a>
                                     <span class="mx-1">•</span>
                                     {{ post.created_at|timesince }} ago
                                 </div>
