@@ -571,7 +571,7 @@ def vote_post(request, pk, vote_type):
     # Check if this is an AJAX request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         # Get the current vote count
-        current_vote_count = post.vote_count()
+        current_vote_count = post.vote_count
         
         # Get the user's current vote
         user_vote = 0
@@ -632,7 +632,7 @@ def vote_comment(request, pk, vote_type):
     # Check if this is an AJAX request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         # Get the current vote count
-        current_vote_count = comment.vote_count()
+        current_vote_count = comment.vote_count
         
         # Get the user's current vote
         user_vote = 0
@@ -868,7 +868,7 @@ def post_votes_api(request, pk):
     post = get_object_or_404(Post, pk=pk)
     
     # Get current vote count
-    vote_count = post.vote_count()
+    vote_count = post.vote_count
     
     # Get the user's vote on this post
     user_vote = 0
@@ -891,7 +891,7 @@ def comment_votes_api(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     
     # Get current vote count
-    vote_count = comment.vote_count()
+    vote_count = comment.vote_count
     
     # Get the user's vote on this comment
     user_vote = 0
