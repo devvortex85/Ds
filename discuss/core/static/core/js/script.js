@@ -9,6 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const nestingIndicators = document.querySelectorAll('.nesting-indicator');
     console.log("Found nesting indicators:", nestingIndicators.length);
     
+    // Log reply forms for debugging
+    const replyForms = document.querySelectorAll('.reply-form');
+    console.log("Found reply forms:", replyForms.length);
+    replyForms.forEach(form => {
+        console.log("Form ID:", form.id);
+    });
+    
     // Set up comment replies
     setupCommentReplies();
     
@@ -39,6 +46,11 @@ function setupCommentReplies() {
             console.log("Toggling reply form for comment ID:", commentId);
             console.log("Reply form element:", replyForm);
             
+            // First scroll to the comment to make sure it's in view
+            if (replyForm) {
+                replyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
             // Hide all other reply forms first
             document.querySelectorAll('.reply-form').forEach(form => {
                 if (form.id !== `reply-form-${commentId}`) {
@@ -54,7 +66,10 @@ function setupCommentReplies() {
                 if (replyForm.style.display === 'block') {
                     const textarea = replyForm.querySelector('textarea');
                     if (textarea) {
-                        textarea.focus();
+                        // Wait a bit for the form to be visible before focusing
+                        setTimeout(() => {
+                            textarea.focus();
+                        }, 100);
                     }
                 }
             } else {
@@ -88,6 +103,7 @@ function setupCommentReplies() {
 function setupVoting() {
     // AJAX for post votes
     const postVoteButtons = document.querySelectorAll('.post-content .vote-btn');
+    console.log("Found post vote buttons:", postVoteButtons.length);
     
     postVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -97,6 +113,8 @@ function setupVoting() {
                 e.preventDefault();
                 
                 const url = this.getAttribute('href');
+                console.log("Making vote request to:", url);
+                
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -105,6 +123,8 @@ function setupVoting() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Vote response:", data);
+                    
                     // Update the vote count
                     const voteCountElement = this.parentElement.querySelector('.vote-count');
                     if (voteCountElement) {
@@ -141,6 +161,7 @@ function setupVoting() {
     
     // AJAX for comment votes (both top-level and nested)
     const commentVoteButtons = document.querySelectorAll('.list-group-item .vote-btn, .nested-reply .vote-btn');
+    console.log("Found comment vote buttons:", commentVoteButtons.length);
     
     commentVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -149,6 +170,8 @@ function setupVoting() {
                 e.preventDefault();
                 
                 const url = this.getAttribute('href');
+                console.log("Making vote request to:", url);
+                
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -157,6 +180,8 @@ function setupVoting() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Vote response:", data);
+                    
                     // Update the vote count
                     const voteCountElement = this.parentElement.querySelector('.vote-count');
                     if (voteCountElement) {
