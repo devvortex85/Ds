@@ -14,6 +14,15 @@ from .forms import (UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
                    CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm)
 from .filters import PostFilter
 
+def get_unread_notification_count(user):
+    """Helper function to get unread notification count for a user"""
+    if user.is_authenticated:
+        try:
+            return Notification.objects.filter(recipient=user, is_read=False).count()
+        except:
+            return 0
+    return 0
+
 def home(request, template='core/index.html', extra_context=None):
     """
     Homepage view showing a list of posts with various filtering options
@@ -67,6 +76,9 @@ def home(request, template='core/index.html', extra_context=None):
         num_times=Count('taggit_taggeditem_items')
     ).order_by('-num_times')[:10]
     
+    # Get unread notification count for the current user
+    unread_notification_count = get_unread_notification_count(request.user)
+    
     context = {
         'posts': posts,
         'top_communities': top_communities,
@@ -74,6 +86,7 @@ def home(request, template='core/index.html', extra_context=None):
         'active_community': active_community,
         'active_tag': active_tag,
         'active_sort': sort,
+        'unread_notification_count': unread_notification_count,
     }
     
     # Add any extra context if provided
@@ -131,6 +144,7 @@ def profile(request, username):
         'reputation_level': reputation_level,
         'reputation_progress': reputation_progress,
         'profile_user': user,  # Added for template compatibility
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     return render(request, 'core/profile.html', context)
@@ -156,6 +170,7 @@ def edit_profile(request):
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     return render(request, 'core/edit_profile.html', context)
@@ -178,6 +193,7 @@ def community_list(request):
     context = {
         'communities': communities,
         'user_communities': user_communities,
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     return render(request, 'core/community_list.html', context)
@@ -218,6 +234,7 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
         'posts': posts,
         'is_member': is_member,
         'member_count': member_count,
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     # Add any extra context if provided
@@ -287,6 +304,7 @@ def create_text_post(request, community_id):
         'form': form,
         'community': community,
         'post_type': 'text',
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     return render(request, 'core/create_post.html', context)
@@ -331,6 +349,7 @@ def create_link_post(request, community_id):
         'form': form,
         'community': community,
         'post_type': 'link',
+        'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     return render(request, 'core/create_post.html', context)
@@ -384,6 +403,7 @@ def post_detail(request, pk):
         'comment_form': comment_form,
         'user_post_vote': user_post_vote,
         'related_posts': related_posts,
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }
     
     return render(request, 'core/post_detail.html', context)
@@ -578,7 +598,8 @@ def search(request):
                 'communities': 0, 
                 'users': 0,
                 'tags': 0,
-            }
+            },
+            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
         })
     
     try:
@@ -625,6 +646,7 @@ def search(request):
             'tags': tags,
             'result_counts': result_counts,
             'using_fallback': False,
+            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
         })
         
     except Exception as e:
@@ -666,6 +688,7 @@ def search(request):
             'result_counts': result_counts,
             'using_fallback': True,
             'search_error': str(e),
+            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
         })
 
 def advanced_search(request):
@@ -709,6 +732,7 @@ def advanced_search(request):
         'all_tags': all_tags,
         'using_fallback': using_fallback,
         'search_error': search_error,
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }
     
     return render(request, 'core/advanced_search.html', context)

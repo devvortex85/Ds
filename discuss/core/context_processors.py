@@ -6,9 +6,10 @@ def notification_count(request):
     
     if request.user.is_authenticated:
         try:
+            # If the user is logged in, query their unread notifications
             unread_count = request.user.notifications.filter(is_read=False).count()
-        except:
-            # If notification model doesn't exist yet or any other error
+        except Exception as e:
+            # If there's any error, default to 0
             unread_count = 0
     
     return {
