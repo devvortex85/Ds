@@ -1,5 +1,6 @@
 # Node
 node_modules/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -21,6 +22,8 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.pythonlibs/
+.cache/
 
 # Django
 *.log
@@ -55,17 +58,15 @@ attached_assets/
 *.swo
 
 # Cache
-__pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
-.cache/
 
 # Replit specific
 .replit.bak
 .upm/
 .config/
 
+# Generated files 
+generated-icon.png
 
-# Node
-node_modules/
