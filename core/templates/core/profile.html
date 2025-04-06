@@ -61,7 +61,9 @@
                         <div class="interests-section">
                             <small class="text-muted d-block mb-1">Interests:</small>
                             {% for interest in profile_user.profile.interests.all %}
-                                <span class="badge bg-secondary me-1 mb-1">{{ interest.name }}</span>
+                                <a href="/?tag={{ interest.slug }}" class="text-decoration-none">
+                                    <span class="badge bg-secondary me-1 mb-1">{{ interest.name }}</span>
+                                </a>
                             {% endfor %}
                         </div>
                     {% endif %}
