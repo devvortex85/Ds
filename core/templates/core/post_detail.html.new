@@ -92,7 +92,7 @@
                             <i class="fas fa-comment-alt me-1"></i> Login to Comment
                         </a>
                     {% endif %}
-                    {% include "core/includes/social_share_buttons_new.html" %}
+                    {% include "core/includes/social_share_buttons_direct.html" %}
                     </div>
                     
                     {% if user == post.author %}
