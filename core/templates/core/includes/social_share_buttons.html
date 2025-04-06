@@ -9,7 +9,7 @@
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{% post_to_twitter "Check out this post: "|add:post.title object_or_url %}" target="_blank">
+            <a class="dropdown-item" href="{% post_to_twitter 'Check out this post!' object_or_url %}" target="_blank">
                 <i class="fab fa-twitter me-2"></i> Share on Twitter
             </a>
         </li>
@@ -19,7 +19,7 @@
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{% post_to_reddit "Check out this post: "|add:post.title object_or_url %}" target="_blank">
+            <a class="dropdown-item" href="{% post_to_reddit 'Check out this post!' object_or_url %}" target="_blank">
                 <i class="fab fa-reddit me-2"></i> Share on Reddit
             </a>
         </li>
@@ -30,7 +30,7 @@
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{% send_email "Check out this post: "|add:post.title post.title|add:" - "|add:post.content|default:post.url|truncatechars:150 object_or_url %}" target="_blank">
+            <a class="dropdown-item" href="{% send_email 'Check out this post!' 'I thought you might be interested in this post.' object_or_url %}" target="_blank">
                 <i class="fas fa-envelope me-2"></i> Email
             </a>
         </li>
