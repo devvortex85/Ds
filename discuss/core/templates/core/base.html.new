@@ -40,8 +40,6 @@
             max-width: 100%;
             height: auto;
         }
-            height: auto;
-        }
         .fa-arrow-up {
             color: #6c757d;
         }
@@ -142,7 +140,7 @@
                             <a class="nav-link position-relative" href="{% url 'postman:inbox' %}" title="Private Messages">
                                 <i class="fas fa-envelope"></i>
                                 {% load postman_tags %}
-                                {% postman_unread as messages_count %}
+                                {% with user.get_username as username %}{% postman_unread username as messages_count %}{% endwith %}
                                 {% if messages_count > 0 %}
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                         {{ messages_count }}
@@ -180,7 +178,13 @@
                                         <i class="fas fa-envelope me-2"></i> Messages
                                     </a>
                                 </li>
+                                <li>
                                     <a class="dropdown-item" href="{% url 'donation_history' %}">
+                                        <i class="fas fa-history me-2"></i> Donation History
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
                                     <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item">
@@ -262,3 +266,6 @@
     <!-- Core App Script -->
     <script src="{% static 'core/js/script.js' %}"></script>
     
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

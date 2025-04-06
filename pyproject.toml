@@ -24,4 +24,5 @@ dependencies = [
     "django-payments>=3.0.1",
     "sentry-sdk>=2.25.1",
     "django-social-share>=2.3.0",
+    "django-postman>=4.5",
 ]

@@ -273,6 +273,18 @@ phonenumberslite = [
 ]
 
 [[package]]
+name = "django-postman"
+version = "4.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/05/3a/8b786c9e36d95dd0b28830f09927ea353d5820178ee49e8b4c999570f239/django_postman-4.5.tar.gz", hash = "sha256:5b6f3ae9c5ebef5744ad5af88ee8063bf0171f09bcec020ed2457a93386b1b13", size = 192300 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/84/b417540b5b1fc8af617e83a874dbafb66b67dc2cf06d3d9401b769299660/django_postman-4.5-py3-none-any.whl", hash = "sha256:3d20ea230a39193e5d192590f8cbad0b0d9fedb5a493799388b767c8ee47282b", size = 265070 },
+]
+
+[[package]]
 name = "django-social-share"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -480,6 +492,7 @@ dependencies = [
     { name = "django-markdownx" },
     { name = "django-mptt" },
     { name = "django-payments" },
+    { name = "django-postman" },
     { name = "django-social-share" },
     { name = "django-taggit" },
     { name = "django-watson" },
@@ -504,6 +517,7 @@ requires-dist = [
     { name = "django-markdownx", specifier = ">=4.0.7" },
     { name = "django-mptt", specifier = ">=0.17.0" },
     { name = "django-payments", specifier = ">=3.0.1" },
+    { name = "django-postman", specifier = ">=4.5" },
     { name = "django-social-share", specifier = ">=2.3.0" },
     { name = "django-taggit", specifier = ">=6.1.0" },
     { name = "django-watson", specifier = ">=1.6.3" },

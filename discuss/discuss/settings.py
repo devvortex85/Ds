@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'mptt',      # For improved hierarchical comment trees
     'watson',    # For advanced full-text search
     'payments',   # For processing payments and donations
+    'postman',    # For private messaging between users
 ]
 
 MIDDLEWARE = [
@@ -255,6 +256,14 @@ PAYMENT_VARIANTS = {
         'public_key': '',
     })
 }
+
+# Django Postman settings
+POSTMAN_DISALLOW_ANONYMOUS = True  # Only authenticated users can use messaging
+POSTMAN_DISALLOW_MULTIRECIPIENTS = False  # Allow sending to multiple recipients
+POSTMAN_DISALLOW_COPIES_ON_REPLY = False  # Allow copies on reply
+POSTMAN_DISABLE_USER_EMAILING = True  # No emails sent for now (can be enabled later)
+POSTMAN_AUTO_MODERATE_AS = True  # Auto-accept all messages
+POSTMAN_SHOW_USER_AS = 'username'  # Display user by username
 
 # Sentry configuration for error tracking
 SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
