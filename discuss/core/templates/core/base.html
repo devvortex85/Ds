@@ -35,7 +35,7 @@
     </style>
     
     <!-- User Guide CSS -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/user-guide.css">
+    <link rel="stylesheet" href="{% static 'css/user-guide.css' %}">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -195,7 +195,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <!-- User Guide Script -->
-    <script src="{{ STATIC_URL }}js/user-guide.js"></script>
+    <script src="{% static 'js/user-guide.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

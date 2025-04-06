@@ -1,6 +1,94 @@
-/**
- * User Guide Styling
- */
+/* User Guide CSS */
+.user-guide-step {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.user-guide-step .step-number {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-guide-step h3 {
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.user-guide-navigation {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.guide-tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 0.875rem;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.guide-tooltip.show {
+    opacity: 1;
+}
+
+.guide-tooltip-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.guide-tooltip-content {
+    margin-bottom: 12px;
+}
+
+.guide-tooltip-arrow {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    transform: rotate(45deg);
+}
+
+.guide-tooltip .btn-next {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.guide-tooltip .btn-skip {
+    background: none;
+    border: none;
+    color: #6c757d;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.guide-highlighted {
+    position: relative;
+    z-index: 1060;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
+    border-radius: 4px;
+}
 
 .guide-overlay {
     position: fixed;
@@ -9,76 +97,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-}
-
-.guide-highlight {
-    position: absolute;
-    z-index: 9999;
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
-    border-radius: 4px;
+    z-index: 1050;
     pointer-events: none;
-}
-
-.guide-tooltip {
-    position: absolute;
-    z-index: 10000;
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-width: 300px;
-}
-
-.guide-tooltip h4 {
-    margin-top: 0;
-    color: #0d6efd;
-    font-size: 1.2rem;
-}
-
-.guide-tooltip p {
-    margin-bottom: 15px;
-}
-
-.tooltip-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.guide-navigation {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.guide-step {
-    border-left: 4px solid #0d6efd;
-    padding-left: 15px;
-    margin-bottom: 20px;
-}
-
-.guide-step h3 {
-    color: #0d6efd;
-}
-
-/* Position modifiers */
-.guide-tooltip.top {
-    transform: translate(-50%, -100%);
-    margin-top: -10px;
-}
-
-.guide-tooltip.bottom {
-    transform: translate(-50%, 0);
-    margin-top: 10px;
-}
-
-.guide-tooltip.left {
-    transform: translate(-100%, -50%);
-    margin-left: -10px;
-}
-
-.guide-tooltip.right {
-    transform: translate(0, -50%);
-    margin-left: 10px;
 }
