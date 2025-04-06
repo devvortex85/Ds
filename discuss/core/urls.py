@@ -34,6 +34,10 @@ urlpatterns = [
     path('vote/post/<int:pk>/<str:vote_type>/', views.vote_post, name='vote_post'),
     path('vote/comment/<int:pk>/<str:vote_type>/', views.vote_comment, name='vote_comment'),
     
+    # API endpoints for AJAX
+    path('api/post/<int:pk>/votes/', views.post_votes_api, name='post_votes_api'),
+    path('api/comment/<int:pk>/votes/', views.comment_votes_api, name='comment_votes_api'),
+    
     # Search
     path('search/', views.search, name='search'),
     path('search/advanced/', views.advanced_search, name='advanced_search'),

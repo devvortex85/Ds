@@ -547,17 +547,6 @@ def vote_post(request, pk, vote_type):
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Get the referring page or default to post detail
-    next_url = request.GET.get('next', '')
-    if not next_url:
-        next_url = reverse('post_detail', kwargs={'pk': pk})
-    
-    # Add fragment identifier if present (for comment anchors)
-    fragment = ''
-    if '#' in next_url:
-        next_url, fragment = next_url.split('#', 1)
-        fragment = '#' + fragment
-    
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
@@ -579,7 +568,37 @@ def vote_post(request, pk, vote_type):
     # Update the author's karma
     post.author.profile.update_karma()
     
-    # Redirect back to the referring page with any fragment
+    # Check if this is an AJAX request
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        # Get the current vote count
+        current_vote_count = post.vote_count()
+        
+        # Get the user's current vote
+        user_vote = 0
+        try:
+            vote = Vote.objects.get(user=request.user, post=post)
+            user_vote = vote.value
+        except Vote.DoesNotExist:
+            pass
+        
+        # Return JSON response
+        return JsonResponse({
+            'post_id': post.id,
+            'vote_count': current_vote_count,
+            'user_vote': user_vote
+        })
+    
+    # For non-AJAX requests, redirect back to the referring page
+    next_url = request.GET.get('next', '')
+    if not next_url:
+        next_url = reverse('post_detail', kwargs={'pk': pk})
+    
+    # Add fragment identifier if present (for anchors)
+    fragment = ''
+    if '#' in next_url:
+        next_url, fragment = next_url.split('#', 1)
+        fragment = '#' + fragment
+    
     return redirect(next_url + fragment)
 
 @login_required
@@ -588,22 +607,6 @@ def vote_comment(request, pk, vote_type):
     Vote on a comment (upvote or downvote)
     """
     comment = get_object_or_404(Comment, pk=pk)
-    
-    # Get the referring page or default to post detail
-    next_url = request.GET.get('next', '')
-    if not next_url:
-        next_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
-    
-    # Add fragment identifier if present (for comment anchors)
-    fragment = ''
-    if '#' in next_url:
-        next_url, fragment = next_url.split('#', 1)
-        fragment = '#' + fragment
-    else:
-        # If no fragment and we're on a post detail page, add a fragment to scroll to the comment
-        post_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
-        if post_url in next_url:
-            fragment = f'#comment-{comment.id}'
     
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
@@ -626,7 +629,42 @@ def vote_comment(request, pk, vote_type):
     # Update the author's karma
     comment.author.profile.update_karma()
     
-    # Redirect back to the referring page with any fragment
+    # Check if this is an AJAX request
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        # Get the current vote count
+        current_vote_count = comment.vote_count()
+        
+        # Get the user's current vote
+        user_vote = 0
+        try:
+            vote = Vote.objects.get(user=request.user, comment=comment)
+            user_vote = vote.value
+        except Vote.DoesNotExist:
+            pass
+        
+        # Return JSON response
+        return JsonResponse({
+            'comment_id': comment.id,
+            'vote_count': current_vote_count,
+            'user_vote': user_vote
+        })
+    
+    # For non-AJAX requests, redirect back to the referring page
+    next_url = request.GET.get('next', '')
+    if not next_url:
+        next_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
+    
+    # Add fragment identifier if present (for comment anchors)
+    fragment = ''
+    if '#' in next_url:
+        next_url, fragment = next_url.split('#', 1)
+        fragment = '#' + fragment
+    else:
+        # If no fragment and we're on a post detail page, add a fragment to scroll to the comment
+        post_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
+        if post_url in next_url:
+            fragment = f'#comment-{comment.id}'
+    
     return redirect(next_url + fragment)
 
 def search(request):
@@ -823,3 +861,49 @@ def mark_all_notifications_read(request):
     
     # Otherwise redirect back to the notifications list
     return redirect('notifications_list')
+
+@login_required
+def post_votes_api(request, pk):
+    """API endpoint to get post vote count and user's vote"""
+    post = get_object_or_404(Post, pk=pk)
+    
+    # Get current vote count
+    vote_count = post.vote_count()
+    
+    # Get the user's vote on this post
+    user_vote = 0
+    try:
+        vote = Vote.objects.get(user=request.user, post=post)
+        user_vote = vote.value
+    except Vote.DoesNotExist:
+        pass
+    
+    # Return JSON response
+    return JsonResponse({
+        'post_id': post.id,
+        'vote_count': vote_count,
+        'user_vote': user_vote
+    })
+
+@login_required
+def comment_votes_api(request, pk):
+    """API endpoint to get comment vote count and user's vote"""
+    comment = get_object_or_404(Comment, pk=pk)
+    
+    # Get current vote count
+    vote_count = comment.vote_count()
+    
+    # Get the user's vote on this comment
+    user_vote = 0
+    try:
+        vote = Vote.objects.get(user=request.user, comment=comment)
+        user_vote = vote.value
+    except Vote.DoesNotExist:
+        pass
+    
+    # Return JSON response
+    return JsonResponse({
+        'comment_id': comment.id,
+        'vote_count': vote_count,
+        'user_vote': user_vote
+    })
