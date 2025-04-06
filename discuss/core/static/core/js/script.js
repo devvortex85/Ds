@@ -43,11 +43,6 @@ function setupCommentReplies() {
             console.log("Toggling reply form for comment ID:", commentId);
             console.log("Reply form element:", replyForm);
             
-            // First scroll to the comment to make sure it's in view
-            if (replyForm) {
-                replyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            
             // Hide all other reply forms first
             document.querySelectorAll('.reply-form').forEach(form => {
                 if (form.id !== `reply-form-${commentId}`) {
@@ -57,17 +52,22 @@ function setupCommentReplies() {
             
             // Toggle this reply form
             if (replyForm) {
-                replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                // Toggle visibility
+                const isCurrentlyHidden = replyForm.style.display === 'none' || replyForm.style.display === '';
+                replyForm.style.display = isCurrentlyHidden ? 'block' : 'none';
                 
-                // Focus on the textarea if showing the form
-                if (replyForm.style.display === 'block') {
-                    const textarea = replyForm.querySelector('textarea');
-                    if (textarea) {
-                        // Wait a bit for the form to be visible before focusing
-                        setTimeout(() => {
+                // If showing the form, scroll to it and focus
+                if (isCurrentlyHidden) {
+                    // Scroll to the form (with a small delay to ensure display change has taken effect)
+                    setTimeout(() => {
+                        replyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Focus on the textarea
+                        const textarea = replyForm.querySelector('textarea');
+                        if (textarea) {
                             textarea.focus();
-                        }, 100);
-                    }
+                        }
+                    }, 50);
                 }
             } else {
                 console.error("Reply form not found for comment ID:", commentId);

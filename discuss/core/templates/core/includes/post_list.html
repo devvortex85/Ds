@@ -2,13 +2,13 @@
 
 {% paginate posts %}
 {% for post in posts %}
-<div class="card mb-3 post-card">
+<div class="card mb-3 post-card" id="post-{{ post.id }}">
     <div class="card-body">
         <div class="d-flex">
             <!-- Votes section -->
             <div class="vote-controls me-3">
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ request.path }}" class="vote-btn upvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active{% endif %}">
+                <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ request.path }}#post-{{ post.id }}" class="vote-btn upvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active{% endif %}">
                     <i class="fas fa-arrow-up"></i>
                 </a>
                 {% else %}
@@ -20,7 +20,7 @@
                 <div class="vote-count" id="post-{{ post.id }}-votes">{{ post.vote_count }}</div>
                 
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}" class="vote-btn downvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active{% endif %}">
+                <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}#post-{{ post.id }}" class="vote-btn downvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active{% endif %}">
                     <i class="fas fa-arrow-down"></i>
                 </a>
                 {% else %}
@@ -30,60 +30,62 @@
                 {% endif %}
             </div>
             
-            <!-- Post content -->
+            <!-- Content section -->
             <div class="post-content">
-                <!-- Post header info -->
-                <div class="post-meta mb-2">
-                    <a href="{% url 'community_detail' post.community.id %}" class="community-link">d/{{ post.community.name }}</a>
-                    <span class="text-muted">• Posted by 
-                        <a href="{% url 'profile' post.author.username %}" class="user-link">u/{{ post.author.username }}</a>
-                        {% if post.author.profile.country %}
-                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" /> 
-                        {% endif %}
-                        {{ post.created_at|timesince }} ago
-                    </span>
-                </div>
-                
-                <!-- Post title -->
-                <h5 class="card-title">
-                    <a href="{% url 'post_detail' post.id %}" class="post-title-link">{{ post.title }}</a>
-                    {% if post.post_type == 'link' %}
-                    <small><a href="{{ post.url }}" target="_blank" class="text-muted url-link">
-                        <i class="fas fa-external-link-alt"></i> {{ post.url|truncatechars:30 }}
-                    </a></small>
-                    {% endif %}
+                {% if post.post_type == 'link' %}
+                <h5 class="card-title mb-1">
+                    <a href="{{ post.url }}" target="_blank" class="post-title">{{ post.title }}</a>
+                    <small class="text-muted">
+                        <i class="fas fa-external-link-alt fa-xs"></i>
+                    </small>
                 </h5>
+                {% else %}
+                <h5 class="card-title mb-1">
+                    <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                </h5>
+                {% endif %}
                 
-                <!-- Post content preview -->
+                <div class="post-meta small text-muted mb-1">
+                    Posted {{ post.created_at|timesince }} ago by 
+                    <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">
+                        {{ post.author.username }}
+                    </a>
+                    
+                    {% if post.author.profile.country %}
+                    <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" title="{{ post.author.profile.country.name }}" style="width: 20px; height: 13px; vertical-align: middle;" />
+                    {% endif %}
+                    
+                    {{ post.author.profile.karma|reputation_badge }}
+                    
+                    <span class="mx-1">in</span>
+                    <a href="{% url 'community_detail' post.community.id %}" class="community-link">r/{{ post.community.name }}</a>
+                </div>
+                
                 {% if post.post_type == 'text' and post.content %}
-                <div class="post-preview">
-                    <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                <div class="post-content-preview small text-muted">
+                    {{ post.content|truncatewords:50 }}
                 </div>
                 {% endif %}
                 
-                <!-- Post tags -->
-                {% if post.tags.all %}
-                <div class="post-tags mb-2">
-                    {% for tag in post.tags.all %}
-                        <a href="{% url 'home' %}?tag={{ tag.slug }}" class="badge bg-light text-dark text-decoration-none me-1">
-                            <i class="fas fa-tag me-1"></i>{{ tag.name }}
+                <div class="post-actions small mt-2">
+                    <a href="{% url 'post_detail' post.id %}" class="text-muted me-3">
+                        <i class="far fa-comment"></i> {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
+                    </a>
+                    
+                    {% if user.is_authenticated and user == post.author %}
+                    <a href="{% url 'delete_post' post.id %}" class="text-danger me-3" onclick="return confirm('Are you sure you want to delete this post?')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                    {% endif %}
+                    
+                    {% if post.tags.count > 0 %}
+                    <div class="post-tags mt-2">
+                        {% for tag in post.tags.all %}
+                        <a href="{% url 'advanced_search' %}?tags={{ tag.slug }}" class="tag-link">
+                            #{{ tag.name }}
                         </a>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                
-                <!-- Post footer actions -->
-                <div class="post-actions mt-2">
-                    <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-comment"></i> {% if post.comment_count_anno is not None %}{{ post.comment_count_anno }}{% else %}{{ post.comments.count }}{% endif %} Comments
-                    </a>
-                    <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-share"></i> Share
-                    </a>
-                    {% if user == post.author %}
-                    <a href="{% url 'delete_post' post.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this post?')">
-                        <i class="fas fa-trash"></i> Delete
-                    </a>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -91,14 +93,46 @@
     </div>
 </div>
 {% empty %}
-<div class="card mb-4">
-    <div class="card-body text-center">
-        <p class="text-muted">No posts yet...</p>
-        {% if community and is_member %}
-        <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary">Create the first post</a>
-        {% endif %}
-    </div>
+<div class="alert alert-info mt-3">
+    <p class="mb-0">No posts found.</p>
 </div>
 {% endfor %}
 
-{% show_more %}
+{% get_pages %}
+{% if pages.paginated %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if pages.previous %}
+        <li class="page-item">
+            <a class="page-link" href="{{ pages.previous.path }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+        
+        {% for page in pages %}
+        {% if page == pages.current %}
+        <li class="page-item active"><span class="page-link">{{ page.number }}</span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="{{ page.path }}">{{ page.number }}</a></li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if pages.next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ pages.next.path }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

@@ -4,7 +4,7 @@
 
 <div class="list-group list-group-flush">
     {% for root_comment in comments %}
-        <div class="list-group-item p-3">
+        <div id="comment-{{ root_comment.id }}" class="list-group-item p-3">
             <div class="d-flex">
                 <!-- Comment Voting -->
                 <div class="vote-column text-center me-3">
@@ -89,7 +89,7 @@
                     {% if not root_comment.is_leaf_node %}
                     <div class="nested-comments mt-3">
                         {% for node in root_comment.get_descendants %}
-                        <div class="nested-reply mb-3">
+                        <div id="comment-{{ node.id }}" class="nested-reply mb-3">
                             <!-- Add color-coded nesting indicator based on parent -->
                             <div class="nesting-indicator nesting-color-{{ node.parent_id|nesting_color }}"></div>
                             

@@ -513,9 +513,10 @@ def add_comment(request, post_id):
                     'comment_id': comment.id,
                 })
             
-            # Otherwise redirect to the post detail page
+            # Otherwise redirect to the post detail page with fragment to the new comment
             messages.success(request, 'Your comment has been added!')
-            return redirect('post_detail', pk=post_id)
+            url = reverse('post_detail', kwargs={'pk': post_id}) + f'#comment-{comment.id}'
+            return redirect(url)
     
     # If we get here, there was an error
     return redirect('post_detail', pk=post_id)
@@ -551,6 +552,12 @@ def vote_post(request, pk, vote_type):
     if not next_url:
         next_url = reverse('post_detail', kwargs={'pk': pk})
     
+    # Add fragment identifier if present (for comment anchors)
+    fragment = ''
+    if '#' in next_url:
+        next_url, fragment = next_url.split('#', 1)
+        fragment = '#' + fragment
+    
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
@@ -558,7 +565,7 @@ def vote_post(request, pk, vote_type):
     try:
         vote = Vote.objects.get(user=request.user, post=post)
         
-        # If same vote type, remove the vote
+        # If same vote type, remove the vote (toggle off)
         if vote.value == vote_value:
             vote.delete()
         else:
@@ -572,8 +579,8 @@ def vote_post(request, pk, vote_type):
     # Update the author's karma
     post.author.profile.update_karma()
     
-    # Redirect back to the referring page
-    return redirect(next_url)
+    # Redirect back to the referring page with any fragment
+    return redirect(next_url + fragment)
 
 @login_required
 def vote_comment(request, pk, vote_type):
@@ -587,6 +594,17 @@ def vote_comment(request, pk, vote_type):
     if not next_url:
         next_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
     
+    # Add fragment identifier if present (for comment anchors)
+    fragment = ''
+    if '#' in next_url:
+        next_url, fragment = next_url.split('#', 1)
+        fragment = '#' + fragment
+    else:
+        # If no fragment and we're on a post detail page, add a fragment to scroll to the comment
+        post_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
+        if post_url in next_url:
+            fragment = f'#comment-{comment.id}'
+    
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
@@ -594,7 +612,7 @@ def vote_comment(request, pk, vote_type):
     try:
         vote = Vote.objects.get(user=request.user, comment=comment)
         
-        # If same vote type, remove the vote
+        # If same vote type, remove the vote (toggle off)
         if vote.value == vote_value:
             vote.delete()
         else:
@@ -608,8 +626,8 @@ def vote_comment(request, pk, vote_type):
     # Update the author's karma
     comment.author.profile.update_karma()
     
-    # Redirect back to the referring page
-    return redirect(next_url)
+    # Redirect back to the referring page with any fragment
+    return redirect(next_url + fragment)
 
 def search(request):
     """
