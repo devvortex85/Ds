@@ -68,7 +68,7 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write a comment...', 'rows': 3}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write a comment...', 'rows': 2}),
         }
 
 class SearchForm(forms.Form):
