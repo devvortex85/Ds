@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q, Count, Sum, Case, When, F, IntegerField
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from el_pagination.decorators import page_template
 from taggit.models import Tag
 # from notifications.signals import notify  # Temporarily disabled
 from watson import search as watson
+import sentry_sdk
 
 from .models import Profile, Community, Post, Comment, Vote
 from .forms import (
@@ -491,3 +492,11 @@ def advanced_search(request):
     }
     
     return render(request, 'core/advanced_search.html', context)
+
+def sentry_test(request):
+    """
+    View to test Sentry error reporting functionality.
+    Deliberately raises a ZeroDivisionError to trigger Sentry.
+    """
+    division_by_zero = 1 / 0
+    return HttpResponse("This should never be displayed because an error is raised.")

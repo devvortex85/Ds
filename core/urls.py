@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -36,4 +36,7 @@ urlpatterns = [
     
     # Search
     path('search/', views.search, name='search'),
+    
+    # Test route for Sentry error reporting
+    path('sentry-test/', views.sentry_test, name='sentry_test'),
 ]
