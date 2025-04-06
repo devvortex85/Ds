@@ -197,6 +197,7 @@ class Vote(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes', null=True, blank=True)
     value = models.SmallIntegerField(choices=VOTE_CHOICES)
+    created_at = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         target = self.post if self.post else self.comment
@@ -299,3 +300,43 @@ class Notification(models.Model):
                 continue
                 
         return created_notifications
+        
+    @classmethod
+    def create_vote_notification(cls, vote):
+        """Create notification when a user receives an upvote on their post or comment"""
+        # Only notify for upvotes (value=1), not downvotes
+        if vote.value != 1:
+            return None
+            
+        if vote.post:
+            # This is a post vote
+            # Don't notify if user is voting on their own post
+            if vote.user == vote.post.author:
+                return None
+                
+            notification = cls.objects.create(
+                recipient=vote.post.author,
+                sender=vote.user,
+                notification_type='vote',
+                post=vote.post,
+                text=f"{vote.user.username} upvoted your post '{vote.post.title}'"
+            )
+            return notification
+            
+        elif vote.comment:
+            # This is a comment vote
+            # Don't notify if user is voting on their own comment
+            if vote.user == vote.comment.author:
+                return None
+                
+            notification = cls.objects.create(
+                recipient=vote.comment.author,
+                sender=vote.user,
+                notification_type='vote',
+                post=vote.comment.post,
+                comment=vote.comment,
+                text=f"{vote.user.username} upvoted your comment on '{vote.comment.post.title}'"
+            )
+            return notification
+            
+        return None
