@@ -21,7 +21,7 @@
                     </a>
                 {% endif %}
                 
-                <div class="vote-count fw-bold my-1">{{ post.vote_count }}</div>
+                <div id="post-{{ post.id }}-votes" class="vote-count fw-bold my-1">{{ post.vote_count }}</div>
                 
                 {% if user.is_authenticated %}
                     <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}" class="d-block text-decoration-none {% if user_post_vote == -1 %}voted{% endif %}">

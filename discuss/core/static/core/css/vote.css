@@ -1,0 +1,29 @@
+/* 
+ * Vote styling for Discuss platform
+ * This ensures vote buttons are properly styled when active
+ */
+
+/* Default vote button colors */
+.fa-arrow-up, .fa-arrow-down {
+    transition: color 0.2s ease;
+}
+
+/* Active vote button colors */
+.voted .fa-arrow-up, 
+a.voted .fa-arrow-up {
+    color: #FF4500 !important;
+}
+
+.voted .fa-arrow-down, 
+a.voted .fa-arrow-down {
+    color: #7193FF !important;
+}
+
+/* Hover effects */
+a:hover .fa-arrow-up:not(.voted) {
+    color: rgba(255, 69, 0, 0.7) !important;
+}
+
+a:hover .fa-arrow-down:not(.voted) {
+    color: rgba(113, 147, 255, 0.7) !important;
+}

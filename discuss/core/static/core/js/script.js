@@ -82,11 +82,16 @@ function setupCommentReplies() {
 }
 
 function setupAjaxVoting() {
+    console.log("Setting up AJAX voting");
+    
     // For post votes
     const postVoteButtons = document.querySelectorAll('a[href*="vote/post"]');
+    console.log("Found post vote buttons:", postVoteButtons.length);
+    
     postVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log("Post vote button clicked:", this.href);
             
             // Only process authenticated user clicks
             if (this.href.includes('login')) {
@@ -102,30 +107,43 @@ function setupAjaxVoting() {
             })
             .then(response => response.json())
             .then(data => {
+                console.log("Vote response data:", data);
+                
                 // Update the vote count display
                 const postId = data.post_id;
                 const voteCountElement = document.getElementById(`post-${postId}-votes`);
                 if (voteCountElement) {
                     voteCountElement.textContent = data.vote_count;
+                    console.log(`Updated vote count to ${data.vote_count}`);
+                } else {
+                    console.error(`Vote count element not found for post-${postId}-votes`);
                 }
                 
                 // Update active state of vote buttons
                 const upvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/upvote"]`);
                 const downvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/downvote"]`);
                 
+                console.log("Found upvote buttons:", upvoteButtons.length);
+                console.log("Found downvote buttons:", downvoteButtons.length);
+                console.log("Current user vote value:", data.user_vote);
+                
                 upvoteButtons.forEach(btn => {
                     if (data.user_vote === 1) {
-                        btn.classList.add('active');
+                        btn.classList.add('voted');
+                        console.log("Added 'voted' class to upvote button");
                     } else {
-                        btn.classList.remove('active');
+                        btn.classList.remove('voted');
+                        console.log("Removed 'voted' class from upvote button");
                     }
                 });
                 
                 downvoteButtons.forEach(btn => {
                     if (data.user_vote === -1) {
-                        btn.classList.add('active');
+                        btn.classList.add('voted');
+                        console.log("Added 'voted' class to downvote button");
                     } else {
-                        btn.classList.remove('active');
+                        btn.classList.remove('voted');
+                        console.log("Removed 'voted' class from downvote button");
                     }
                 });
             })
@@ -137,9 +155,12 @@ function setupAjaxVoting() {
     
     // For comment votes
     const commentVoteButtons = document.querySelectorAll('a[href*="vote/comment"]');
+    console.log("Found comment vote buttons:", commentVoteButtons.length);
+    
     commentVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log("Comment vote button clicked:", this.href);
             
             // Only process authenticated user clicks
             if (this.href.includes('login')) {
@@ -155,6 +176,8 @@ function setupAjaxVoting() {
             })
             .then(response => response.json())
             .then(data => {
+                console.log("Comment vote response data:", data);
+                
                 // Update the vote count display
                 const commentId = data.comment_id;
                 const commentElement = document.getElementById(`comment-${commentId}`);
@@ -162,27 +185,40 @@ function setupAjaxVoting() {
                     const voteCountElement = commentElement.querySelector('.vote-count');
                     if (voteCountElement) {
                         voteCountElement.textContent = data.vote_count;
+                        console.log(`Updated comment vote count to ${data.vote_count}`);
+                    } else {
+                        console.error(`Vote count element not found for comment ${commentId}`);
                     }
                     
                     // Update vote button styles
                     const upvoteBtn = commentElement.querySelector('a[href*="upvote"]');
                     const downvoteBtn = commentElement.querySelector('a[href*="downvote"]');
                     
+                    console.log("Found comment upvote button:", upvoteBtn ? "yes" : "no");
+                    console.log("Found comment downvote button:", downvoteBtn ? "yes" : "no");
+                    console.log("Current user comment vote value:", data.user_vote);
+                    
                     if (upvoteBtn) {
                         if (data.user_vote === 1) {
                             upvoteBtn.classList.add('voted');
+                            console.log("Added 'voted' class to comment upvote button");
                         } else {
                             upvoteBtn.classList.remove('voted');
+                            console.log("Removed 'voted' class from comment upvote button");
                         }
                     }
                     
                     if (downvoteBtn) {
                         if (data.user_vote === -1) {
                             downvoteBtn.classList.add('voted');
+                            console.log("Added 'voted' class to comment downvote button");
                         } else {
                             downvoteBtn.classList.remove('voted');
+                            console.log("Removed 'voted' class from comment downvote button");
                         }
                     }
+                } else {
+                    console.error(`Comment element not found for comment-${commentId}`);
                 }
             })
             .catch(error => {
