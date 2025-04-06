@@ -10,6 +10,7 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 - Commenting with nested replies
 - Advanced search functionality
 - User profiles with reputation system
+- Voting system for posts and comments
 
 ## Technologies
 
@@ -17,4 +18,4 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 - PostgreSQL database
 - Responsive web design with Bootstrap
 
-# Test commit
+# Repository Synchronization Complete
