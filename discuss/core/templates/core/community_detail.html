@@ -65,7 +65,7 @@
                             <!-- Voting -->
                             <div class="vote-column text-center me-3">
                                 {% if user.is_authenticated %}
-                                    <a href="{% url 'vote_post' post.id 'upvote' %}" class="vote-btn upvote-btn d-block text-decoration-none">
+                                    <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}" class="vote-btn upvote-btn d-block text-decoration-none">
                                         <i class="fas fa-arrow-up"></i>
                                     </a>
                                 {% else %}
@@ -77,7 +77,7 @@
                                 <div class="vote-count fw-bold my-1">{{ post.vote_count }}</div>
                                 
                                 {% if user.is_authenticated %}
-                                    <a href="{% url 'vote_post' post.id 'downvote' %}" class="vote-btn downvote-btn d-block text-decoration-none">
+                                    <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}" class="vote-btn downvote-btn d-block text-decoration-none">
                                         <i class="fas fa-arrow-down"></i>
                                     </a>
                                 {% else %}

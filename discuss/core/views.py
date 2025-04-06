@@ -546,6 +546,11 @@ def vote_post(request, pk, vote_type):
     """
     post = get_object_or_404(Post, pk=pk)
     
+    # Get the referring page or default to post detail
+    next_url = request.GET.get('next', '')
+    if not next_url:
+        next_url = reverse('post_detail', kwargs={'pk': pk})
+    
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
@@ -556,31 +561,19 @@ def vote_post(request, pk, vote_type):
         # If same vote type, remove the vote
         if vote.value == vote_value:
             vote.delete()
-            action = 'removed'
         else:
             # If different vote type, update the vote
             vote.value = vote_value
             vote.save()
-            action = 'changed'
     except Vote.DoesNotExist:
         # Create a new vote
         Vote.objects.create(user=request.user, post=post, value=vote_value)
-        action = 'added'
     
     # Update the author's karma
     post.author.profile.update_karma()
     
-    # If AJAX request, return a JSON response
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({
-            'success': True,
-            'action': action,
-            'vote_type': vote_type,
-            'vote_count': post.vote_count(),
-        })
-    
-    # Otherwise redirect to the post detail page
-    return redirect('post_detail', pk=pk)
+    # Redirect back to the referring page
+    return redirect(next_url)
 
 @login_required
 def vote_comment(request, pk, vote_type):
@@ -588,6 +581,11 @@ def vote_comment(request, pk, vote_type):
     Vote on a comment (upvote or downvote)
     """
     comment = get_object_or_404(Comment, pk=pk)
+    
+    # Get the referring page or default to post detail
+    next_url = request.GET.get('next', '')
+    if not next_url:
+        next_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
     
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
@@ -599,31 +597,19 @@ def vote_comment(request, pk, vote_type):
         # If same vote type, remove the vote
         if vote.value == vote_value:
             vote.delete()
-            action = 'removed'
         else:
             # If different vote type, update the vote
             vote.value = vote_value
             vote.save()
-            action = 'changed'
     except Vote.DoesNotExist:
         # Create a new vote
         Vote.objects.create(user=request.user, comment=comment, value=vote_value)
-        action = 'added'
     
     # Update the author's karma
     comment.author.profile.update_karma()
     
-    # If AJAX request, return a JSON response
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({
-            'success': True,
-            'action': action,
-            'vote_type': vote_type,
-            'vote_count': comment.vote_count(),
-        })
-    
-    # Otherwise redirect to the post detail page
-    return redirect('post_detail', pk=comment.post.pk)
+    # Redirect back to the referring page
+    return redirect(next_url)
 
 def search(request):
     """
