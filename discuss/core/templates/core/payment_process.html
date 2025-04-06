@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Processing Payment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Payment Processing</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <p class="lead mb-0">Please complete your payment below:</p>
+                    </div>
+                    
+                    <div class="payment-details mb-4">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-center mb-4">Connecting to payment provider...</h5>
+                        
+                        {% if form %}
+                            <div class="payment-form-container">
+                                {{ form.action_url }}
+                                {{ form.as_p }}
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="process-payment-btn">
+                                        Complete Payment
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function() {
+        // Auto-submit the form if it's a redirect form
+        if ($('.payment-form-container form').length) {
+            // Hide the spinner after a short delay
+            setTimeout(function() {
+                $('.spinner-border').hide();
+                $('h5.text-center').text('Please complete the payment process below:');
+            }, 1000);
+        } else {
+            // Automatically redirect if no form present
+            $('#process-payment-btn').click();
+        }
+    });
+</script>
+{% endblock %}

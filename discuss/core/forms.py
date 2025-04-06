@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Community, Post, Comment
+from .models import Profile, Community, Post, Comment, Payment
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -77,3 +77,50 @@ class SearchForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search...'}),
     )
+
+class DonationForm(forms.ModelForm):
+    custom_amount = forms.DecimalField(
+        required=False,
+        min_value=1,
+        max_value=1000,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Custom amount (optional)',
+            'step': '0.01',
+            'min': '1',
+            'max': '1000'
+        })
+    )
+    
+    community = forms.ModelChoiceField(
+        queryset=Community.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control form-select'}),
+        help_text="Support a specific community (optional)"
+    )
+    
+    class Meta:
+        model = Payment
+        fields = ['donation_type', 'custom_amount', 'community', 'description']
+        widgets = {
+            'donation_type': forms.RadioSelect(attrs={'class': 'donation-option'}),
+            'description': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Reason for donation (optional)'
+            }),
+        }
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        donation_type = cleaned_data.get('donation_type')
+        custom_amount = cleaned_data.get('custom_amount')
+        
+        if custom_amount:
+            # If custom amount is provided, use it instead of the predefined amount
+            cleaned_data['amount'] = custom_amount
+        else:
+            # Use the selected donation amount
+            cleaned_data['amount'] = donation_type
+            
+        return cleaned_data

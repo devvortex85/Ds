@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0">Payment Successful</h2>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <h3 class="mb-3">Thank You for Your Support!</h3>
+                    
+                    <p class="lead mb-4">Your donation of <strong>${{ payment.amount }}</strong> has been processed successfully.</p>
+                    
+                    <div class="alert alert-info">
+                        <p class="mb-0">Your support helps keep Discuss running and growing. We've added a special donor badge to your profile!</p>
+                    </div>
+                    
+                    <div class="donation-details mb-4">
+                        <table class="table">
+                            <tr>
+                                <th>Transaction ID:</th>
+                                <td>{{ payment.transaction_id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date:</th>
+                                <td>{{ payment.created_at|date:"F j, Y, g:i a" }}</td>
+                            </tr>
+                            {% if payment.community %}
+                            <tr>
+                                <th>Community:</th>
+                                <td>{{ payment.community.name }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'donation_history' %}" class="btn btn-outline-primary">View Donation History</a>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Return to Homepage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -8,10 +8,12 @@ from django.http import JsonResponse, HttpResponseForbidden, HttpResponseRedirec
 from django.urls import reverse
 from taggit.models import Tag
 from watson import search as watson
+from payments import get_payment_model, RedirectNeeded
 
-from .models import Profile, Community, Post, Comment, Vote, Notification
+from .models import Profile, Community, Post, Comment, Vote, Notification, Payment
 from .forms import (UserRegisterForm, UserUpdateForm, ProfileUpdateForm, 
-                   CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm)
+                   CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm,
+                   DonationForm)
 from .filters import PostFilter
 
 def get_unread_notification_count(user):
@@ -919,3 +921,130 @@ def comment_votes_api(request, pk):
         'vote_count': vote_count,
         'user_vote': user_vote
     })
+
+# Donation/Payment Views
+@login_required
+def donation_view(request):
+    """View for creating a new donation"""
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            payment.user = request.user
+            payment.variant = 'default'  # Start with the default payment processor
+            payment.currency = 'USD'
+            payment.description = f"Donation to Discuss by {request.user.username}"
+            payment.billing_first_name = request.user.username
+            payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
+            payment.save()
+            
+            # Store the payment ID in the session for later reference
+            request.session['payment_id'] = payment.id
+            
+            # Redirect to confirmation page
+            return redirect('donation_confirmation')
+    else:
+        form = DonationForm()
+        
+    context = {
+        'form': form,
+        'unread_notification_count': get_unread_notification_count(request.user)
+    }
+    
+    return render(request, 'core/donation.html', context)
+
+@login_required
+def donation_confirmation(request):
+    """Confirm donation details before processing"""
+    payment_id = request.session.get('payment_id')
+    if not payment_id:
+        messages.error(request, 'No donation in progress. Please start a new donation.')
+        return redirect('donate')
+    
+    try:
+        payment = get_object_or_404(Payment, id=payment_id)
+        
+        # Handle payment confirmation
+        if request.method == 'POST':
+            # Get selected payment method from form
+            variant = request.POST.get('payment_variant', 'default')
+            payment.variant = variant
+            payment.save()
+            
+            # Process payment
+            try:
+                form = payment.get_form()
+                
+                # Handle PayPal and other external redirects
+                return render(request, 'core/payment_process.html', {
+                    'form': form,
+                    'payment': payment,
+                    'unread_notification_count': get_unread_notification_count(request.user)
+                })
+            except RedirectNeeded as redirect_to:
+                return redirect(str(redirect_to))
+        
+        # Display confirmation page
+        context = {
+            'payment': payment,
+            'unread_notification_count': get_unread_notification_count(request.user)
+        }
+        return render(request, 'core/donation_confirmation.html', context)
+        
+    except Payment.DoesNotExist:
+        messages.error(request, 'Donation not found. Please try again.')
+        return redirect('donate')
+
+@login_required
+def payment_success(request):
+    """Payment success page"""
+    payment_id = request.session.get('payment_id')
+    if payment_id:
+        payment = get_object_or_404(Payment, id=payment_id)
+        
+        # Clear the session
+        if 'payment_id' in request.session:
+            del request.session['payment_id']
+            
+        # Add a donation badge for the user or update their profile as needed
+        # This is where you could add gamification features
+            
+        context = {
+            'payment': payment,
+            'unread_notification_count': get_unread_notification_count(request.user)
+        }
+        return render(request, 'core/payment_success.html', context)
+    
+    # If no payment ID in session, redirect to donation history
+    return redirect('donation_history')
+
+@login_required
+def payment_failure(request):
+    """Payment failure page"""
+    payment_id = request.session.get('payment_id')
+    
+    context = {
+        'unread_notification_count': get_unread_notification_count(request.user)
+    }
+    
+    if payment_id:
+        payment = get_object_or_404(Payment, id=payment_id)
+        context['payment'] = payment
+        
+        # Clear the session
+        if 'payment_id' in request.session:
+            del request.session['payment_id']
+            
+    return render(request, 'core/payment_failure.html', context)
+
+@login_required
+def donation_history(request):
+    """View user's donation history"""
+    payments = Payment.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'payments': payments,
+        'unread_notification_count': get_unread_notification_count(request.user)
+    }
+    
+    return render(request, 'core/donation_history.html', context)

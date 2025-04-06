@@ -21,4 +21,5 @@ dependencies = [
     "django-countries>=7.6.1",
     "django-taggit>=6.1.0",
     "django-mptt>=0.17.0",
+    "django-payments>=3.0.1",
 ]

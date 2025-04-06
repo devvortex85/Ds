@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -46,4 +46,14 @@ urlpatterns = [
     path('notifications/', views.notifications_list, name='notifications_list'),
     path('notifications/<int:pk>/mark-read/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    
+    # Donations
+    path('donate/', views.donation_view, name='donate'),
+    path('donate/confirm/', views.donation_confirmation, name='donation_confirmation'),
+    path('donate/success/', views.payment_success, name='payment_success'),
+    path('donate/failure/', views.payment_failure, name='payment_failure'),
+    path('donate/history/', views.donation_history, name='donation_history'),
+    
+    # Django Payments URLs
+    path('payments/', include('payments.urls')),
 ]

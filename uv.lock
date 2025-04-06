@@ -242,6 +242,37 @@ wheels = [
 ]
 
 [[package]]
+name = "django-payments"
+version = "3.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "django-phonenumber-field", extra = ["phonenumberslite"] },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3a/ea/8a0cf49b367a2a3b5f173f40d257fb0f147dc5f6681e6589fc716a3a4f70/django_payments-3.0.1.tar.gz", hash = "sha256:008eb91c36b75f926f4d2487d338bb7c569c8524dee306f5f6aab93695570e2e", size = 111269 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/03/ebdd60f71c543e98355999369f11bbc474c08098162f8ba436209df378a7/django_payments-3.0.1-py3-none-any.whl", hash = "sha256:8490a55990371b527302d50a17b9843cdd6ff3ee17780771f026fddb06fbce3d", size = 150622 },
+]
+
+[[package]]
+name = "django-phonenumber-field"
+version = "8.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/d1/0a2ba41434d98ac9a2669ea7edfc8d1bc75055da450d94894c597913e01c/django_phonenumber_field-8.0.0.tar.gz", hash = "sha256:8a560fe1b01b94c9de8cde22bc373b695f023cc6df4baba00264cb079da9f631", size = 43759 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fc/ab/4738a40d6f297688ecedd08cf6dc1608ad06c08ba3c03d1fc85b19ac6717/django_phonenumber_field-8.0.0-py3-none-any.whl", hash = "sha256:196c917b70c01a98e327f482eb8a4a4a55a29891db551f99078585397370b3ba", size = 66441 },
+]
+
+[package.optional-dependencies]
+phonenumberslite = [
+    { name = "phonenumberslite" },
+]
+
+[[package]]
 name = "django-taggit"
 version = "6.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -308,6 +339,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/54/28/3af612670f82f4c056911fbbbb42760255801b3068c48de792d354ff4472/markdown-3.7.tar.gz", hash = "sha256:2ae2471477cfd02dbbf038d5d9bc226d40def84b4fe2986e49b59b6b472bbed2", size = 357086 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3f/08/83871f3c50fc983b88547c196d11cf8c3340e37c32d2e9d6152abe2c61f7/Markdown-3.7-py3-none-any.whl", hash = "sha256:7eb6df5690b81a1d7942992c97fad2938e956e79df20cbc6186e9c3a77b1c803", size = 106349 },
+]
+
+[[package]]
+name = "phonenumberslite"
+version = "9.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/39/63/0910e1f1e0bb361eec5d32306d677fbc7124fc4fbc37a8629c5317de7978/phonenumberslite-9.0.2.tar.gz", hash = "sha256:d4a01a23e29deded03a3b55106a89d3a23726ec9b3817e15ad093947ca18169e", size = 2296927 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ce/ea/1a302e4cfada37f9ab8394b01cebb3becf032fb330296049e28d8853550e/phonenumberslite-9.0.2-py2.py3-none-any.whl", hash = "sha256:4e5509ededd47212e0b02c0e72f56e1498dfb61181c2a5ccb10b5c9fb35c09ef", size = 471994 },
 ]
 
 [[package]]
@@ -430,6 +470,7 @@ dependencies = [
     { name = "django-filter" },
     { name = "django-markdownx" },
     { name = "django-mptt" },
+    { name = "django-payments" },
     { name = "django-taggit" },
     { name = "django-watson" },
     { name = "djangorestframework" },
@@ -451,6 +492,7 @@ requires-dist = [
     { name = "django-filter", specifier = ">=25.1" },
     { name = "django-markdownx", specifier = ">=4.0.7" },
     { name = "django-mptt", specifier = ">=0.17.0" },
+    { name = "django-payments", specifier = ">=3.0.1" },
     { name = "django-taggit", specifier = ">=6.1.0" },
     { name = "django-watson", specifier = ">=1.6.3" },
     { name = "djangorestframework", specifier = ">=3.16.0" },

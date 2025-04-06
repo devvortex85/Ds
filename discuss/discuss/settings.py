@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_countries',  # For country selection in profiles
     'mptt',      # For improved hierarchical comment trees
     'watson',    # For advanced full-text search
+    'payments',   # For processing payments and donations
 ]
 
 MIDDLEWARE = [
@@ -234,3 +235,21 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # Django Countries settings
 COUNTRIES_FLAG_URL = 'https://flagicons.lipis.dev/flags/4x3/{code}.svg'
+
+# Django Payments settings
+PAYMENT_HOST = '0.0.0.0:5000'
+PAYMENT_USES_SSL = False
+PAYMENT_MODEL = 'core.Payment'
+PAYMENT_VARIANTS = {
+    'default': ('payments.dummy.DummyProvider', {}),
+    'paypal': ('payments.paypal.PaypalProvider', {
+        'client_id': '',
+        'secret': '',
+        'endpoint': 'https://api.sandbox.paypal.com',
+        'capture': True,
+    }),
+    'stripe': ('payments.stripe.StripeProvider', {
+        'secret_key': '',
+        'public_key': '',
+    })
+}

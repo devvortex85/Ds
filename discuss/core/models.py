@@ -7,6 +7,7 @@ from django.utils import timezone
 from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
 from mptt.models import MPTTModel, TreeForeignKey
+from payments.models import BasePayment
 import re
 
 class Profile(models.Model):
@@ -340,3 +341,42 @@ class Notification(models.Model):
             return notification
             
         return None
+
+class Payment(BasePayment):
+    """Payment model for handling donations to the platform"""
+    
+    DONATION_CHOICES = [
+        (5, '$5 - Basic Support'),
+        (10, '$10 - Supporter'),
+        (25, '$25 - Super Supporter'),
+        (50, '$50 - Gold Supporter'),
+        (100, '$100 - Platinum Supporter'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='payments', null=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=10)
+    donation_type = models.IntegerField(choices=DONATION_CHOICES, default=10)
+    description = models.CharField(max_length=255, default="Donation to Discuss")
+    created_at = models.DateTimeField(auto_now_add=True)
+    community = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    def get_success_url(self):
+        return reverse('payment_success')
+        
+    def get_failure_url(self):
+        return reverse('payment_failure')
+        
+    def get_purchased_items(self):
+        from payments.models import PurchasedItem
+        return [
+            PurchasedItem(
+                name=f"{self.get_donation_type_display()}",
+                sku=f"donation-{self.donation_type}",
+                quantity=1,
+                price=self.amount,
+                currency=self.currency,
+            )
+        ]
+    
+    class Meta:
+        ordering = ['-created_at']
