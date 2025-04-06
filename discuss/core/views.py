@@ -221,7 +221,7 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
     View a community and its posts
     """
     community = get_object_or_404(Community, pk=pk)
-    posts = Post.objects.filter(community=community).order_by('-created_at')
+    posts = Post.objects.filter(community=community).annotate(comment_count=Count('comments')).order_by('-created_at')
     
     # Check if user is a member
     is_member = request.user.is_authenticated and community.members.filter(id=request.user.id).exists()
@@ -229,17 +229,28 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
     # Get member count
     member_count = community.members.count()
     
+    # Get user's votes on posts
+    user_post_votes = {}
+    if request.user.is_authenticated:
+        post_votes = Vote.objects.filter(user=request.user, post__in=posts)
+        for vote in post_votes:
+            user_post_votes[vote.post_id] = vote.value
+    
     context = {
         'community': community,
         'posts': posts,
+        'page_obj': posts,  # Adding this for pagination in template
         'is_member': is_member,
         'member_count': member_count,
+        'user_post_votes': user_post_votes,
         'unread_notification_count': get_unread_notification_count(request.user)
     }
     
     # Add any extra context if provided
     if extra_context:
         context.update(extra_context)
+    
+    print(f"DEBUG: Found {posts.count()} posts in community {community.name}")
     
     return render(request, template, context)
 
@@ -522,7 +533,7 @@ def vote_post(request, pk, vote_type):
     post = get_object_or_404(Post, pk=pk)
     
     # Determine vote value
-    vote_value = 1 if vote_type == 'up' else -1
+    vote_value = 1 if vote_type == 'upvote' else -1
     
     # Check if user has already voted on this post
     try:
@@ -565,7 +576,7 @@ def vote_comment(request, pk, vote_type):
     comment = get_object_or_404(Comment, pk=pk)
     
     # Determine vote value
-    vote_value = 1 if vote_type == 'up' else -1
+    vote_value = 1 if vote_type == 'upvote' else -1
     
     # Check if user has already voted on this comment
     try:

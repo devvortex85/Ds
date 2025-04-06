@@ -37,6 +37,7 @@ function setupCommentReplies() {
             const replyForm = document.getElementById(`reply-form-${commentId}`);
             
             console.log("Toggling reply form for comment ID:", commentId);
+            console.log("Reply form element:", replyForm);
             
             // Hide all other reply forms first
             document.querySelectorAll('.reply-form').forEach(form => {
@@ -58,6 +59,12 @@ function setupCommentReplies() {
                 }
             } else {
                 console.error("Reply form not found for comment ID:", commentId);
+                // Log all reply forms to debug
+                const allReplyForms = document.querySelectorAll('.reply-form');
+                console.log("All reply forms:", allReplyForms.length);
+                allReplyForms.forEach(form => {
+                    console.log("Form ID:", form.id);
+                });
             }
         });
     });
@@ -110,16 +117,15 @@ function setupVoting() {
                         ? this.parentElement.querySelector('.downvote-btn')
                         : this.parentElement.querySelector('.upvote-btn');
                     
-                    // If the vote was added, add 'voted' class
-                    // If the vote was removed, remove 'voted' class
-                    if (data.message === 'Vote recorded.') {
+                    // Handle the vote action response
+                    if (data.action === 'added') {
                         this.classList.add('voted');
                         if (otherButton) {
                             otherButton.classList.remove('voted');
                         }
-                    } else if (data.message === 'Vote removed.') {
+                    } else if (data.action === 'removed') {
                         this.classList.remove('voted');
-                    } else if (data.message === 'Vote updated.') {
+                    } else if (data.action === 'changed') {
                         this.classList.add('voted');
                         if (otherButton) {
                             otherButton.classList.remove('voted');
@@ -134,7 +140,7 @@ function setupVoting() {
     });
     
     // AJAX for comment votes (both top-level and nested)
-    const commentVoteButtons = document.querySelectorAll('.list-group-item .vote-btn, .reply .vote-btn');
+    const commentVoteButtons = document.querySelectorAll('.list-group-item .vote-btn, .nested-reply .vote-btn');
     
     commentVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -163,16 +169,15 @@ function setupVoting() {
                         ? this.parentElement.querySelector('.downvote-btn')
                         : this.parentElement.querySelector('.upvote-btn');
                     
-                    // If the vote was added, add 'voted' class
-                    // If the vote was removed, remove 'voted' class
-                    if (data.message === 'Vote recorded.') {
+                    // Handle the vote action response
+                    if (data.action === 'added') {
                         this.classList.add('voted');
                         if (otherButton) {
                             otherButton.classList.remove('voted');
                         }
-                    } else if (data.message === 'Vote removed.') {
+                    } else if (data.action === 'removed') {
                         this.classList.remove('voted');
-                    } else if (data.message === 'Vote updated.') {
+                    } else if (data.action === 'changed') {
                         this.classList.add('voted');
                         if (otherButton) {
                             otherButton.classList.remove('voted');
