@@ -36,6 +36,13 @@ urlpatterns = [
     
     # Search
     path('search/', views.search, name='search'),
+    path('advanced-search/', views.advanced_search, name='advanced_search'),
+    
+    # Donations and Payments
+    path('donate/', views.donate, name='donate'),
+    path('donation-confirmation/', views.donation_confirmation, name='donation_confirmation'),
+    path('payment-failure/', views.payment_failure, name='payment_failure'),
+    path('donation-history/', views.donation_history, name='donation_history'),
     
     # Test route for Sentry error reporting
     path('sentry-test/', views.sentry_test, name='sentry_test'),

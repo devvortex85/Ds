@@ -6,6 +6,9 @@ from django.dispatch import receiver
 from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
 from django.utils import timezone
+import uuid
+from payments import PurchasedItem
+from payments.models import BasePayment
 
 class Profile(models.Model):
     REPUTATION_LEVELS = [
@@ -207,3 +210,35 @@ class Vote(models.Model):
             models.UniqueConstraint(fields=['user', 'post'], name='unique_post_vote', condition=models.Q(post__isnull=False)),
             models.UniqueConstraint(fields=['user', 'comment'], name='unique_comment_vote', condition=models.Q(comment__isnull=False)),
         ]
+
+class Payment(BasePayment):
+    DONATION_LEVELS = [
+        ('small', 'Small ($5)'),
+        ('medium', 'Medium ($10)'),
+        ('large', 'Large ($25)'),
+        ('custom', 'Custom Amount'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
+    donation_level = models.CharField(max_length=10, choices=DONATION_LEVELS, default='small')
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def get_failure_url(self):
+        return reverse('payment_failure')
+    
+    def get_success_url(self):
+        return reverse('donation_confirmation')
+    
+    def get_purchased_items(self):
+        # Return purchased items for the receipt
+        yield PurchasedItem(
+            name=f"Donation to Discuss ({self.get_donation_level_display()})",
+            sku='DONATE',
+            quantity=1,
+            price=self.total,
+            currency=self.currency,
+        )
+    
+    def __str__(self):
+        return f"Payment #{self.id} - {self.user.username} - {self.get_donation_level_display()}"

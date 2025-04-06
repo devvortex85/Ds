@@ -343,40 +343,38 @@ class Notification(models.Model):
         return None
 
 class Payment(BasePayment):
-    """Payment model for handling donations to the platform"""
-    
-    DONATION_CHOICES = [
-        (5, '$5 - Basic Support'),
-        (10, '$10 - Supporter'),
-        (25, '$25 - Super Supporter'),
-        (50, '$50 - Gold Supporter'),
-        (100, '$100 - Platinum Supporter'),
+    DONATION_LEVELS = [
+        ('small', 'Small ($5)'),
+        ('medium', 'Medium ($10)'),
+        ('large', 'Large ($25)'),
+        ('custom', 'Custom Amount'),
     ]
-    
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='payments', null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=10)
-    donation_type = models.IntegerField(choices=DONATION_CHOICES, default=10)
-    description = models.CharField(max_length=255, default="Donation to Discuss")
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
+    donation_level = models.CharField(max_length=10, choices=DONATION_LEVELS, default='small')
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    community = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True, blank=True)
-    
-    def get_success_url(self):
-        return reverse('payment_success')
-        
+
     def get_failure_url(self):
         return reverse('payment_failure')
-        
+    
+    def get_success_url(self):
+        return reverse('donation_confirmation')
+
     def get_purchased_items(self):
         from payments.models import PurchasedItem
         return [
             PurchasedItem(
-                name=f"{self.get_donation_type_display()}",
-                sku=f"donation-{self.donation_type}",
+                name=f"Donation to Discuss - {self.get_donation_level_display()}",
+                sku=f"donation-{self.donation_level}",
                 quantity=1,
-                price=self.amount,
+                price=self.total,
                 currency=self.currency,
             )
         ]
+    
+    def __str__(self):
+        return f"Payment {self.id} - {self.user.username} - ${self.total}"
     
     class Meta:
         ordering = ['-created_at']

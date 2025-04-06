@@ -5,13 +5,15 @@ from django.contrib import messages
 from django.db.models import Q, Count, Sum, Case, When, F, IntegerField
 from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
+from django.urls import reverse_lazy
 from el_pagination.decorators import page_template
 from taggit.models import Tag
 # from notifications.signals import notify  # Temporarily disabled
 from watson import search as watson
 import sentry_sdk
+from decimal import Decimal
 
-from .models import Profile, Community, Post, Comment, Vote
+from .models import Profile, Community, Post, Comment, Vote, Payment
 from .forms import (
     UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
     CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm
@@ -500,3 +502,79 @@ def sentry_test(request):
     """
     division_by_zero = 1 / 0
     return HttpResponse("This should never be displayed because an error is raised.")
+
+@login_required
+def donate(request):
+    """
+    View for handling donations. Shows a simple form for selecting a donation amount.
+    """
+    if request.method == 'POST':
+        donation_level = request.POST.get('donation_level', 'small')
+        custom_amount = request.POST.get('custom_amount', None)
+        
+        # Create a payment instance
+        payment = Payment(
+            user=request.user,
+            donation_level=donation_level,
+            description=f"Donation to Discuss - {donation_level} amount",
+            variant='default',  # Using the dummy provider defined in settings
+            currency='USD',
+        )
+        
+        # Set the total amount based on donation level
+        if donation_level == 'small':
+            payment.total = Decimal('5.00')
+        elif donation_level == 'medium':
+            payment.total = Decimal('10.00')
+        elif donation_level == 'large':
+            payment.total = Decimal('25.00')
+        elif donation_level == 'custom' and custom_amount:
+            try:
+                payment.total = Decimal(custom_amount)
+            except:
+                payment.total = Decimal('5.00')
+        else:
+            payment.total = Decimal('5.00')
+            
+        payment.save()
+        
+        # Redirect to the payment processing page
+        return redirect('payment:process', token=payment.token)
+        
+    return render(request, 'core/donate.html')
+
+@login_required
+def donation_confirmation(request):
+    """
+    View displayed after a successful donation payment.
+    """
+    # Get the user's most recent successful payment
+    try:
+        payment = Payment.objects.filter(
+            user=request.user,
+            status='confirmed'
+        ).order_by('-created_at').first()
+    except Exception as e:
+        payment = None
+    
+    return render(request, 'core/donation_confirmation.html', {
+        'payment': payment
+    })
+
+@login_required
+def payment_failure(request):
+    """
+    View displayed when a payment fails.
+    """
+    return render(request, 'core/payment_failure.html')
+
+@login_required
+def donation_history(request):
+    """
+    View to display a user's donation history.
+    """
+    payments = Payment.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'core/donation_history.html', {
+        'payments': payments
+    })

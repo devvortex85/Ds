@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Community, Post, Comment, Vote
+from .models import Profile, Community, Post, Comment, Vote, Payment
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'bio')
@@ -24,8 +24,15 @@ class VoteAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'comment', 'value')
     list_filter = ('value',)
 
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'donation_level', 'status', 'created_at', 'total')
+    list_filter = ('status', 'donation_level', 'created_at')
+    search_fields = ('user__username', 'description')
+    readonly_fields = ('token', 'variant', 'status', 'transaction_id', 'currency', 'total', 'delivery', 'tax')
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Vote, VoteAdmin)
+admin.site.register(Payment, PaymentAdmin)

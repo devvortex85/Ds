@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_countries',  # Django-countries app
     'watson',  # Django-watson for full-text search
     'django_social_share',  # Django social share app for sharing posts
+    'payments',  # Django-payments for handling donations
 ]
 
 MIDDLEWARE = [
@@ -243,3 +244,11 @@ CACHEOPS = {
 
 # Django-countries settings
 COUNTRIES_FLAG_URL = 'https://flagicons.lipis.dev/flags/4x3/{code}.svg'
+
+# Django-payments settings
+PAYMENT_HOST = os.environ.get('PAYMENT_HOST', 'localhost:5000')
+PAYMENT_USES_SSL = os.environ.get('PAYMENT_USES_SSL', False)
+PAYMENT_MODEL = 'core.Payment'
+PAYMENT_VARIANTS = {
+    'default': ('payments.dummy.DummyProvider', {}),
+}

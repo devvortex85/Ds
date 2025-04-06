@@ -16,6 +16,7 @@ urlpatterns = [
     # path('inbox/notifications/', include(notifications.urls, namespace='notifications')),  # Temporarily disabled
     # Avatar functionality is now directly implemented in the Profile model
     # and handled through the regular profile views
+    path('payments/', include('payments.urls')),
     path('', include('core.urls')),
 ]
 

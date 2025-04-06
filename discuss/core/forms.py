@@ -86,41 +86,24 @@ class DonationForm(forms.ModelForm):
         decimal_places=2,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Custom amount (optional)',
+            'placeholder': 'Custom amount (USD)',
             'step': '0.01',
             'min': '1',
             'max': '1000'
         })
     )
     
-    community = forms.ModelChoiceField(
-        queryset=Community.objects.all(),
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control form-select'}),
-        help_text="Support a specific community (optional)"
-    )
-    
     class Meta:
         model = Payment
-        fields = ['donation_type', 'custom_amount', 'community', 'description']
+        fields = ['donation_level', 'description']
         widgets = {
-            'donation_type': forms.RadioSelect(attrs={'class': 'donation-option'}),
-            'description': forms.TextInput(attrs={
+            'donation_level': forms.Select(attrs={
+                'class': 'form-select',
+                'onchange': 'toggleCustomAmount()'
+            }),
+            'description': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Reason for donation (optional)'
+                'placeholder': 'Reason for donation (optional)',
+                'rows': 3
             }),
         }
-        
-    def clean(self):
-        cleaned_data = super().clean()
-        donation_type = cleaned_data.get('donation_type')
-        custom_amount = cleaned_data.get('custom_amount')
-        
-        if custom_amount:
-            # If custom amount is provided, use it instead of the predefined amount
-            cleaned_data['amount'] = custom_amount
-        else:
-            # Use the selected donation amount
-            cleaned_data['amount'] = donation_type
-            
-        return cleaned_data

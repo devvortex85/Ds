@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="my-2">Support Discuss</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-heart fa-4x text-danger mb-3"></i>
+                        <h4>Your donation helps keep our community thriving!</h4>
+                        <p class="text-muted">
+                            Discuss is a community-driven platform that relies on the support of users like you. 
+                            Your contribution helps us maintain and improve the site.
+                        </p>
+                    </div>
+
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label for="donation_level" class="form-label">Select donation amount:</label>
+                            <select name="donation_level" id="donation_level" class="form-select form-control" onchange="toggleCustomAmount()">
+                                <option value="small">Small Donation ($5)</option>
+                                <option value="medium">Medium Donation ($10)</option>
+                                <option value="large">Large Donation ($25)</option>
+                                <option value="custom">Custom Amount</option>
+                            </select>
+                        </div>
+
+                        <div id="custom_amount_div" class="form-group mb-4" style="display: none;">
+                            <label for="custom_amount" class="form-label">Enter custom amount (USD):</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" min="1" step="0.01" name="custom_amount" id="custom_amount" class="form-control" placeholder="Custom amount">
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Proceed to Payment</button>
+                        </div>
+                    </form>
+
+                    <div class="card bg-light mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-shield-alt me-2"></i>Secure Payment</h5>
+                            <p class="card-text">
+                                All payments are processed securely. Your financial information is never stored on our servers.
+                            </p>
+
+                            <h5 class="card-title mt-3"><i class="fas fa-history me-2"></i>Previous Donations</h5>
+                            <p class="card-text">
+                                You can view your donation history <a href="{% url 'donation_history' %}">here</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleCustomAmount() {
+        const donationLevel = document.getElementById('donation_level').value;
+        const customAmountDiv = document.getElementById('custom_amount_div');
+        
+        if (donationLevel === 'custom') {
+            customAmountDiv.style.display = 'block';
+        } else {
+            customAmountDiv.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

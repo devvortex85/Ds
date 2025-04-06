@@ -1,77 +1,96 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Donation History{% endblock %}
-
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
     <div class="row">
         <div class="col-lg-10 mx-auto">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">Donation History</h2>
-                    <a href="{% url 'donate' %}" class="btn btn-light">Make a New Donation</a>
+                <div class="card-header bg-primary text-white">
+                    <h2 class="my-2"><i class="fas fa-history me-2"></i>Your Donation History</h2>
                 </div>
                 <div class="card-body">
                     {% if payments %}
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
                                         <th>Amount</th>
+                                        <th>Type</th>
                                         <th>Status</th>
-                                        <th>Community</th>
-                                        <th>Description</th>
                                         <th>Transaction ID</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for payment in payments %}
-                                    <tr>
-                                        <td>{{ payment.created_at|date:"M d, Y" }}</td>
-                                        <td>${{ payment.amount }}</td>
-                                        <td>
-                                            {% if payment.status == 'confirmed' %}
-                                                <span class="badge bg-success">Completed</span>
-                                            {% elif payment.status == 'rejected' %}
-                                                <span class="badge bg-danger">Failed</span>
-                                            {% elif payment.status == 'waiting' %}
-                                                <span class="badge bg-warning text-dark">Pending</span>
-                                            {% elif payment.status == 'input' %}
-                                                <span class="badge bg-info text-dark">New</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary">{{ payment.status }}</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if payment.community %}
-                                                <a href="{% url 'community_detail' payment.community.pk %}">{{ payment.community.name }}</a>
-                                            {% else %}
-                                                <span class="text-muted">General</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ payment.description|truncatechars:30 }}</td>
-                                        <td>
-                                            {% if payment.transaction_id %}
-                                                <small class="text-muted">{{ payment.transaction_id }}</small>
-                                            {% else %}
-                                                <small class="text-muted">N/A</small>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ payment.created_at|date:"M d, Y" }}</td>
+                                            <td>${{ payment.total }}</td>
+                                            <td>
+                                                {% if payment.donation_level == 'small' %}
+                                                    Small Donation
+                                                {% elif payment.donation_level == 'medium' %}
+                                                    Medium Donation
+                                                {% elif payment.donation_level == 'large' %}
+                                                    Large Donation
+                                                {% elif payment.donation_level == 'custom' %}
+                                                    Custom Donation
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if payment.status == 'confirmed' %}
+                                                    <span class="badge bg-success">Confirmed</span>
+                                                {% elif payment.status == 'waiting' %}
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                {% elif payment.status == 'preauth' %}
+                                                    <span class="badge bg-info">Pre-authorized</span>
+                                                {% elif payment.status == 'refunded' %}
+                                                    <span class="badge bg-secondary">Refunded</span>
+                                                {% elif payment.status == 'rejected' %}
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                {% elif payment.status == 'error' %}
+                                                    <span class="badge bg-danger">Error</span>
+                                                {% elif payment.status == 'input' %}
+                                                    <span class="badge bg-light text-dark">Input</span>
+                                                {% else %}
+                                                    <span class="badge bg-light text-dark">{{ payment.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if payment.transaction_id %}
+                                                    <small class="text-muted">{{ payment.transaction_id }}</small>
+                                                {% else %}
+                                                    <small class="text-muted">N/A</small>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     {% else %}
-                        <div class="alert alert-info">
-                            <p class="lead mb-0">You haven't made any donations yet.</p>
-                        </div>
-                        <div class="text-center mt-4">
-                            <a href="{% url 'donate' %}" class="btn btn-primary btn-lg">Make Your First Donation</a>
+                        <div class="text-center py-5">
+                            <i class="fas fa-donate fa-5x text-muted mb-3"></i>
+                            <h4>You haven't made any donations yet</h4>
+                            <p class="text-muted mb-4">
+                                Consider supporting Discuss to help maintain and improve the platform.
+                            </p>
+                            <a href="{% url 'donate' %}" class="btn btn-primary">
+                                Make Your First Donation
+                            </a>
                         </div>
                     {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-home me-1"></i> Return to Home
+                        </a>
+                        <a href="{% url 'donate' %}" class="btn btn-success">
+                            <i class="fas fa-donate me-1"></i> Make a New Donation
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
