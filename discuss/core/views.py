@@ -359,15 +359,31 @@ def post_detail(request, pk):
     View a post and its comments
     """
     post = get_object_or_404(Post, pk=pk)
+    
+    # Get all root comments (no parent) and prefetch all descendants for the nested structure
     comments = Comment.objects.filter(post=post, parent=None).order_by('created_at')
+    
+    # Calculate total comments including replies
+    total_comments_count = Comment.objects.filter(post=post).count()
     
     # Get user's vote on this post if authenticated
     user_post_vote = None
+    user_comment_votes = {}
     if request.user.is_authenticated:
         try:
             user_post_vote = Vote.objects.get(user=request.user, post=post).value
         except Vote.DoesNotExist:
             pass
+            
+        # Get all comment votes for this user and post in one query
+        comment_votes = Vote.objects.filter(
+            user=request.user,
+            comment__post=post
+        ).select_related('comment')
+        
+        # Create a dictionary of comment_id -> vote_value for easy lookup in template
+        for vote in comment_votes:
+            user_comment_votes[vote.comment.id] = vote.value
     
     # Create a new comment form
     if request.method == 'POST' and request.user.is_authenticated:
@@ -402,6 +418,8 @@ def post_detail(request, pk):
         'comments': comments,
         'comment_form': comment_form,
         'user_post_vote': user_post_vote,
+        'user_comment_votes': user_comment_votes,
+        'total_comments_count': total_comments_count,
         'related_posts': related_posts,
         'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }

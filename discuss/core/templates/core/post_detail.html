@@ -41,7 +41,7 @@
                     <span class="mx-1">•</span>
                     Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}
                         {% if post.author.profile.country %}
-                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" /> 
                         {% endif %}
                         {{ post.author.profile.karma|reputation_badge }}</a>
                     <span class="mx-1">•</span>

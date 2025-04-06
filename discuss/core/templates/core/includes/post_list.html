@@ -38,7 +38,7 @@
                     <span class="text-muted">• Posted by 
                         <a href="{% url 'profile' post.author.username %}" class="user-link">u/{{ post.author.username }}</a>
                         {% if post.author.profile.country %}
-                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 24px; height: auto;" /> 
+                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" /> 
                         {% endif %}
                         {{ post.created_at|timesince }} ago
                     </span>

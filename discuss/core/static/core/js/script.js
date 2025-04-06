@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM loaded - initializing Discuss app features");
     
+    // Log any existing nested replies for debugging
+    const nestedReplies = document.querySelectorAll('.nested-reply');
+    console.log("Found nested replies:", nestedReplies.length);
+    
+    // Log nesting indicators
+    const nestingIndicators = document.querySelectorAll('.nesting-indicator');
+    console.log("Found nesting indicators:", nestingIndicators.length);
+    
     // Set up comment replies
     setupCommentReplies();
     
@@ -28,6 +36,8 @@ function setupCommentReplies() {
             const commentId = this.getAttribute('data-comment-id');
             const replyForm = document.getElementById(`reply-form-${commentId}`);
             
+            console.log("Toggling reply form for comment ID:", commentId);
+            
             // Hide all other reply forms first
             document.querySelectorAll('.reply-form').forEach(form => {
                 if (form.id !== `reply-form-${commentId}`) {
@@ -46,6 +56,8 @@ function setupCommentReplies() {
                         textarea.focus();
                     }
                 }
+            } else {
+                console.error("Reply form not found for comment ID:", commentId);
             }
         });
     });

@@ -42,7 +42,7 @@
                         <a href="{% url 'profile' root_comment.author.username %}" class="fw-bold text-decoration-none">{{ root_comment.author.username }}</a>
                         
                         {% if root_comment.author.profile.country %}
-                        <img src="{{ root_comment.author.profile.country.flag }}" alt="{{ root_comment.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                        <img src="{{ root_comment.author.profile.country.flag }}" alt="{{ root_comment.author.profile.country.code }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" /> 
                         {% endif %}
                          
                         {{ root_comment.author.profile.karma|reputation_badge }}
@@ -90,10 +90,10 @@
                     <div class="nested-comments mt-3">
                         {% for node in root_comment.get_descendants %}
                         <div class="nested-reply mb-3">
+                            <!-- Add color-coded nesting indicator based on parent -->
+                            <div class="nesting-indicator nesting-color-{{ node.parent_id|nesting_color }}"></div>
+                            
                             <div class="d-flex">
-                                <!-- Add color-coded nesting indicator based on parent -->
-                                <div class="nesting-indicator nesting-color-{{ node.parent_id|nesting_color }}"></div>
-                                
                                 <!-- Reply Voting -->
                                 <div class="vote-column text-center me-2">
                                     {% if user.is_authenticated %}
@@ -130,7 +130,7 @@
                                         <a href="{% url 'profile' node.author.username %}" class="fw-bold text-decoration-none">{{ node.author.username }}</a>
                                         
                                         {% if node.author.profile.country %}
-                                        <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                                        <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.code }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" /> 
                                         {% endif %}
                                          
                                         {{ node.author.profile.karma|reputation_badge }}
