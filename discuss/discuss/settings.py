@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # 'notifications',  # Temporarily disabled due to compatibility issues
     'el_pagination',
     # 'cacheops',  # Temporarily disabled due to compatibility issues
     # 'avatar',    # Replaced with native ImageField in Profile model
@@ -90,7 +89,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.tags.popular_tags',
             ],
         },
     },

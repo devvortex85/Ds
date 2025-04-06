@@ -9,7 +9,7 @@ from django.urls import reverse
 from taggit.models import Tag
 from watson import search as watson
 
-from .models import Profile, Community, Post, Comment, Vote
+from .models import Profile, Community, Post, Comment, Vote, Notification
 from .forms import (UserRegisterForm, UserUpdateForm, ProfileUpdateForm, 
                    CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm)
 from .filters import PostFilter
@@ -270,6 +270,14 @@ def create_text_post(request, community_id):
             # Save the tags
             form.save_m2m()
             
+            # Check for mentions in the content
+            if post.content:
+                Notification.create_mention_notifications(
+                    user=request.user,
+                    content=post.content,
+                    post=post
+                )
+            
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
     else:
@@ -306,6 +314,13 @@ def create_link_post(request, community_id):
             
             # Save the tags
             form.save_m2m()
+            
+            # Check for mentions in the title
+            Notification.create_mention_notifications(
+                user=request.user,
+                content=post.title,
+                post=post
+            )
             
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
@@ -416,6 +431,16 @@ def add_comment(request, post_id):
                     pass
             
             comment.save()
+            
+            # Create reply notification
+            reply_notification = Notification.create_reply_notification(comment)
+            
+            # Create mention notifications
+            mention_notifications = Notification.create_mention_notifications(
+                user=request.user,
+                content=comment.content,
+                comment=comment
+            )
             
             # If AJAX request, return a JSON response
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -687,3 +712,43 @@ def advanced_search(request):
     }
     
     return render(request, 'core/advanced_search.html', context)
+
+@login_required
+def notifications_list(request):
+    """View all notifications for the current user"""
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    
+    # Count unread notifications
+    unread_count = notifications.filter(is_read=False).count()
+    
+    context = {
+        'notifications': notifications,
+        'unread_count': unread_count
+    }
+    
+    return render(request, 'core/notifications.html', context)
+
+@login_required
+def mark_notification_read(request, pk):
+    """Mark a notification as read"""
+    notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
+    notification.mark_as_read()
+    
+    # If this is an AJAX request, return JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True})
+    
+    # Otherwise redirect back to the notifications list
+    return redirect('notifications_list')
+
+@login_required
+def mark_all_notifications_read(request):
+    """Mark all notifications as read"""
+    Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+    
+    # If this is an AJAX request, return JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True})
+    
+    # Otherwise redirect back to the notifications list
+    return redirect('notifications_list')

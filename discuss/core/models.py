@@ -7,6 +7,7 @@ from django.utils import timezone
 from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
 from mptt.models import MPTTModel, TreeForeignKey
+import re
 
 class Profile(models.Model):
     REPUTATION_LEVELS = [
@@ -203,3 +204,94 @@ class Vote(models.Model):
             models.UniqueConstraint(fields=['user', 'post'], name='unique_post_vote', condition=models.Q(post__isnull=False)),
             models.UniqueConstraint(fields=['user', 'comment'], name='unique_comment_vote', condition=models.Q(comment__isnull=False)),
         ]
+
+class Notification(models.Model):
+    """Model for storing user notifications"""
+    NOTIFICATION_TYPES = [
+        ('mention', 'Mention'),
+        ('reply', 'Reply'),
+        ('vote', 'Vote'),
+    ]
+    
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_notifications')
+    notification_type = models.CharField(max_length=10, choices=NOTIFICATION_TYPES)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
+    text = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f'Notification for {self.recipient.username}: {self.text}'
+    
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+        
+    @classmethod
+    def create_reply_notification(cls, comment):
+        """Create notification when a user replies to another user's post or comment"""
+        # Skip notification if user is replying to their own content
+        if comment.parent and comment.parent.author != comment.author:
+            notification = cls.objects.create(
+                recipient=comment.parent.author,
+                sender=comment.author,
+                notification_type='reply',
+                post=comment.post,
+                comment=comment,
+                text=f"{comment.author.username} replied to your comment on '{comment.post.title}'"
+            )
+            return notification
+        elif comment.post.author != comment.author:
+            notification = cls.objects.create(
+                recipient=comment.post.author,
+                sender=comment.author,
+                notification_type='reply',
+                post=comment.post,
+                comment=comment,
+                text=f"{comment.author.username} commented on your post '{comment.post.title}'"
+            )
+            return notification
+        return None
+    
+    @classmethod
+    def create_mention_notifications(cls, user, content, post=None, comment=None):
+        """Parse content for @mentions and create notifications"""
+        # Regular expression to find mentions (@username)
+        mentions = re.findall(r'@(\w+)', content)
+        created_notifications = []
+        
+        for username in mentions:
+            try:
+                mentioned_user = User.objects.get(username=username)
+                # Skip self-mentions
+                if mentioned_user == user:
+                    continue
+                    
+                if post:
+                    notification = cls.objects.create(
+                        recipient=mentioned_user,
+                        sender=user,
+                        notification_type='mention',
+                        post=post,
+                        text=f"{user.username} mentioned you in post '{post.title}'"
+                    )
+                elif comment:
+                    notification = cls.objects.create(
+                        recipient=mentioned_user,
+                        sender=user,
+                        notification_type='mention',
+                        post=comment.post,
+                        comment=comment,
+                        text=f"{user.username} mentioned you in a comment on '{comment.post.title}'"
+                    )
+                created_notifications.append(notification)
+            except User.DoesNotExist:
+                # User mentioned doesn't exist, skip
+                continue
+                
+        return created_notifications

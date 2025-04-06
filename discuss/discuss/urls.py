@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-# import notifications.urls  # Temporarily disabled
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,7 +13,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('allauth.urls')),
     # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
-    # path('inbox/notifications/', include(notifications.urls, namespace='notifications')),  # Temporarily disabled
     path('', include('core.urls')),
 ]
 

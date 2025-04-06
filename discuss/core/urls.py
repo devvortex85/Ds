@@ -37,4 +37,9 @@ urlpatterns = [
     # Search
     path('search/', views.search, name='search'),
     path('search/advanced/', views.advanced_search, name='advanced_search'),
+    
+    # Notifications
+    path('notifications/', views.notifications_list, name='notifications_list'),
+    path('notifications/<int:pk>/mark-read/', views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
 ]
