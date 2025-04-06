@@ -90,11 +90,17 @@ def profile(request, username):
     # Get user's communities
     communities = user.communities.all()
     
+    # Get reputation information
+    reputation_level = user.profile.get_reputation_level()
+    reputation_progress = user.profile.get_reputation_progress()
+    
     return render(request, 'core/profile.html', {
         'profile_user': user,
         'posts': posts,
         'comments': comments,
-        'communities': communities
+        'communities': communities,
+        'reputation_level': reputation_level,
+        'reputation_progress': reputation_progress
     })
 
 @login_required

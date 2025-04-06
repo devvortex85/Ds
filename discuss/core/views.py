@@ -116,6 +116,10 @@ def profile(request, username):
     post_karma = Vote.objects.filter(post__author=user).aggregate(Sum('value'))['value__sum'] or 0
     comment_karma = Vote.objects.filter(comment__author=user).aggregate(Sum('value'))['value__sum'] or 0
     
+    # Get reputation information
+    reputation_level = profile.get_reputation_level()
+    reputation_progress = profile.get_reputation_progress()
+    
     context = {
         'user_profile': user,
         'profile': profile,
@@ -124,6 +128,9 @@ def profile(request, username):
         'communities': communities,
         'post_karma': post_karma,
         'comment_karma': comment_karma,
+        'reputation_level': reputation_level,
+        'reputation_progress': reputation_progress,
+        'profile_user': user,  # Added for template compatibility
     }
     
     return render(request, 'core/profile.html', context)
