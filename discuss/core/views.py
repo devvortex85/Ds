@@ -125,9 +125,12 @@ def profile(request, username):
     posts = Post.objects.filter(author=user).annotate(comment_count_anno=Count('comments')).order_by('-created_at')
     posts_count = posts.count()
     comments = Comment.objects.filter(author=user).order_by('-created_at')
+    comments_count = comments.count()
+    comments_count = comments.count()
     
     # Get user's communities
     communities = user.communities.all()
+    communities_count = communities.count()
     
     # Calculate karma breakdown
     post_karma = Vote.objects.filter(post__author=user).aggregate(Sum('value'))['value__sum'] or 0
