@@ -1,3 +1,5 @@
+# Node
+node_modules/
 # Python
 __pycache__/
 *.py[cod]
@@ -44,6 +46,7 @@ minimal_repo/
 fresh_clone/
 discuss-package/
 discuss_core/
+attached_assets/
 
 # IDE
 .idea/
@@ -62,6 +65,7 @@ htmlcov/
 .replit.bak
 .upm/
 .config/
+
 
 # Node
 node_modules/
