@@ -628,9 +628,15 @@ def vote_comment(request, pk, vote_type):
             # If different vote type, update the vote
             vote.value = vote_value
             vote.save()
+            # Create a notification for the vote if it's an upvote
+            if vote_value == 1:
+                Notification.create_vote_notification(vote)
     except Vote.DoesNotExist:
         # Create a new vote
-        Vote.objects.create(user=request.user, comment=comment, value=vote_value)
+        vote = Vote.objects.create(user=request.user, comment=comment, value=vote_value)
+        # Create a notification for the vote if it's an upvote
+        if vote_value == 1:
+            Notification.create_vote_notification(vote)
     
     # Update the author's karma
     comment.author.profile.update_karma()
