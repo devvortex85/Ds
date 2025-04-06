@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up comment replies
     setupCommentReplies();
     
+    // Set up AJAX voting
+    setupAjaxVoting();
+    
     // Initialize any tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -22,6 +25,8 @@ function setupCommentReplies() {
     replyToggles.forEach(toggle => {
         toggle.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            
             const commentId = this.getAttribute('data-comment-id');
             const replyForm = document.getElementById(`reply-form-${commentId}`);
             
@@ -63,7 +68,10 @@ function setupCommentReplies() {
     
     // Add click event to each cancel button
     cancelButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             const commentId = this.getAttribute('data-comment-id');
             const replyForm = document.getElementById(`reply-form-${commentId}`);
             if (replyForm) {
@@ -71,125 +79,115 @@ function setupCommentReplies() {
             }
         });
     });
-
-    // Add AJAX voting to avoid page refresh
-    setupAjaxVoting();
 }
 
 function setupAjaxVoting() {
-    // Get all vote buttons
-    const voteButtons = document.querySelectorAll('.vote-btn, .upvote-btn, .downvote-btn');
-    
-    voteButtons.forEach(button => {
+    // For post votes
+    const postVoteButtons = document.querySelectorAll('a[href*="vote/post"]');
+    postVoteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Only handle clicks for authenticated users (skip login redirects)
-            if (this.getAttribute('href').includes('login')) {
-                window.location = this.getAttribute('href');
+            // Only process authenticated user clicks
+            if (this.href.includes('login')) {
+                window.location.href = this.href;
                 return;
             }
             
-            const voteUrl = this.getAttribute('href');
-            
-            // Make AJAX request to vote URL
+            const voteUrl = this.href;
             fetch(voteUrl, {
-                method: 'GET',
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => {
-                if (response.ok) {
-                    // Update UI based on the element voted
-                    if (voteUrl.includes('vote_post')) {
-                        // Extract post ID from URL
-                        const postId = voteUrl.split('/').filter(part => part !== '')[2];
-                        updatePostVoteUI(postId);
-                    } else if (voteUrl.includes('vote_comment')) {
-                        // Extract comment ID from URL
-                        const commentId = voteUrl.split('/').filter(part => part !== '')[2];
-                        updateCommentVoteUI(commentId);
-                    }
-                } else {
-                    console.error('Error voting:', response.status);
+            .then(response => response.json())
+            .then(data => {
+                // Update the vote count display
+                const postId = data.post_id;
+                const voteCountElement = document.getElementById(`post-${postId}-votes`);
+                if (voteCountElement) {
+                    voteCountElement.textContent = data.vote_count;
                 }
+                
+                // Update active state of vote buttons
+                const upvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/upvote"]`);
+                const downvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/downvote"]`);
+                
+                upvoteButtons.forEach(btn => {
+                    if (data.user_vote === 1) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                downvoteButtons.forEach(btn => {
+                    if (data.user_vote === -1) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         });
     });
-}
-
-function updatePostVoteUI(postId) {
-    // Fetch the updated post vote count
-    fetch(`/api/post/${postId}/votes/`)
-    .then(response => response.json())
-    .then(data => {
-        // Update vote count
-        const voteCountElement = document.querySelector(`#post-${postId}-votes`);
-        if (voteCountElement) {
-            voteCountElement.textContent = data.vote_count;
-        }
-        
-        // Update vote button styles
-        const upvoteBtn = document.querySelector(`a[href*="vote_post/${postId}/upvote"]`);
-        const downvoteBtn = document.querySelector(`a[href*="vote_post/${postId}/downvote"]`);
-        
-        if (upvoteBtn) {
-            if (data.user_vote === 1) {
-                upvoteBtn.classList.add('active');
-            } else {
-                upvoteBtn.classList.remove('active');
+    
+    // For comment votes
+    const commentVoteButtons = document.querySelectorAll('a[href*="vote/comment"]');
+    commentVoteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Only process authenticated user clicks
+            if (this.href.includes('login')) {
+                window.location.href = this.href;
+                return;
             }
-        }
-        
-        if (downvoteBtn) {
-            if (data.user_vote === -1) {
-                downvoteBtn.classList.add('active');
-            } else {
-                downvoteBtn.classList.remove('active');
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error updating post vote UI:', error);
-    });
-}
-
-function updateCommentVoteUI(commentId) {
-    // Fetch the updated comment vote count
-    fetch(`/api/comment/${commentId}/votes/`)
-    .then(response => response.json())
-    .then(data => {
-        // Find the vote count element for this comment
-        const voteCountElement = document.querySelector(`#comment-${commentId} .vote-count`);
-        if (voteCountElement) {
-            voteCountElement.textContent = data.vote_count;
-        }
-        
-        // Update vote button styles
-        const upvoteBtn = document.querySelector(`a[href*="vote_comment/${commentId}/upvote"]`);
-        const downvoteBtn = document.querySelector(`a[href*="vote_comment/${commentId}/downvote"]`);
-        
-        if (upvoteBtn) {
-            if (data.user_vote === 1) {
-                upvoteBtn.classList.add('voted');
-            } else {
-                upvoteBtn.classList.remove('voted');
-            }
-        }
-        
-        if (downvoteBtn) {
-            if (data.user_vote === -1) {
-                downvoteBtn.classList.add('voted');
-            } else {
-                downvoteBtn.classList.remove('voted');
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error updating comment vote UI:', error);
+            
+            const voteUrl = this.href;
+            fetch(voteUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the vote count display
+                const commentId = data.comment_id;
+                const commentElement = document.getElementById(`comment-${commentId}`);
+                if (commentElement) {
+                    const voteCountElement = commentElement.querySelector('.vote-count');
+                    if (voteCountElement) {
+                        voteCountElement.textContent = data.vote_count;
+                    }
+                    
+                    // Update vote button styles
+                    const upvoteBtn = commentElement.querySelector('a[href*="upvote"]');
+                    const downvoteBtn = commentElement.querySelector('a[href*="downvote"]');
+                    
+                    if (upvoteBtn) {
+                        if (data.user_vote === 1) {
+                            upvoteBtn.classList.add('voted');
+                        } else {
+                            upvoteBtn.classList.remove('voted');
+                        }
+                    }
+                    
+                    if (downvoteBtn) {
+                        if (data.user_vote === -1) {
+                            downvoteBtn.classList.add('voted');
+                        } else {
+                            downvoteBtn.classList.remove('voted');
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
     });
 }
