@@ -65,24 +65,23 @@
 
 {% block custom_js %}
 <script>
+    function toggleCustomAmount() {
+        var donationLevel = $('#id_donation_level').val();
+        if (donationLevel === 'custom') {
+            $('#custom_amount_container').show();
+        } else {
+            $('#custom_amount_container').hide();
+            $('#id_custom_amount').val('');
+        }
+    }
+    
     $(document).ready(function() {
-        // Style the radio buttons for donation options
-        $('.donation-option').parent().addClass('form-check');
-        $('.donation-option').addClass('form-check-input');
-        $('.donation-option').next('label').addClass('form-check-label');
+        // Initial state
+        toggleCustomAmount();
         
-        // When a radio button is selected, clear the custom amount field
-        $('.donation-option').change(function() {
-            if ($(this).is(':checked')) {
-                $('#id_custom_amount').val('');
-            }
-        });
-        
-        // When custom amount is entered, uncheck radio buttons
-        $('#id_custom_amount').on('input', function() {
-            if ($(this).val()) {
-                $('.donation-option').prop('checked', false);
-            }
+        // Listen for changes
+        $('#id_donation_level').change(function() {
+            toggleCustomAmount();
         });
     });
 </script>

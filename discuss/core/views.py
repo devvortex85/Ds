@@ -933,6 +933,22 @@ def donation_view(request):
             payment.user = request.user
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
+            
+            # Set total based on donation level or custom amount
+            donation_level = form.cleaned_data.get('donation_level')
+            custom_amount = form.cleaned_data.get('custom_amount')
+            
+            if donation_level == 'custom' and custom_amount:
+                payment.total = custom_amount
+            elif donation_level == 'small':
+                payment.total = 5
+            elif donation_level == 'medium':
+                payment.total = 10
+            elif donation_level == 'large':
+                payment.total = 25
+            else:
+                payment.total = 5  # Default to smallest amount
+                
             payment.description = f"Donation to Discuss by {request.user.username}"
             payment.billing_first_name = request.user.username
             payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
