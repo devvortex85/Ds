@@ -940,14 +940,19 @@ def donation_view(request):
             
             if donation_type == 0 and custom_amount:  # 0 means custom amount
                 payment.total = custom_amount
+                payment.amount = custom_amount  # Set amount field as well
             elif donation_type == 5:  # Small
                 payment.total = 5
+                payment.amount = 5
             elif donation_type == 10:  # Medium
                 payment.total = 10
+                payment.amount = 10
             elif donation_type == 25:  # Large
                 payment.total = 25
+                payment.amount = 25
             else:
                 payment.total = 5  # Default to smallest amount
+                payment.amount = 5
                 
             payment.description = f"Donation to Discuss by {request.user.username}"
             payment.billing_first_name = request.user.username
