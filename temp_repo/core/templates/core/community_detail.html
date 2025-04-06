@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load el_pagination_tags reputation_tags %}
 
 {% block title %}d/{{ community.name }} | Discuss{% endblock %}
 
@@ -7,49 +8,42 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-flex align-items-center">
-            <i class="fas fa-users fa-3x text-primary me-3"></i>
-            <div class="community-info flex-grow-1">
-                <h2 class="mb-1">d/{{ community.name }}</h2>
-                <p class="text-muted mb-0">{{ community.description }}</p>
-                <div class="community-meta small text-muted mt-1">
-                    <span><i class="fas fa-user me-1"></i> {{ community.members.count }} members</span>
-                    <span class="mx-2">•</span>
-                    <span><i class="fas fa-calendar-alt me-1"></i> Created {{ community.created_at|date:"F j, Y" }}</span>
-                </div>
+            <div class="icon me-3">
+                <i class="fas fa-users fa-3x text-primary"></i>
             </div>
-            
-            {% if user.is_authenticated %}
-                <div class="community-actions">
-                    {% if is_member %}
-                        <a href="{% url 'leave_community' community.id %}" class="btn btn-outline-danger btn-sm">
-                            <i class="fas fa-sign-out-alt me-1"></i> Leave
-                        </a>
-                    {% else %}
-                        <a href="{% url 'join_community' community.id %}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sign-in-alt me-1"></i> Join
-                        </a>
-                    {% endif %}
-                </div>
-            {% endif %}
+            <div>
+                <h1 class="mb-1">d/{{ community.name }}</h1>
+                <p class="text-muted mb-0">{{ community.description }}</p>
+                <small class="text-muted">Created {{ community.created_at|timesince }} ago • {{ community.members.count }} members</small>
+            </div>
         </div>
+        
+        {% if user.is_authenticated %}
+            <div class="mt-3">
+                {% if user in community.members.all %}
+                    <a href="{% url 'leave_community' community.id %}" class="btn btn-outline-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Leave Community
+                    </a>
+                    <div class="btn-group ms-2">
+                        <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary">
+                            <i class="fas fa-pen me-1"></i> Create Text Post
+                        </a>
+                        <a href="{% url 'create_link_post' community.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-link me-1"></i> Share Link
+                        </a>
+                    </div>
+                {% else %}
+                    <a href="{% url 'join_community' community.id %}" class="btn btn-success">
+                        <i class="fas fa-user-plus me-1"></i> Join Community
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Post Creation Buttons -->
-{% if user.is_authenticated and is_member %}
-    <div class="card mb-4">
-        <div class="card-body py-3">
-            <div class="d-flex">
-                <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary me-2 flex-grow-1">
-                    <i class="fas fa-font me-1"></i> Text Post
-                </a>
-                <a href="{% url 'create_link_post' community.id %}" class="btn btn-outline-primary flex-grow-1">
-                    <i class="fas fa-link me-1"></i> Link Post
-                </a>
-            </div>
-        </div>
-    </div>
-{% elif user.is_authenticated %}
+<!-- Call to Action for non-members -->
+{% if user.is_authenticated and user not in community.members.all %}
     <div class="alert alert-info mb-4">
         <i class="fas fa-info-circle me-2"></i>
         Join this community to create posts.
@@ -94,7 +88,7 @@
                             </div>
                             
                             <!-- Post Content -->
-                            <div class="post-content">
+                            <div class="post-content flex-grow-1">
                                 <div class="post-meta small text-muted mb-2">
                                     Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}</a>
                                     <span class="mx-1">•</span>
@@ -110,12 +104,14 @@
                                 
                                 {% if post.post_type == 'link' %}
                                     <div class="post-url">
-                                        <a href="{{ post.url }}" class="small text-muted text-decoration-none" target="_blank">
+                                        <a href="{{ post.url }}" target="_blank" class="text-muted small">
+                                            <i class="fas fa-external-link-alt me-1"></i>
                                             {{ post.url|truncatechars:50 }}
-                                            <i class="fas fa-external-link-alt ms-1"></i>
                                         </a>
                                     </div>
-                                {% elif post.content %}
+                                {% endif %}
+                                
+                                {% if post.post_type == 'text' and post.content %}
                                     <div class="post-content">
                                         <p class="mb-1">{{ post.content|truncatewords:50 }}</p>
                                     </div>
@@ -134,141 +130,61 @@
             </div>
             
             {% if page_obj.has_other_pages %}
-                <div class="pagination-container p-3">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center mb-0">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=1">&laquo; First</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <div class="pagination justify-content-center my-4">
+                    {% get_pages %}
+                    <ul class="pagination mb-0">
+                        {% if pages.previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ pages.previous.path }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page in pages %}
+                            {% if page == None %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
                                 </li>
                             {% else %}
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">&laquo; First</a>
-                                </li>
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">Previous</a>
+                                <li class="page-item {% if page.is_current %} active{% endif %}">
+                                    <a class="page-link" href="{{ page.path }}">{{ page.number }}</a>
                                 </li>
                             {% endif %}
-                            
-                            {% for num in page_obj.paginator.page_range %}
-                                {% if page_obj.number == num %}
-                                    <li class="page-item active">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                    </li>
-                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">Last &raquo;</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
+                        {% endfor %}
+                        
+                        {% if pages.next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ pages.next.path }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             {% endif %}
         {% else %}
-            <div class="p-4 text-center">
-                <p class="mb-3">No posts in this community yet.</p>
-                {% if user.is_authenticated and is_member %}
-                    <div class="d-flex justify-content-center">
-                        <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary me-2">
-                            <i class="fas fa-font me-1"></i> Create Text Post
-                        </a>
-                        <a href="{% url 'create_link_post' community.id %}" class="btn btn-outline-primary">
-                            <i class="fas fa-link me-1"></i> Create Link Post
+            <div class="text-center p-4">
+                <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                <h5>No posts yet</h5>
+                <p class="text-muted">Be the first to post in this community!</p>
+                {% if user.is_authenticated and user in community.members.all %}
+                    <div class="mt-3">
+                        <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary">
+                            <i class="fas fa-pen me-1"></i> Create Post
                         </a>
                     </div>
-                {% elif user.is_authenticated %}
-                    <a href="{% url 'join_community' community.id %}" class="btn btn-primary">
-                        Join to Post
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-primary">
-                        Login to Join
-                    </a>
                 {% endif %}
             </div>
         {% endif %}
-    </div>
-</div>
-{% endblock %}
-
-{% block sidebar %}
-<!-- Community Info -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">About d/{{ community.name }}</h5>
-    </div>
-    <div class="card-body">
-        <p>{{ community.description }}</p>
-        <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Members
-                <span class="badge bg-primary rounded-pill">{{ community.members.count }}</span>
-            </li>
-            <li class="list-group-item">
-                <i class="fas fa-calendar-alt me-2"></i> Created {{ community.created_at|date:"F j, Y" }}
-            </li>
-        </ul>
-        
-        {% if user.is_authenticated %}
-            {% if is_member %}
-                <div class="d-grid gap-2">
-                    {% if user.is_authenticated and is_member %}
-                        <a href="{% url 'create_text_post' community.id %}" class="btn btn-primary">
-                            <i class="fas fa-edit me-1"></i> Create Post
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'leave_community' community.id %}" class="btn btn-outline-danger">
-                        <i class="fas fa-sign-out-alt me-1"></i> Leave Community
-                    </a>
-                </div>
-            {% else %}
-                <div class="d-grid">
-                    <a href="{% url 'join_community' community.id %}" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt me-1"></i> Join Community
-                    </a>
-                </div>
-            {% endif %}
-        {% else %}
-            <div class="d-grid">
-                <a href="{% url 'login' %}" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt me-1"></i> Login to Join
-                </a>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Related Communities -->
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">Discover More Communities</h5>
-    </div>
-    <div class="card-body p-0">
-        <div class="list-group list-group-flush">
-            <a href="{% url 'community_list' %}" class="list-group-item list-group-item-action text-center">
-                <i class="fas fa-compass me-1"></i> Browse All Communities
-            </a>
-        </div>
     </div>
 </div>
 {% endblock %}
