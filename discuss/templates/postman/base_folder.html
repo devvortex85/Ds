@@ -1,0 +1,53 @@
+{% extends 'postman/base.html' %}
+{% load i18n %}
+
+{% block postman_content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+        <h5 class="mb-0">{% block pm_folder_title %}{% endblock %}</h5>
+        <div>
+            {% block pm_header_buttons %}{% endblock %}
+        </div>
+    </div>
+    <div class="card-body">
+        {% if pm_messages %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            {% block pm_sender_header %}
+                            <th>{% trans "Sender" %}</th>
+                            {% endblock %}
+                            <th>{% trans "Subject" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Action" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in pm_messages %}
+                            <tr{% if message.is_new %} class="fw-bold"{% endif %}>
+                                {% block pm_sender_cell %}
+                                <td>{{ message.sender }}</td>
+                                {% endblock %}
+                                <td>
+                                    <a href="{% url 'postman:view' message.pk %}">
+                                        {{ message.subject }}
+                                    </a>
+                                </td>
+                                <td>{{ message.sent_at|date:"SHORT_DATETIME_FORMAT" }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        {% block pm_actions %}{% endblock %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center py-4">{% trans "No messages." %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'postman/base.html' %}
+{% load i18n %}
+
+{% block postman_content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">{% trans "Archives" %}</h5>
+    </div>
+    <div class="card-body">
+        {% if pm_messages %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Sender" %}</th>
+                            <th>{% trans "Subject" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Action" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in pm_messages %}
+                            <tr>
+                                <td>{{ message.sender }}</td>
+                                <td>
+                                    <a href="{% url 'postman:view' message.pk %}">
+                                        {{ message.subject }}
+                                    </a>
+                                </td>
+                                <td>{{ message.sent_at|date:"SHORT_DATETIME_FORMAT" }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'postman:unarchive' %}?pks={{ message.pk }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-inbox"></i>
+                                        </a>
+                                        <a href="{% url 'postman:delete' %}?pks={{ message.pk }}" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center py-4">{% trans "No messages." %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -181,9 +181,17 @@
                                     </a>
                                 </li>
                                     <a class="dropdown-item" href="{% url 'donation_history' %}">
+                                        <i class="fas fa-credit-card me-2"></i> Donation History
+                                    </a>
+                                </li>
+                                <li>
                                     <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
                                             <i class="fas fa-sign-out-alt me-2"></i> Logout
                                         </button>
                                     </form>

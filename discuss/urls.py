@@ -17,6 +17,7 @@ urlpatterns = [
     # Avatar functionality is now directly implemented in the Profile model
     # and handled through the regular profile views
     path('payments/', include('payments.urls')),
+    path('messages/', include('postman.urls', namespace='postman')),
     path('', include('core.urls')),
 ]
 

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'watson',  # Django-watson for full-text search
     'django_social_share',  # Django social share app for sharing posts
     'payments',  # Django-payments for handling donations
+    'postman',  # Django-postman for private messaging
 ]
 
 MIDDLEWARE = [
@@ -252,3 +253,11 @@ PAYMENT_MODEL = 'core.Payment'
 PAYMENT_VARIANTS = {
     'default': ('payments.dummy.DummyProvider', {}),
 }
+
+# Django-postman settings
+POSTMAN_DISALLOW_ANONYMOUS = True  # No anonymous messaging
+POSTMAN_DISALLOW_MULTIRECIPIENTS = False  # Allow multiple recipients
+POSTMAN_DISALLOW_COPIES_ON_REPLY = False  # Allow copies on reply
+POSTMAN_DISABLE_USER_EMAILING = True  # No email notifications
+POSTMAN_AUTO_MODERATE_AS = True  # Auto-accept messages
+POSTMAN_SHOW_USER_AS = 'username'  # Show usernames instead of full name
