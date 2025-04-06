@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up comment replies
     setupCommentReplies();
     
-    // Set up AJAX voting
+    // Set up AJAX voting - load votes from localStorage first, then apply AJAX handlers
+    loadVotesFromLocalStorage();
     setupAjaxVoting();
     
     // Initialize any tooltips
@@ -84,6 +85,9 @@ function setupCommentReplies() {
 function setupAjaxVoting() {
     console.log("Setting up AJAX voting");
     
+    // Load existing votes from localStorage first
+    loadVotesFromLocalStorage();
+    
     // For post votes
     const postVoteButtons = document.querySelectorAll('a[href*="vote/post"]');
     console.log("Found post vote buttons:", postVoteButtons.length);
@@ -101,8 +105,11 @@ function setupAjaxVoting() {
             
             const voteUrl = this.href;
             fetch(voteUrl, {
+                method: 'POST',  // Use POST for state changes
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
                 }
             })
             .then(response => response.json())
@@ -146,6 +153,9 @@ function setupAjaxVoting() {
                         console.log("Removed 'voted' class from downvote button");
                     }
                 });
+                
+                // Save the vote state to localStorage
+                saveVoteToLocalStorage('post', postId, data.user_vote);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -170,8 +180,11 @@ function setupAjaxVoting() {
             
             const voteUrl = this.href;
             fetch(voteUrl, {
+                method: 'POST',  // Use POST for state changes
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
                 }
             })
             .then(response => response.json())
@@ -217,6 +230,9 @@ function setupAjaxVoting() {
                             console.log("Removed 'voted' class from comment downvote button");
                         }
                     }
+                    
+                    // Save the vote state to localStorage
+                    saveVoteToLocalStorage('comment', commentId, data.user_vote);
                 } else {
                     console.error(`Comment element not found for comment-${commentId}`);
                 }
@@ -226,4 +242,78 @@ function setupAjaxVoting() {
             });
         });
     });
+}
+
+// Function to get CSRF token
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+           document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+}
+
+// Save vote to localStorage - this is similar to how Reddit persists vote state
+function saveVoteToLocalStorage(type, id, value) {
+    try {
+        if (type && id) {
+            const key = `discuss_${type}_vote_${id}`;
+            console.log(`Saving vote to localStorage: ${key} = ${value}`);
+            localStorage.setItem(key, value);
+        }
+    } catch (e) {
+        console.error('Error saving vote to localStorage:', e);
+    }
+}
+
+// Load votes from localStorage and apply them
+function loadVotesFromLocalStorage() {
+    try {
+        console.log("Loading votes from localStorage");
+        
+        // For posts
+        document.querySelectorAll('a[href*="vote/post"]').forEach(btn => {
+            const href = btn.getAttribute('href');
+            const postIdMatch = href.match(/vote\/post\/(\d+)\/(up|down)vote/);
+            
+            if (postIdMatch && postIdMatch[1]) {
+                const postId = postIdMatch[1];
+                const voteType = postIdMatch[2]; // 'up' or 'down'
+                const key = `discuss_post_vote_${postId}`;
+                const savedVote = localStorage.getItem(key);
+                
+                console.log(`Checking saved vote for post ${postId}: ${savedVote}`);
+                
+                if (savedVote === '1' && voteType === 'up') {
+                    btn.classList.add('voted');
+                    console.log(`Applied saved upvote for post ${postId}`);
+                } else if (savedVote === '-1' && voteType === 'down') {
+                    btn.classList.add('voted');
+                    console.log(`Applied saved downvote for post ${postId}`);
+                }
+            }
+        });
+        
+        // For comments
+        document.querySelectorAll('a[href*="vote/comment"]').forEach(btn => {
+            const href = btn.getAttribute('href');
+            const commentIdMatch = href.match(/vote\/comment\/(\d+)\/(up|down)vote/);
+            
+            if (commentIdMatch && commentIdMatch[1]) {
+                const commentId = commentIdMatch[1];
+                const voteType = commentIdMatch[2]; // 'up' or 'down'
+                const key = `discuss_comment_vote_${commentId}`;
+                const savedVote = localStorage.getItem(key);
+                
+                console.log(`Checking saved vote for comment ${commentId}: ${savedVote}`);
+                
+                if (savedVote === '1' && voteType === 'up') {
+                    btn.classList.add('voted');
+                    console.log(`Applied saved upvote for comment ${commentId}`);
+                } else if (savedVote === '-1' && voteType === 'down') {
+                    btn.classList.add('voted');
+                    console.log(`Applied saved downvote for comment ${commentId}`);
+                }
+            }
+        });
+    } catch (e) {
+        console.error('Error loading votes from localStorage:', e);
+    }
 }

@@ -65,6 +65,8 @@ function setupVoting() {
             if (voteUrl && !voteUrl.includes('login')) {
                 event.preventDefault();
                 
+                console.log("Processing vote on:", voteUrl);
+                
                 // Send the AJAX request
                 fetch(voteUrl, {
                     method: 'POST',
@@ -75,39 +77,77 @@ function setupVoting() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Vote response:", data);
+                    
                     // Find the container with the vote count
                     const voteContainer = voteBtn.closest('.d-flex').querySelector('.vote-count');
                     if (voteContainer) {
                         voteContainer.textContent = data.vote_count;
                     }
                     
-                    // Toggle the voted class
+                    // Get vote buttons
                     const upvoteBtn = voteBtn.closest('.vote-column').querySelector('.upvote-btn');
                     const downvoteBtn = voteBtn.closest('.vote-column').querySelector('.downvote-btn');
                     
-                    if (voteBtn.classList.contains('upvote-btn')) {
-                        if (voteBtn.classList.contains('voted')) {
-                            voteBtn.classList.remove('voted');
-                        } else {
-                            voteBtn.classList.add('voted');
-                            if (downvoteBtn.classList.contains('voted')) {
-                                downvoteBtn.classList.remove('voted');
-                            }
-                        }
-                    } else if (voteBtn.classList.contains('downvote-btn')) {
-                        if (voteBtn.classList.contains('voted')) {
-                            voteBtn.classList.remove('voted');
-                        } else {
-                            voteBtn.classList.add('voted');
-                            if (upvoteBtn.classList.contains('voted')) {
-                                upvoteBtn.classList.remove('voted');
-                            }
-                        }
+                    // Remove voted class from both buttons first
+                    upvoteBtn.classList.remove('voted');
+                    downvoteBtn.classList.remove('voted');
+                    
+                    // Apply the correct voted class based on server response
+                    if (data.user_vote === 1) {
+                        upvoteBtn.classList.add('voted');
+                    } else if (data.user_vote === -1) {
+                        downvoteBtn.classList.add('voted');
                     }
+                    
+                    // Store the vote state in local storage for persistence
+                    const storageKey = data.post_id ? `post_vote_${data.post_id}` : `comment_vote_${data.comment_id}`;
+                    localStorage.setItem(storageKey, data.user_vote.toString());
                 })
                 .catch(error => {
                     console.error('Error during vote:', error);
                 });
+            }
+        }
+    });
+    
+    // Restore vote states from localStorage on page load
+    restoreVoteStates();
+}
+
+// Function to restore vote states from localStorage
+function restoreVoteStates() {
+    // Process all upvote/downvote buttons
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+        if (btn.classList.contains('upvote-btn')) {
+            const postId = btn.getAttribute('data-post-id');
+            const commentId = btn.getAttribute('data-comment-id');
+            
+            if (postId) {
+                const voteValue = localStorage.getItem(`post_vote_${postId}`);
+                if (voteValue === '1') {
+                    btn.classList.add('voted');
+                }
+            } else if (commentId) {
+                const voteValue = localStorage.getItem(`comment_vote_${commentId}`);
+                if (voteValue === '1') {
+                    btn.classList.add('voted');
+                }
+            }
+        } else if (btn.classList.contains('downvote-btn')) {
+            const postId = btn.getAttribute('data-post-id');
+            const commentId = btn.getAttribute('data-comment-id');
+            
+            if (postId) {
+                const voteValue = localStorage.getItem(`post_vote_${postId}`);
+                if (voteValue === '-1') {
+                    btn.classList.add('voted');
+                }
+            } else if (commentId) {
+                const voteValue = localStorage.getItem(`comment_vote_${commentId}`);
+                if (voteValue === '-1') {
+                    btn.classList.add('voted');
+                }
             }
         }
     });

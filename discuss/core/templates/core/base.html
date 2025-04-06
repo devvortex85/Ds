@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Discuss{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">  <!-- For AJAX calls -->
     {% load static %}
     
     <!-- Bootstrap CSS -->
@@ -236,9 +237,3 @@
     <!-- Core App Script -->
     <script src="{% static 'core/js/script.js' %}"></script>
     
-    <!-- Core App Script -->
-    <script src="{% static 'core/js/script.js' %}"></script>
-    
-    {% block extra_js %}{% endblock %}
-</body>
-</html>
