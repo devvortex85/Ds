@@ -39,11 +39,7 @@
                 <div class="post-meta small text-muted mb-2">
                     <a href="{% url 'community_detail' post.community.id %}" class="fw-bold text-decoration-none">d/{{ post.community.name }}</a>
                     <span class="mx-1">•</span>
-                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}
-                        {% if post.author.profile.country %}
-                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
-                        {% endif %}
-                        {{ post.author.profile.karma|reputation_badge }}</a>
+                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }} {{ post.author|country_flag }} {{ post.author.profile.karma|reputation_badge }}</a>
                     <span class="mx-1">•</span>
                     {{ post.created_at|timesince }} ago
                 </div>

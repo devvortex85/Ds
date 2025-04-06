@@ -1,4 +1,4 @@
-django==5.2
+django>=5.0
 django-allauth
 django-countries
 django-debug-toolbar
@@ -11,5 +11,4 @@ django-watson
 djangorestframework
 pillow
 psycopg2-binary
-requests
 dj-database-url

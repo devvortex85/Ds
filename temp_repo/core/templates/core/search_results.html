@@ -5,24 +5,12 @@
 {% block content %}
 <div class="mb-4">
     <h2>Search Results for "{{ query }}"</h2>
-    <div class="mt-2 mb-3">
-        {% if result_counts.total > 0 %}
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i> Found <strong>{{ result_counts.total }}</strong> total results 
-                ({{ result_counts.posts }} posts, {{ result_counts.communities }} communities, 
-                {{ result_counts.users }} users, {{ result_counts.tags }} tags)
-            </div>
-        {% endif %}
-    </div>
     <div class="mt-3">
         <form action="{% url 'search' %}" method="GET" class="d-flex">
             <input type="text" name="query" value="{{ query }}" class="form-control me-2" placeholder="Search...">
-            <button type="submit" class="btn btn-primary me-2">
+            <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search me-1"></i> Search
             </button>
-            <a href="{% url 'advanced_search' %}" class="btn btn-info text-white">
-                <i class="fas fa-filter me-1"></i> Advanced Search
-            </a>
         </form>
     </div>
 </div>
@@ -127,7 +115,7 @@
                                 <div class="post-meta small text-muted mb-2">
                                     <a href="{% url 'community_detail' post.community.id %}" class="fw-bold text-decoration-none">d/{{ post.community.name }}</a>
                                     <span class="mx-1">•</span>
-                                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }}</a>
+                                    Posted by <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">u/{{ post.author.username }} {{ post.author|country_flag }}</a>
                                     <span class="mx-1">•</span>
                                     {{ post.created_at|timesince }} ago
                                 </div>

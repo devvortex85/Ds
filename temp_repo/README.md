@@ -1,35 +1,23 @@
-# Discuss
+# Discuss Platform Core
 
-A dynamic Reddit-like social platform that enables community-driven content sharing and intelligent interaction through advanced social features.
+This repository contains the core components of the Discuss social platform.
 
 ## Features
 
-- User authentication system with profile pages
+- User profiles with reputation system
 - Community creation and management
-- Text and link posts with Markdown support
-- Nested comment system with threading
-- Voting system for posts and comments
-- Tagging system with filtering capabilities
-- Reputation/karma tracking system
-- Mobile-responsive design
+- Text and link post creation
+- Commenting with nested replies
+- Voting system
+- Advanced search and filtering
 
-## Technology Stack
+## Installation
 
-- Django web framework
-- PostgreSQL database
-- Bootstrap for responsive design
-- Django packages:
-  - django-allauth: Enhanced authentication
-  - django-taggit: Tagging system
-  - django-mptt: Tree structure for nested comments
-  - django-markdownx: Markdown support
-  - django-filter: Filtering capabilities
-  - django-el-pagination: Enhanced pagination
+1. Clone this repository
+2. Install dependencies: Django, Django REST Framework, etc.
+3. Run migrations: `python manage.py migrate`
+4. Start the server: `python manage.py runserver`
 
-## Recent Updates
+## Repository Structure
 
-- Added tagging system with filtering functionality
-- Improved comment nesting with color-coded indicators
-- Enhanced user reputation tracking
-- Migrated from SQLite to PostgreSQL for better performance
-- Added default tags and improved user onboarding
+This repository contains only the essential models, views, filters, and forms needed to understand the project structure.
