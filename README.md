@@ -17,3 +17,4 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 - PostgreSQL database
 - Responsive web design with Bootstrap
 
+# Test commit
