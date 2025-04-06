@@ -25,8 +25,8 @@ class VoteAdmin(admin.ModelAdmin):
     list_filter = ('value',)
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'donation_level', 'status', 'created_at', 'total')
-    list_filter = ('status', 'donation_level', 'created_at')
+    list_display = ('id', 'user', 'donation_type', 'status', 'created_at', 'total')
+    list_filter = ('status', 'donation_type', 'created_at')
     search_fields = ('user__username', 'description')
     readonly_fields = ('token', 'variant', 'status', 'transaction_id', 'currency', 'total', 'delivery', 'tax')
 

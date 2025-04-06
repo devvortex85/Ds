@@ -934,17 +934,17 @@ def donation_view(request):
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
             
-            # Set total based on donation level or custom amount
-            donation_level = form.cleaned_data.get('donation_level')
+            # Set total based on donation type or custom amount
+            donation_type = form.cleaned_data.get('donation_type')
             custom_amount = form.cleaned_data.get('custom_amount')
             
-            if donation_level == 'custom' and custom_amount:
+            if donation_type == 'custom' and custom_amount:
                 payment.total = custom_amount
-            elif donation_level == 'small':
+            elif donation_type == 'small':
                 payment.total = 5
-            elif donation_level == 'medium':
+            elif donation_type == 'medium':
                 payment.total = 10
-            elif donation_level == 'large':
+            elif donation_type == 'large':
                 payment.total = 25
             else:
                 payment.total = 5  # Default to smallest amount

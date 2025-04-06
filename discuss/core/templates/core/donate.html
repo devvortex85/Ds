@@ -22,8 +22,8 @@
                     <form method="post" class="mb-4">
                         {% csrf_token %}
                         <div class="form-group mb-4">
-                            <label for="donation_level" class="form-label">Select donation amount:</label>
-                            <select name="donation_level" id="donation_level" class="form-select form-control" onchange="toggleCustomAmount()">
+                            <label for="donation_type" class="form-label">Select donation amount:</label>
+                            <select name="donation_type" id="donation_type" class="form-select form-control" onchange="toggleCustomAmount()">
                                 <option value="small">Small Donation ($5)</option>
                                 <option value="medium">Medium Donation ($10)</option>
                                 <option value="large">Large Donation ($25)</option>
@@ -65,10 +65,10 @@
 
 <script>
     function toggleCustomAmount() {
-        const donationLevel = document.getElementById('donation_level').value;
+        const donationType = document.getElementById('donation_type').value;
         const customAmountDiv = document.getElementById('custom_amount_div');
         
-        if (donationLevel === 'custom') {
+        if (donationType === 'custom') {
             customAmountDiv.style.display = 'block';
         } else {
             customAmountDiv.style.display = 'none';

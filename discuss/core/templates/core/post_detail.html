@@ -93,9 +93,47 @@
                     {% endif %}
                     
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ post.title }}', url: window.location.href})">
+                        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-share-alt me-1"></i> Share
                         </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fab fa-facebook me-2"></i>Facebook
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fab fa-twitter me-2"></i>Twitter
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank">
+                                    <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fas fa-envelope me-2"></i>Email
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="https://reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank">
+                                    <i class="fab fa-reddit me-2"></i>Reddit
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('Link copied to clipboard!'); return false;">
+                                    <i class="fas fa-copy me-2"></i>Copy Link
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="navigator.share && navigator.share({title: '{{ post.title }}', url: window.location.href}); return false;">
+                                    <i class="fas fa-share me-2"></i>Native Share
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     
                     {% if user == post.author %}

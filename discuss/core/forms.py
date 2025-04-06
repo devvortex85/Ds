@@ -95,9 +95,9 @@ class DonationForm(forms.ModelForm):
     
     class Meta:
         model = Payment
-        fields = ['donation_level', 'description']
+        fields = ['donation_type', 'description']
         widgets = {
-            'donation_level': forms.Select(attrs={
+            'donation_type': forms.Select(attrs={
                 'class': 'form-select',
                 'onchange': 'toggleCustomAmount()'
             }),

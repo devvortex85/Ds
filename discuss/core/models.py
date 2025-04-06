@@ -351,7 +351,7 @@ class Payment(BasePayment):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
-    donation_level = models.CharField(max_length=10, choices=DONATION_LEVELS, default='small')
+    donation_type = models.CharField(max_length=10, choices=DONATION_LEVELS, default='small')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -365,8 +365,8 @@ class Payment(BasePayment):
         from payments.models import PurchasedItem
         return [
             PurchasedItem(
-                name=f"Donation to Discuss - {self.get_donation_level_display()}",
-                sku=f"donation-{self.donation_level}",
+                name=f"Donation to Discuss - {self.get_donation_type_display()}",
+                sku=f"donation-{self.donation_type}",
                 quantity=1,
                 price=self.total,
                 currency=self.currency,
