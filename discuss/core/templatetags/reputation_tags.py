@@ -9,20 +9,29 @@ def reputation_badge(karma, min_value=0):
     """
     Display a reputation badge with appropriate styling based on karma value.
     """
-    if karma < min_value:
+    # Convert karma and min_value to integers if they're strings
+    try:
+        karma_int = int(karma)
+        min_value_int = int(min_value)
+    except (ValueError, TypeError):
+        # If conversion fails, default to 0
+        karma_int = 0
+        min_value_int = 0
+    
+    if karma_int < min_value_int:
         return mark_safe(f'<span class="reputation-badge reputation-level-new">{karma}</span>')
     
-    if karma < 100:
+    if karma_int < 100:
         css_class = "reputation-level-new"
-    elif karma < 500:
+    elif karma_int < 500:
         css_class = "reputation-level-regular"
-    elif karma < 1000:
+    elif karma_int < 1000:
         css_class = "reputation-level-established"
-    elif karma < 2500:
+    elif karma_int < 2500:
         css_class = "reputation-level-trusted"
-    elif karma < 5000:
+    elif karma_int < 5000:
         css_class = "reputation-level-expert"
-    elif karma < 10000:
+    elif karma_int < 10000:
         css_class = "reputation-level-leader"
     else:
         css_class = "reputation-level-legend"
@@ -77,4 +86,8 @@ def country_flag(user):
 @register.filter
 def nesting_color(parent_id):
     """Return a color index for nested comments based on parent_id."""
-    return parent_id % 6  # Cycle through 6 different colors
+    try:
+        parent_id_int = int(parent_id)
+        return parent_id_int % 6  # Cycle through 6 different colors
+    except (ValueError, TypeError):
+        return 0  # Default to the first color
