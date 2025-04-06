@@ -938,13 +938,13 @@ def donation_view(request):
             donation_type = form.cleaned_data.get('donation_type')
             custom_amount = form.cleaned_data.get('custom_amount')
             
-            if donation_type == 'custom' and custom_amount:
+            if donation_type == 0 and custom_amount:  # 0 means custom amount
                 payment.total = custom_amount
-            elif donation_type == 'small':
+            elif donation_type == 5:  # Small
                 payment.total = 5
-            elif donation_type == 'medium':
+            elif donation_type == 10:  # Medium
                 payment.total = 10
-            elif donation_type == 'large':
+            elif donation_type == 25:  # Large
                 payment.total = 25
             else:
                 payment.total = 5  # Default to smallest amount

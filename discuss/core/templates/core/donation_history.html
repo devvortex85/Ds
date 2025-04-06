@@ -28,13 +28,13 @@
                                             <td>{{ payment.created_at|date:"M d, Y" }}</td>
                                             <td>${{ payment.total }}</td>
                                             <td>
-                                                {% if payment.donation_type == 'small' %}
+                                                {% if payment.donation_type == 5 %}
                                                     Small Donation
-                                                {% elif payment.donation_type == 'medium' %}
+                                                {% elif payment.donation_type == 10 %}
                                                     Medium Donation
-                                                {% elif payment.donation_type == 'large' %}
+                                                {% elif payment.donation_type == 25 %}
                                                     Large Donation
-                                                {% elif payment.donation_type == 'custom' %}
+                                                {% elif payment.donation_type == 0 %}
                                                     Custom Donation
                                                 {% endif %}
                                             </td>

@@ -344,14 +344,14 @@ class Notification(models.Model):
 
 class Payment(BasePayment):
     DONATION_LEVELS = [
-        ('small', 'Small ($5)'),
-        ('medium', 'Medium ($10)'),
-        ('large', 'Large ($25)'),
-        ('custom', 'Custom Amount'),
+        (5, 'Small ($5)'),
+        (10, 'Medium ($10)'),
+        (25, 'Large ($25)'),
+        (0, 'Custom Amount'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
-    donation_type = models.CharField(max_length=10, choices=DONATION_LEVELS, default='small')
+    donation_type = models.IntegerField(choices=DONATION_LEVELS, default=5)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -24,10 +24,10 @@
                         <div class="form-group mb-4">
                             <label for="donation_type" class="form-label">Select donation amount:</label>
                             <select name="donation_type" id="donation_type" class="form-select form-control" onchange="toggleCustomAmount()">
-                                <option value="small">Small Donation ($5)</option>
-                                <option value="medium">Medium Donation ($10)</option>
-                                <option value="large">Large Donation ($25)</option>
-                                <option value="custom">Custom Amount</option>
+                                <option value="5">Small Donation ($5)</option>
+                                <option value="10">Medium Donation ($10)</option>
+                                <option value="25">Large Donation ($25)</option>
+                                <option value="0">Custom Amount</option>
                             </select>
                         </div>
 
@@ -68,7 +68,7 @@
         const donationType = document.getElementById('donation_type').value;
         const customAmountDiv = document.getElementById('custom_amount_div');
         
-        if (donationType === 'custom') {
+        if (donationType === '0') {
             customAmountDiv.style.display = 'block';
         } else {
             customAmountDiv.style.display = 'none';
