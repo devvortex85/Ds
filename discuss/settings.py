@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'taggit',  # Django-taggit app
     'django_countries',  # Django-countries app
     'watson',  # Django-watson for full-text search
+    'django_social_share',  # Django social share app for sharing posts
 ]
 
 MIDDLEWARE = [
