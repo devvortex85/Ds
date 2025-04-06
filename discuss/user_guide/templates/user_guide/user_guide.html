@@ -1,0 +1,322 @@
+{% extends "core/base.html" %}
+
+{% block title %}User Guide - {{ guide_type|title }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{{ guide_type|title|replace:"_":" " }} Guide</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <p>Click the buttons below to navigate through the guide. This is an interactive tutorial that will help you understand how to use the Discuss platform.</p>
+                    </div>
+                    
+                    <div class="guide-navigation mb-4">
+                        <button id="guide-start" class="btn btn-primary">Start Guide</button>
+                        <button id="guide-prev" class="btn btn-secondary" disabled>Previous</button>
+                        <button id="guide-next" class="btn btn-secondary">Next</button>
+                        <button id="guide-close" class="btn btn-danger">Close Guide</button>
+                    </div>
+                    
+                    <div class="guide-steps">
+                        {% for step in steps %}
+                        <div class="guide-step" id="step-{{ step.order }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+                            <h3>{{ step.title }}</h3>
+                            <p>{{ step.content }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h3 class="mb-0">Other Guides</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'user_guide' 'new_user' %}" class="btn btn-outline-primary w-100">New User Guide</a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'user_guide' 'community_creation' %}" class="btn btn-outline-primary w-100">Community Guide</a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'user_guide' 'post_creation' %}" class="btn btn-outline-primary w-100">Post Creation</a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'user_guide' 'commenting' %}" class="btn btn-outline-primary w-100">Commenting</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = [{% for step in steps %}{{ step.order }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        let currentStep = 1;
+        const guideType = "{{ guide_type }}";
+        
+        // Guide navigation buttons
+        const startBtn = document.getElementById('guide-start');
+        const prevBtn = document.getElementById('guide-prev');
+        const nextBtn = document.getElementById('guide-next');
+        const closeBtn = document.getElementById('guide-close');
+        
+        // Update guide based on current step
+        function updateGuide() {
+            // Hide all steps
+            document.querySelectorAll('.guide-step').forEach(step => {
+                step.style.display = 'none';
+            });
+            
+            // Show current step
+            const currentStepEl = document.getElementById(`step-${currentStep}`);
+            if (currentStepEl) {
+                currentStepEl.style.display = 'block';
+            }
+            
+            // Update buttons
+            prevBtn.disabled = currentStep === 1;
+            nextBtn.disabled = currentStep === steps.length;
+        }
+        
+        // Start guide button
+        startBtn.addEventListener('click', function() {
+            currentStep = 1;
+            updateGuide();
+            
+            // Send AJAX request to get guide data
+            fetch(`/user-guide/api/${guideType}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Guide data loaded:', data);
+                    startInteractiveGuide(data.steps);
+                })
+                .catch(error => console.error('Error loading guide data:', error));
+        });
+        
+        // Previous button
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateGuide();
+            }
+        });
+        
+        // Next button
+        nextBtn.addEventListener('click', function() {
+            if (currentStep < steps.length) {
+                currentStep++;
+                updateGuide();
+            }
+        });
+        
+        // Close button
+        closeBtn.addEventListener('click', function() {
+            // Hide any tooltips or overlays that might be active
+            const tooltips = document.querySelectorAll('.guide-tooltip');
+            tooltips.forEach(tooltip => {
+                tooltip.remove();
+            });
+            
+            const overlays = document.querySelectorAll('.guide-overlay');
+            overlays.forEach(overlay => {
+                overlay.remove();
+            });
+        });
+        
+        // Interactive guide implementation
+        function startInteractiveGuide(steps) {
+            if (!steps || steps.length === 0) return;
+            
+            // Remove any existing tooltips/overlays
+            const existingTooltips = document.querySelectorAll('.guide-tooltip, .guide-overlay');
+            existingTooltips.forEach(el => el.remove());
+            
+            let currentIndex = 0;
+            
+            function showStep(step) {
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'guide-overlay';
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                overlay.style.zIndex = '9998';
+                document.body.appendChild(overlay);
+                
+                // Find target element
+                const targetElement = document.querySelector(step.element_selector);
+                
+                if (targetElement) {
+                    // Make the target visible through the overlay
+                    const rect = targetElement.getBoundingClientRect();
+                    const highlight = document.createElement('div');
+                    highlight.className = 'guide-highlight';
+                    highlight.style.position = 'absolute';
+                    highlight.style.top = rect.top + 'px';
+                    highlight.style.left = rect.left + 'px';
+                    highlight.style.width = rect.width + 'px';
+                    highlight.style.height = rect.height + 'px';
+                    highlight.style.zIndex = '9999';
+                    highlight.style.boxShadow = '0 0 0 9999px rgba(0, 0, 0, 0.7)';
+                    highlight.style.borderRadius = '4px';
+                    document.body.appendChild(highlight);
+                    
+                    // Create tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'guide-tooltip';
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.zIndex = '10000';
+                    tooltip.style.backgroundColor = '#ffffff';
+                    tooltip.style.padding = '15px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+                    tooltip.style.maxWidth = '300px';
+                    
+                    // Position tooltip based on specified position
+                    let tooltipTop, tooltipLeft;
+                    
+                    switch(step.position) {
+                        case 'top':
+                            tooltipTop = rect.top - 10 - tooltip.offsetHeight;
+                            tooltipLeft = rect.left + rect.width / 2;
+                            break;
+                        case 'bottom':
+                            tooltipTop = rect.bottom + 10;
+                            tooltipLeft = rect.left + rect.width / 2;
+                            break;
+                        case 'left':
+                            tooltipTop = rect.top + rect.height / 2;
+                            tooltipLeft = rect.left - 10 - 300; // Using maxWidth as an approximation
+                            break;
+                        case 'right':
+                            tooltipTop = rect.top + rect.height / 2;
+                            tooltipLeft = rect.right + 10;
+                            break;
+                        default:
+                            tooltipTop = rect.bottom + 10;
+                            tooltipLeft = rect.left + rect.width / 2;
+                    }
+                    
+                    // Add tooltip content
+                    tooltip.innerHTML = `
+                        <h4>${step.title}</h4>
+                        <p>${step.content}</p>
+                        <div class="tooltip-buttons">
+                            <button class="btn btn-sm btn-secondary guide-prev-btn" ${currentIndex === 0 ? 'disabled' : ''}>Previous</button>
+                            <button class="btn btn-sm btn-primary guide-next-btn">
+                                ${currentIndex === steps.length - 1 ? 'Finish' : 'Next'}
+                            </button>
+                        </div>
+                    `;
+                    
+                    tooltip.style.top = tooltipTop + 'px';
+                    tooltip.style.left = tooltipLeft + 'px';
+                    tooltip.style.transform = 'translate(-50%, 0)';
+                    
+                    document.body.appendChild(tooltip);
+                    
+                    // Add event listeners to tooltip buttons
+                    const prevButton = tooltip.querySelector('.guide-prev-btn');
+                    const nextButton = tooltip.querySelector('.guide-next-btn');
+                    
+                    prevButton.addEventListener('click', function() {
+                        if (currentIndex > 0) {
+                            document.querySelectorAll('.guide-tooltip, .guide-overlay, .guide-highlight').forEach(el => el.remove());
+                            currentIndex--;
+                            showStep(steps[currentIndex]);
+                        }
+                    });
+                    
+                    nextButton.addEventListener('click', function() {
+                        document.querySelectorAll('.guide-tooltip, .guide-overlay, .guide-highlight').forEach(el => el.remove());
+                        
+                        if (currentIndex < steps.length - 1) {
+                            currentIndex++;
+                            showStep(steps[currentIndex]);
+                        }
+                    });
+                    
+                } else {
+                    console.warn(`Element with selector '${step.element_selector}' not found`);
+                    document.querySelectorAll('.guide-tooltip, .guide-overlay').forEach(el => el.remove());
+                    
+                    // Show a message when the element isn't found
+                    const errorTooltip = document.createElement('div');
+                    errorTooltip.className = 'guide-tooltip';
+                    errorTooltip.style.position = 'fixed';
+                    errorTooltip.style.top = '50%';
+                    errorTooltip.style.left = '50%';
+                    errorTooltip.style.transform = 'translate(-50%, -50%)';
+                    errorTooltip.style.zIndex = '10000';
+                    errorTooltip.style.backgroundColor = '#ffffff';
+                    errorTooltip.style.padding = '15px';
+                    errorTooltip.style.borderRadius = '5px';
+                    errorTooltip.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+                    errorTooltip.style.maxWidth = '300px';
+                    
+                    errorTooltip.innerHTML = `
+                        <h4>Element Not Found</h4>
+                        <p>The guided element could not be found on this page. You may need to navigate to the appropriate page first.</p>
+                        <div class="tooltip-buttons">
+                            <button class="btn btn-sm btn-secondary guide-prev-btn" ${currentIndex === 0 ? 'disabled' : ''}>Previous</button>
+                            <button class="btn btn-sm btn-primary guide-next-btn">
+                                ${currentIndex === steps.length - 1 ? 'Finish' : 'Next'}
+                            </button>
+                            <button class="btn btn-sm btn-danger guide-close-btn">Close Guide</button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(errorTooltip);
+                    
+                    // Add event listeners
+                    const prevButton = errorTooltip.querySelector('.guide-prev-btn');
+                    const nextButton = errorTooltip.querySelector('.guide-next-btn');
+                    const closeButton = errorTooltip.querySelector('.guide-close-btn');
+                    
+                    prevButton.addEventListener('click', function() {
+                        if (currentIndex > 0) {
+                            document.querySelectorAll('.guide-tooltip, .guide-overlay').forEach(el => el.remove());
+                            currentIndex--;
+                            showStep(steps[currentIndex]);
+                        }
+                    });
+                    
+                    nextButton.addEventListener('click', function() {
+                        document.querySelectorAll('.guide-tooltip, .guide-overlay').forEach(el => el.remove());
+                        
+                        if (currentIndex < steps.length - 1) {
+                            currentIndex++;
+                            showStep(steps[currentIndex]);
+                        } else {
+                            // Last step, close the guide
+                            document.querySelectorAll('.guide-tooltip, .guide-overlay').forEach(el => el.remove());
+                        }
+                    });
+                    
+                    closeButton.addEventListener('click', function() {
+                        document.querySelectorAll('.guide-tooltip, .guide-overlay').forEach(el => el.remove());
+                    });
+                }
+            }
+            
+            // Start with the first step
+            showStep(steps[currentIndex]);
+        }
+    });
+</script>
+{% endblock %}

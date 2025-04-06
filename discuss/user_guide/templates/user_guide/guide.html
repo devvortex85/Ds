@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if guide_type == 'new_user' %}
+        New User Guide
+    {% elif guide_type == 'community_creation' %}
+        Community Creation Guide
+    {% elif guide_type == 'post_creation' %}
+        Post Creation Guide
+    {% elif guide_type == 'commenting' %}
+        Commenting Guide
+    {% else %}
+        User Guide
+    {% endif %}
+{% endblock %}
+
+{% block head_extras %}
+    <link rel="stylesheet" href="{% static 'core/css/user_guide/user_guide.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">
+                    {% if guide_type == 'new_user' %}
+                        New User Guide
+                    {% elif guide_type == 'community_creation' %}
+                        Community Creation Guide
+                    {% elif guide_type == 'post_creation' %}
+                        Post Creation Guide
+                    {% elif guide_type == 'commenting' %}
+                        Commenting Guide
+                    {% else %}
+                        User Guide
+                    {% endif %}
+                </h1>
+
+                <div class="card">
+                    <div class="card-body">
+                        <p class="lead mb-4">
+                            {% if guide_type == 'new_user' %}
+                                Welcome to Discuss! This guide will help you get started with the platform.
+                            {% elif guide_type == 'community_creation' %}
+                                Learn how to create and manage your own communities.
+                            {% elif guide_type == 'post_creation' %}
+                                Learn how to create engaging posts that get noticed.
+                            {% elif guide_type == 'commenting' %}
+                                Learn how to participate in discussions effectively.
+                            {% else %}
+                                Follow this guide to learn more about using Discuss.
+                            {% endif %}
+                        </p>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Click the button below to start the interactive guide. You can press Escape at any time to exit.
+                        </div>
+
+                        <button id="start-guide" class="btn btn-primary">
+                            <i class="fas fa-play-circle me-2"></i>
+                            Start Guide
+                        </button>
+                    </div>
+                </div>
+
+                {% if steps %}
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Guide Steps</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                {% for step in steps %}
+                                    <div class="list-group-item">
+                                        <h5 class="mb-1">{{ step.title }}</h5>
+                                        <p class="mb-1">{{ step.content }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'core/js/user_guide/user_guide.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up the guide
+            const userGuide = new DiscussUserGuide({
+                cookieName: 'discuss_guide_{{ guide_type }}',
+                cookieExpireDays: 365
+            });
+
+            // Load steps from API
+            fetch('{% url 'user_guide:get_steps' guide_type %}')
+                .then(response => response.json())
+                .then(data => {
+                    userGuide.options.steps = data.steps;
+                    
+                    // Add start button event listener
+                    document.getElementById('start-guide').addEventListener('click', function() {
+                        userGuide.start();
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading guide steps:', error);
+                });
+        });
+    </script>
+{% endblock %}
