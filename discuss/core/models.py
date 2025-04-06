@@ -157,6 +157,10 @@ class Post(models.Model):
         up_votes = self.votes.filter(value=1).count()
         down_votes = self.votes.filter(value=-1).count()
         return up_votes - down_votes
+        
+    @property
+    def comment_count(self):
+        return self.comments.count()
     
     class Meta:
         ordering = ['-created_at']

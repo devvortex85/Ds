@@ -38,7 +38,7 @@
                     <span class="text-muted">• Posted by 
                         <a href="{% url 'profile' post.author.username %}" class="user-link">u/{{ post.author.username }}</a>
                         {% if post.author.profile.country %}
-                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 16px; height: 12px;" /> 
+                        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.code }}" class="country-flag" style="width: 24px; height: auto;" /> 
                         {% endif %}
                         {{ post.created_at|timesince }} ago
                     </span>
@@ -75,7 +75,7 @@
                 <!-- Post footer actions -->
                 <div class="post-actions mt-2">
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-comment"></i> {{ post.comment_count|default:0 }} Comments
+                        <i class="fas fa-comment"></i> {{ post.comments.count }} Comments
                     </a>
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-share"></i> Share
