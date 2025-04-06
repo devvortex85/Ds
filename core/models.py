@@ -108,7 +108,9 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        profile = Profile.objects.create(user=instance)
+        # Add 'news' tag to user interests by default
+        profile.interests.add('news')
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -158,6 +160,12 @@ class Post(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+
+# Add 'news' tag by default to posts when they are created
+@receiver(post_save, sender=Post)
+def add_default_tag_to_post(sender, instance, created, **kwargs):
+    if created and instance.tags.count() == 0:
+        instance.tags.add('news')
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
