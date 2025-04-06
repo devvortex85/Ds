@@ -56,4 +56,8 @@ urlpatterns = [
     
     # Django Payments URLs
     path('payments/', include('payments.urls')),
+    
+    # Sentry integration
+    path('sentry/', views.sentry_status, name='sentry_status'),
+    path('sentry-test/', views.sentry_test, name='sentry_test'),
 ]

@@ -3,7 +3,9 @@ Django settings for discuss project.
 """
 
 import os
+import sentry_sdk
 from pathlib import Path
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -253,3 +255,33 @@ PAYMENT_VARIANTS = {
         'public_key': '',
     })
 }
+
+# Sentry configuration for error tracking
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+        ],
+        
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=0.5,
+        
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+        
+        # By default the SDK will try to use the SENTRY_RELEASE
+        # environment variable, or infer a git commit
+        # SHA as release, however you may want to set
+        # something more human-readable.
+        # release="discuss@1.0.0",
+        
+        # How many seconds to wait before sending the event to Sentry
+        shutdown_timeout=2.0,
+        
+        # Set environment name 
+        environment="development" if DEBUG else "production",
+    )

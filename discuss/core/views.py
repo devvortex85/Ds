@@ -1048,3 +1048,25 @@ def donation_history(request):
     }
     
     return render(request, 'core/donation_history.html', context)
+
+
+def sentry_status(request):
+    """
+    View to show the status of Sentry integration
+    """
+    context = {
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+    }
+    return render(request, 'core/sentry_status.html', context)
+
+
+def sentry_test(request):
+    """
+    Test view to verify Sentry error tracking is working.
+    This view will deliberately raise an exception that should be captured by Sentry.
+    """
+    # Trigger a ZeroDivisionError for testing Sentry's error tracking
+    division_by_zero = 1 / 0
+    
+    # This line will never be reached due to the exception above
+    return render(request, 'core/home.html')
