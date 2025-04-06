@@ -19,9 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up comment replies
     setupCommentReplies();
     
-    // Set up AJAX voting for posts and comments
-    setupVoting();
-    
     // Initialize any tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -95,123 +92,6 @@ function setupCommentReplies() {
             const replyForm = document.getElementById(`reply-form-${commentId}`);
             if (replyForm) {
                 replyForm.style.display = 'none';
-            }
-        });
-    });
-}
-
-function setupVoting() {
-    // AJAX for post votes
-    const postVoteButtons = document.querySelectorAll('.post-content .vote-btn');
-    console.log("Found post vote buttons:", postVoteButtons.length);
-    
-    postVoteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Only prevent default if the user is authenticated
-            // (otherwise we want to redirect to login)
-            if (this.classList.contains('upvote-btn') || this.classList.contains('downvote-btn')) {
-                e.preventDefault();
-                
-                const url = this.getAttribute('href');
-                console.log("Making vote request to:", url);
-                
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Vote response:", data);
-                    
-                    // Update the vote count
-                    const voteCountElement = this.parentElement.querySelector('.vote-count');
-                    if (voteCountElement) {
-                        voteCountElement.textContent = data.vote_count;
-                    }
-                    
-                    // Update vote button classes
-                    const voteType = this.classList.contains('upvote-btn') ? 1 : -1;
-                    const otherButton = this.classList.contains('upvote-btn') 
-                        ? this.parentElement.querySelector('.downvote-btn')
-                        : this.parentElement.querySelector('.upvote-btn');
-                    
-                    // Handle the vote action response
-                    if (data.action === 'added') {
-                        this.classList.add('voted');
-                        if (otherButton) {
-                            otherButton.classList.remove('voted');
-                        }
-                    } else if (data.action === 'removed') {
-                        this.classList.remove('voted');
-                    } else if (data.action === 'changed') {
-                        this.classList.add('voted');
-                        if (otherButton) {
-                            otherButton.classList.remove('voted');
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-        });
-    });
-    
-    // AJAX for comment votes (both top-level and nested)
-    const commentVoteButtons = document.querySelectorAll('.list-group-item .vote-btn, .nested-reply .vote-btn');
-    console.log("Found comment vote buttons:", commentVoteButtons.length);
-    
-    commentVoteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Only prevent default if the user is authenticated
-            if (this.classList.contains('upvote-btn') || this.classList.contains('downvote-btn')) {
-                e.preventDefault();
-                
-                const url = this.getAttribute('href');
-                console.log("Making vote request to:", url);
-                
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Vote response:", data);
-                    
-                    // Update the vote count
-                    const voteCountElement = this.parentElement.querySelector('.vote-count');
-                    if (voteCountElement) {
-                        voteCountElement.textContent = data.vote_count;
-                    }
-                    
-                    // Update vote button classes
-                    const voteType = this.classList.contains('upvote-btn') ? 1 : -1;
-                    const otherButton = this.classList.contains('upvote-btn') 
-                        ? this.parentElement.querySelector('.downvote-btn')
-                        : this.parentElement.querySelector('.upvote-btn');
-                    
-                    // Handle the vote action response
-                    if (data.action === 'added') {
-                        this.classList.add('voted');
-                        if (otherButton) {
-                            otherButton.classList.remove('voted');
-                        }
-                    } else if (data.action === 'removed') {
-                        this.classList.remove('voted');
-                    } else if (data.action === 'changed') {
-                        this.classList.add('voted');
-                        if (otherButton) {
-                            otherButton.classList.remove('voted');
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
             }
         });
     });

@@ -56,11 +56,14 @@ def home(request, template='core/index.html', extra_context=None):
         except Tag.DoesNotExist:
             pass
     
+    # Always annotate posts with comment count
+    posts = posts.annotate(comment_count_anno=Count('comments'))
+    
     # Apply sorting
     if sort == 'popular':
         posts = posts.annotate(vote_count_sum=Sum('votes__value')).order_by('-vote_count_sum')
     elif sort == 'comments':
-        posts = posts.annotate(comment_count=Count('comments')).order_by('-comment_count')
+        posts = posts.order_by('-comment_count_anno')
     elif sort == 'oldest':
         posts = posts.order_by('created_at')
     else:  # Default to 'recent'
@@ -119,7 +122,8 @@ def profile(request, username):
     profile = get_object_or_404(Profile, user=user)
     
     # Get user's posts and comments
-    posts = Post.objects.filter(author=user).order_by('-created_at')
+    posts = Post.objects.filter(author=user).annotate(comment_count_anno=Count('comments')).order_by('-created_at')
+    posts_count = posts.count()
     comments = Comment.objects.filter(author=user).order_by('-created_at')
     
     # Get user's communities
@@ -134,6 +138,9 @@ def profile(request, username):
     reputation_progress = profile.get_reputation_progress()
     
     context = {
+        'posts_count': posts_count,
+        'comments_count': comments_count,
+        'communities_count': communities_count,
         'user_profile': user,
         'profile': profile,
         'posts': posts,
@@ -221,7 +228,11 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
     View a community and its posts
     """
     community = get_object_or_404(Community, pk=pk)
-    posts = Post.objects.filter(community=community).order_by('-created_at')
+    
+    # Fetch posts with annotated comment_count
+    posts = Post.objects.filter(community=community).annotate(
+        comment_count_anno=Count('comments')
+    ).order_by('-created_at')
     
     # Check if user is a member
     is_member = request.user.is_authenticated and community.members.filter(id=request.user.id).exists()

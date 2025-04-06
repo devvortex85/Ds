@@ -75,7 +75,7 @@
                 <!-- Post footer actions -->
                 <div class="post-actions mt-2">
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-comment"></i> {{ post.comments.count }} Comments
+                        <i class="fas fa-comment"></i> {% if post.comment_count_anno is not None %}{{ post.comment_count_anno }}{% else %}{{ post.comments.count }}{% endif %} Comments
                     </a>
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-share"></i> Share

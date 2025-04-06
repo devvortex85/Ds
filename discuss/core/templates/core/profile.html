@@ -107,7 +107,7 @@
 <!-- User's Communities -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">Communities ({{ communities|length }})</h5>
+        <h5 class="card-title mb-0">Communities ({{ communities_count }})</h5>
     </div>
     <div class="card-body p-0">
         {% if communities %}
@@ -135,12 +135,12 @@
         <ul class="nav nav-tabs card-header-tabs" id="profileTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">
-                    Posts ({{ posts|length }})
+                    Posts ({{ posts_count }})
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">
-                    Comments ({{ comments|length }})
+                    Comments ({{ comments_count }})
                 </button>
             </li>
         </ul>
@@ -266,15 +266,15 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Posts
-                <span class="badge bg-primary rounded-pill">{{ posts|length }}</span>
+                <span class="badge bg-primary rounded-pill">{{ posts_count }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Comments
-                <span class="badge bg-primary rounded-pill">{{ comments|length }}</span>
+                <span class="badge bg-primary rounded-pill">{{ comments_count }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Communities
-                <span class="badge bg-primary rounded-pill">{{ communities|length }}</span>
+                <span class="badge bg-primary rounded-pill">{{ communities_count }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Reputation
