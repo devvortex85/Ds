@@ -273,6 +273,15 @@ phonenumberslite = [
 ]
 
 [[package]]
+name = "django-social-share"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/06/82/5bb1e496a85b00fdcc0f6220a73d670d0c7a722424a689d370f51c0cf3c9/django-social-share-2.3.0.tar.gz", hash = "sha256:37844f3b4f88a2008604ece7eaedd52fd5914f111f13525200ce1101b750757f", size = 11177 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/8c/fab0089cb1f161435d082d9ee5945d8d2a678da15be8bda5181e6aa4de60/django_social_share-2.3.0-py2.py3-none-any.whl", hash = "sha256:13d0a1fbb2a90e3a6e7eb556315ececd1e93a906574a3284affbe2f43e2f7398", size = 14385 },
+]
+
+[[package]]
 name = "django-taggit"
 version = "6.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -471,6 +480,7 @@ dependencies = [
     { name = "django-markdownx" },
     { name = "django-mptt" },
     { name = "django-payments" },
+    { name = "django-social-share" },
     { name = "django-taggit" },
     { name = "django-watson" },
     { name = "djangorestframework" },
@@ -494,6 +504,7 @@ requires-dist = [
     { name = "django-markdownx", specifier = ">=4.0.7" },
     { name = "django-mptt", specifier = ">=0.17.0" },
     { name = "django-payments", specifier = ">=3.0.1" },
+    { name = "django-social-share", specifier = ">=2.3.0" },
     { name = "django-taggit", specifier = ">=6.1.0" },
     { name = "django-watson", specifier = ">=1.6.3" },
     { name = "djangorestframework", specifier = ">=3.16.0" },
