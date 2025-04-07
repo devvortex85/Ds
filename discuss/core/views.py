@@ -929,8 +929,15 @@ def donate(request):
     if request.method == 'POST':
         form = DonationForm(request.POST)
         if form.is_valid():
-            # Get amount from cleaned_data (set in form's clean method)
-            amount_value = form.cleaned_data.get('amount', 5)  # Default to 5 if not set
+            # Get donation type and determine the amount
+            donation_type = form.cleaned_data.get('donation_type', 5)
+            
+            # Explicitly calculate amount based on donation type or custom amount
+            if donation_type == 0:  # Custom amount
+                amount_value = form.cleaned_data.get('custom_amount', 5)
+            else:
+                # Use the donation_type value directly (5, 10, or 25)
+                amount_value = donation_type
             
             # Create payment but don't save yet
             payment = form.save(commit=False)
@@ -938,9 +945,9 @@ def donate(request):
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
             
-            # Explicitly set total and amount fields to ensure they're not null
+            # Explicitly set total and amount fields
             payment.total = amount_value
-            payment.amount = amount_value  # This is critical - must set both fields
+            payment.amount = amount_value  # Set amount explicitly to avoid null value error
             
             # Add additional fields required by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"
@@ -949,9 +956,13 @@ def donate(request):
             payment.billing_email = request.user.email
             payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
             
+            # Debug output to help diagnose issues
+            print(f"DEBUG: Creating payment with amount={payment.amount}, total={payment.total}")
+            
             # Save the payment record to the database
             try:
                 payment.save()
+                print(f"DEBUG: Payment saved successfully with ID={payment.id}")
                 
                 # Store the payment ID in the session for later reference
                 request.session['payment_id'] = payment.id
@@ -959,6 +970,7 @@ def donate(request):
                 # Redirect to confirmation page
                 return redirect('donation_confirmation')
             except Exception as e:
+                print(f"DEBUG: Payment save failed: {str(e)}")
                 messages.error(request, f"Error processing donation: {str(e)}")
                 return redirect('donate')
     else:

@@ -365,12 +365,15 @@ class Payment(BasePayment):
 
     def get_purchased_items(self):
         from payments.models import PurchasedItem
+        # Ensure we're using the amount field (which should never be null)
+        # Fall back to total if amount is somehow null
+        item_price = self.amount if self.amount is not None else (self.total or 5)
         return [
             PurchasedItem(
                 name=f"Donation to Discuss - {self.get_donation_type_display()}",
                 sku=f"donation-{self.donation_type}",
                 quantity=1,
-                price=self.total,
+                price=item_price,
                 currency=self.currency,
             )
         ]

@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from payments import urls as payment_urls
+from postman import urls as postman_urls  # Import postman URLs properly
 
 urlpatterns = [
     # Home and registration
@@ -38,15 +39,16 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('advanced-search/', views.advanced_search, name='advanced_search'),
     
-    # Notifications
-    path('notifications/', views.notifications_list, name='notifications_list'),  # Updated to match function name
+    # Notifications - Match the correct function name
+    path('notifications/', views.notifications_list, name='notifications_list'),
     path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     
-    # Messaging is handled in the main urls.py
+    # Messaging - Handled in main urls.py, so we don't include it here to avoid conflicts
+    # path('messages/', include(postman_urls, namespace='postman')),
     
     # Donations
-    path('donate/', views.donate, name='donate'),
+    path('donate/', views.donate, name='donate'),  # Function name is donate, not donation_view
     path('donate/confirm/', views.donation_confirmation, name='donation_confirmation'),
     path('donate/process/<int:payment_id>/', views.process_payment, name='process_payment'),
     path('donate/success/', views.payment_success, name='payment_success'),

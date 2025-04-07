@@ -37,12 +37,22 @@
                 <td>{{ message.sent_at|date:"SHORT_DATETIME_FORMAT" }}</td>
                 <td>
                     <div class="btn-group btn-group-sm" role="group">
-                        <a href="{% url 'postman:archive' message.pk %}?next={{ request.path }}" class="btn btn-outline-secondary" title="{% trans 'Archive' %}">
-                            <i class="bi bi-archive"></i>
-                        </a>
-                        <a href="{% url 'postman:delete' message.pk %}?next={{ request.path }}" class="btn btn-outline-danger" title="{% trans 'Delete' %}">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                        <form action="{% url 'postman:archive' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="pks" value="{{ message.pk }}">
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit" class="btn btn-outline-secondary" title="{% trans 'Archive' %}">
+                                <i class="bi bi-archive"></i>
+                            </button>
+                        </form>
+                        <form action="{% url 'postman:delete' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="pks" value="{{ message.pk }}">
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit" class="btn btn-outline-danger" title="{% trans 'Delete' %}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
             </tr>
