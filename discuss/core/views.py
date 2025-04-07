@@ -9,6 +9,7 @@ from django.urls import reverse
 from taggit.models import Tag
 from watson import search as watson
 from payments import get_payment_model, RedirectNeeded
+from decimal import Decimal
 
 from .models import Profile, Community, Post, Comment, Vote, Notification, Payment
 from .forms import (UserRegisterForm, UserUpdateForm, ProfileUpdateForm, 
@@ -1072,6 +1073,24 @@ def process_payment(request, payment_id):
         return redirect('home')
     
     try:
+        # Set required fields if not already set
+        if payment.status is None:
+            payment.status = 'waiting'
+        if payment.fraud_status is None:
+            payment.fraud_status = 'unknown'
+        if not payment.gateway_response:
+            payment.gateway_response = '{}'
+        
+        # Set other required fields with reasonable defaults if empty
+        if payment.delivery is None:
+            payment.delivery = Decimal('0.00')
+        if payment.tax is None:
+            payment.tax = Decimal('0.00')
+        if payment.captured_amount is None:
+            payment.captured_amount = Decimal('0.00')
+            
+        payment.save()
+        
         # Process the payment
         form = payment.get_form(data=request.POST or None)
         if form.is_valid():
