@@ -146,6 +146,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='posts')
     tags = TaggableManager(blank=True, help_text="A comma-separated list of tags.")
+    # Denormalized vote counts (Reddit-style)
+    upvote_count = models.PositiveIntegerField(default=0)
+    downvote_count = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.title
@@ -155,9 +158,10 @@ class Post(models.Model):
     
     @property
     def vote_count(self):
-        up_votes = self.votes.filter(value=1).count()
-        down_votes = self.votes.filter(value=-1).count()
-        return up_votes - down_votes
+        """
+        Reddit-style vote count using denormalized fields
+        """
+        return self.upvote_count - self.downvote_count
         
     @property
     def comment_count(self):
@@ -172,15 +176,19 @@ class Comment(MPTTModel):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+    # Denormalized vote counts (Reddit-style)
+    upvote_count = models.PositiveIntegerField(default=0)
+    downvote_count = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return f'Comment by {self.author.username} on {self.post.title}'
     
     @property
     def vote_count(self):
-        up_votes = self.votes.filter(value=1).count()
-        down_votes = self.votes.filter(value=-1).count()
-        return up_votes - down_votes
+        """
+        Reddit-style vote count using denormalized fields
+        """
+        return self.upvote_count - self.downvote_count
     
     class MPTTMeta:
         order_insertion_by = ['created_at']
@@ -203,6 +211,91 @@ class Vote(models.Model):
     def __str__(self):
         target = self.post if self.post else self.comment
         return f'{self.get_value_display()} by {self.user.username} on {target}'
+    
+    def save(self, *args, **kwargs):
+        """
+        Reddit-style vote processing:
+        When a vote is saved or updated, immediately update the denormalized count
+        on the target object (post or comment)
+        """
+        # Check if this is a new vote being created
+        is_new = self.pk is None
+        
+        # If updating an existing vote, store the old value
+        old_value = None
+        if not is_new:
+            try:
+                old_vote = Vote.objects.get(pk=self.pk)
+                old_value = old_vote.value
+            except Vote.DoesNotExist:
+                pass
+                
+        # Call the parent save method to save the vote itself
+        super().save(*args, **kwargs)
+        
+        # Update denormalized counts on the target
+        if self.post:
+            if is_new:
+                # New vote
+                if self.value == 1:
+                    self.post.upvote_count += 1
+                else:
+                    self.post.downvote_count += 1
+            elif old_value != self.value:
+                # Changed vote (e.g., upvote -> downvote)
+                if old_value == 1 and self.value == -1:
+                    self.post.upvote_count -= 1
+                    self.post.downvote_count += 1
+                elif old_value == -1 and self.value == 1:
+                    self.post.downvote_count -= 1
+                    self.post.upvote_count += 1
+            
+            self.post.save(update_fields=['upvote_count', 'downvote_count'])
+            
+        elif self.comment:
+            if is_new:
+                # New vote
+                if self.value == 1:
+                    self.comment.upvote_count += 1
+                else:
+                    self.comment.downvote_count += 1
+            elif old_value != self.value:
+                # Changed vote (e.g., upvote -> downvote)
+                if old_value == 1 and self.value == -1:
+                    self.comment.upvote_count -= 1
+                    self.comment.downvote_count += 1
+                elif old_value == -1 and self.value == 1:
+                    self.comment.downvote_count -= 1
+                    self.comment.upvote_count += 1
+            
+            self.comment.save(update_fields=['upvote_count', 'downvote_count'])
+    
+    def delete(self, *args, **kwargs):
+        """
+        When a vote is deleted, update the denormalized counts on the target
+        """
+        # Store references before deletion
+        post = self.post
+        comment = self.comment
+        value = self.value
+        
+        # Call the parent delete method
+        super().delete(*args, **kwargs)
+        
+        # Update denormalized counts
+        if post:
+            if value == 1:
+                post.upvote_count = max(0, post.upvote_count - 1)  # Ensure non-negative
+            else:
+                post.downvote_count = max(0, post.downvote_count - 1)
+            post.save(update_fields=['upvote_count', 'downvote_count'])
+            
+        elif comment:
+            if value == 1:
+                comment.upvote_count = max(0, comment.upvote_count - 1)
+            else:
+                comment.downvote_count = max(0, comment.downvote_count - 1)
+            comment.save(update_fields=['upvote_count', 'downvote_count'])
     
     class Meta:
         # Ensure a user can only vote once on a post or comment

@@ -579,7 +579,7 @@ def delete_comment(request, pk):
 @login_required
 def vote_post(request, pk, vote_type):
     """
-    Vote on a post (upvote or downvote)
+    Vote on a post (upvote or downvote) using Reddit-style direct vote counting
     """
     post = get_object_or_404(Post, pk=pk)
     
@@ -610,11 +610,11 @@ def vote_post(request, pk, vote_type):
     # Update the author's karma
     post.author.profile.update_karma()
     
+    # Refresh post from database to get updated vote counts
+    post.refresh_from_db()
+    
     # Check if this is an AJAX request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Get the current vote count
-        current_vote_count = post.vote_count
-        
         # Get the user's current vote
         user_vote = 0
         try:
@@ -623,11 +623,13 @@ def vote_post(request, pk, vote_type):
         except Vote.DoesNotExist:
             pass
         
-        # Return JSON response
+        # Return JSON response with denormalized vote count
         return JsonResponse({
             'post_id': post.id,
-            'vote_count': current_vote_count,
-            'user_vote': user_vote
+            'vote_count': post.vote_count,
+            'user_vote': user_vote,
+            'upvote_count': post.upvote_count,
+            'downvote_count': post.downvote_count
         })
     
     # For non-AJAX requests, redirect back to the referring page
@@ -646,7 +648,7 @@ def vote_post(request, pk, vote_type):
 @login_required
 def vote_comment(request, pk, vote_type):
     """
-    Vote on a comment (upvote or downvote)
+    Vote on a comment (upvote or downvote) using Reddit-style direct vote counting
     """
     comment = get_object_or_404(Comment, pk=pk)
     
@@ -677,11 +679,11 @@ def vote_comment(request, pk, vote_type):
     # Update the author's karma
     comment.author.profile.update_karma()
     
+    # Refresh comment from database to get updated vote counts
+    comment.refresh_from_db()
+    
     # Check if this is an AJAX request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Get the current vote count
-        current_vote_count = comment.vote_count
-        
         # Get the user's current vote
         user_vote = 0
         try:
@@ -690,11 +692,13 @@ def vote_comment(request, pk, vote_type):
         except Vote.DoesNotExist:
             pass
         
-        # Return JSON response
+        # Return JSON response with denormalized vote count
         return JsonResponse({
             'comment_id': comment.id,
-            'vote_count': current_vote_count,
-            'user_vote': user_vote
+            'vote_count': comment.vote_count,
+            'user_vote': user_vote,
+            'upvote_count': comment.upvote_count,
+            'downvote_count': comment.downvote_count
         })
     
     # For non-AJAX requests, redirect back to the referring page
@@ -881,8 +885,8 @@ def post_votes_api(request, pk):
     """API endpoint to get post vote count and user's vote"""
     post = get_object_or_404(Post, pk=pk)
     
-    # Get current vote count
-    vote_count = post.vote_count
+    # Refresh post to ensure we have the latest vote counts
+    post.refresh_from_db()
     
     # Get the user's vote on this post
     user_vote = 0
@@ -895,8 +899,10 @@ def post_votes_api(request, pk):
     # Return JSON response
     return JsonResponse({
         'post_id': post.id,
-        'vote_count': vote_count,
-        'user_vote': user_vote
+        'vote_count': post.vote_count,
+        'user_vote': user_vote,
+        'upvote_count': post.upvote_count,
+        'downvote_count': post.downvote_count
     })
 
 @login_required
@@ -904,8 +910,8 @@ def comment_votes_api(request, pk):
     """API endpoint to get comment vote count and user's vote"""
     comment = get_object_or_404(Comment, pk=pk)
     
-    # Get current vote count
-    vote_count = comment.vote_count
+    # Refresh comment to ensure we have the latest vote counts
+    comment.refresh_from_db()
     
     # Get the user's vote on this comment
     user_vote = 0
@@ -918,8 +924,10 @@ def comment_votes_api(request, pk):
     # Return JSON response
     return JsonResponse({
         'comment_id': comment.id,
-        'vote_count': vote_count,
-        'user_vote': user_vote
+        'vote_count': comment.vote_count,
+        'user_vote': user_vote,
+        'upvote_count': comment.upvote_count,
+        'downvote_count': comment.downvote_count
     })
 
 # Donation/Payment Views
