@@ -924,7 +924,7 @@ def comment_votes_api(request, pk):
 
 # Donation/Payment Views
 @login_required
-def donation_view(request):
+def donate(request):
     """View for creating a new donation"""
     if request.method == 'POST':
         form = DonationForm(request.POST)
@@ -960,9 +960,11 @@ def donation_view(request):
                 payment.amount = 5
                 payment.donation_type = 5  # Ensure this is set to a valid value
             
-            # Add additional fields needed by django-payments
+            # Add additional fields required by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"
             payment.billing_first_name = request.user.username
+            payment.billing_last_name = getattr(request.user, 'last_name', 'User')
+            payment.billing_email = request.user.email
             payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
             
             # Save the payment record to the database
