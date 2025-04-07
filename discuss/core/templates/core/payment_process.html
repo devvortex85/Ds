@@ -32,7 +32,7 @@
                     
                     <div class="payment-form">
                         <h4>Payment Details</h4>
-                        <form method="post" action="{{ payment.get_process_url }}">
+                        <form method="post" action="{% url 'process_payment' payment.pk %}">
                             {% csrf_token %}
                             {{ form.media }}
                             

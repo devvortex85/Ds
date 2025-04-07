@@ -1068,6 +1068,52 @@ def payment_success(request):
     return redirect('donation_history')
 
 @login_required
+def process_payment(request, payment_id):
+    """Process the payment after form submission"""
+    payment = get_object_or_404(Payment, id=payment_id)
+    
+    # Make sure the payment belongs to the current user
+    if payment.user != request.user:
+        messages.error(request, "Access denied. This payment doesn't belong to you.")
+        return redirect('home')
+    
+    try:
+        # Process the payment
+        form = payment.get_form(data=request.POST or None)
+        if form.is_valid():
+            # Try to process the payment with the provider
+            try:
+                form.save()
+                return redirect('payment_success')
+            except Exception as e:
+                # Log the error
+                print(f"Payment processing error: {str(e)}")
+                # Set error on payment for debugging
+                payment.error = str(e)
+                payment.save(update_fields=['error'])
+                messages.error(request, f"Payment error: {str(e)}")
+                return redirect('payment_failure')
+        else:
+            # Form has validation errors
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, f"{field}: {error}")
+            
+            # Render the payment process page again with errors
+            context = {
+                'form': form,
+                'payment': payment,
+                'unread_notification_count': get_unread_notification_count(request.user)
+            }
+            return render(request, 'core/payment_process.html', context)
+            
+    except Exception as e:
+        # General exception handling
+        print(f"Payment exception: {str(e)}")
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect('payment_failure')
+
+@login_required
 def payment_failure(request):
     """Payment failure page"""
     payment_id = request.session.get('payment_id')

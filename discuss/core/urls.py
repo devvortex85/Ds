@@ -50,6 +50,7 @@ urlpatterns = [
     # Donations
     path('donate/', views.donate, name='donate'),
     path('donate/confirm/', views.donation_confirmation, name='donation_confirmation'),
+    path('donate/process/<int:payment_id>/', views.process_payment, name='process_payment'),
     path('donate/success/', views.payment_success, name='payment_success'),
     path('donate/failure/', views.payment_failure, name='payment_failure'),
     path('donate/history/', views.donation_history, name='donation_history'),
