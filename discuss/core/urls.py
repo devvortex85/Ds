@@ -44,7 +44,7 @@ urlpatterns = [
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     
     # Messaging - Handled in main urls.py, so we don't include it here to avoid conflicts
-    # path('messages/', include(postman_urls, namespace='postman')),
+    # Postman URLs are already included in the main urls.py file
     
     # Donations
     path('donate/', views.donate, name='donate'),  # Function name is donate, not donation_view
