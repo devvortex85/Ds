@@ -21,8 +21,11 @@ def get_unread_notification_count(user):
     """Helper function to get unread notification count for a user"""
     if user.is_authenticated:
         try:
+            # Try to get notification count if the model/functionality exists
             return Notification.objects.filter(recipient=user, is_read=False).count()
-        except:
+        except Exception as e:
+            # In case of any error (model doesn't exist, table doesn't exist, etc.)
+            print(f"Error getting notification count: {str(e)}")
             return 0
     return 0
 
@@ -616,15 +619,15 @@ def vote_post(request, pk, vote_type):
             # If different vote type, update the vote
             vote.value = vote_value
             vote.save()
-            # Create a notification for the vote if it's an upvote
-            if vote_value == 1:
-                Notification.create_vote_notification(vote)
+            # Notification functionality commented out until properly implemented
+            # if vote_value == 1:
+            #     Notification.create_vote_notification(vote)
     except Vote.DoesNotExist:
         # Create a new vote
         vote = Vote.objects.create(user=request.user, post=post, value=vote_value)
-        # Create a notification for the vote if it's an upvote
-        if vote_value == 1:
-            Notification.create_vote_notification(vote)
+        # Notification functionality commented out until properly implemented
+        # if vote_value == 1:
+        #     Notification.create_vote_notification(vote)
     
     # Update the author's karma
     post.author.profile.update_karma()
@@ -689,15 +692,15 @@ def vote_comment(request, pk, vote_type):
             # If different vote type, update the vote
             vote.value = vote_value
             vote.save()
-            # Create a notification for the vote if it's an upvote
-            if vote_value == 1:
-                Notification.create_vote_notification(vote)
+            # Notification functionality commented out until properly implemented
+            # if vote_value == 1:
+            #     Notification.create_vote_notification(vote)
     except Vote.DoesNotExist:
         # Create a new vote
         vote = Vote.objects.create(user=request.user, comment=comment, value=vote_value)
-        # Create a notification for the vote if it's an upvote
-        if vote_value == 1:
-            Notification.create_vote_notification(vote)
+        # Notification functionality commented out until properly implemented
+        # if vote_value == 1:
+        #     Notification.create_vote_notification(vote)
     
     # Update the author's karma
     comment.author.profile.update_karma()
@@ -901,11 +904,7 @@ def advanced_search(request):
     
     return render(request, 'core/advanced_search.html', context)
 
-# Notification view function is already defined at the top of the file
-
-# Notification mark_as_read view function is already defined at the top of the file
-
-# mark_all_notifications_read view function is already defined at the top of the file
+# Notification views are already defined at the top of the file
 
 @login_required
 def post_votes_api(request, pk):

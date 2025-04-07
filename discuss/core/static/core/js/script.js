@@ -89,7 +89,7 @@ function setupAjaxVoting() {
     loadVotesFromLocalStorage();
     
     // For post votes
-    const postVoteButtons = document.querySelectorAll('a[href*="vote/post"]');
+    const postVoteButtons = document.querySelectorAll('.post-vote-btn');
     console.log("Found post vote buttons:", postVoteButtons.length);
     
     postVoteButtons.forEach(button => {
@@ -168,7 +168,7 @@ function setupAjaxVoting() {
     });
     
     // For comment votes
-    const commentVoteButtons = document.querySelectorAll('a[href*="vote/comment"]');
+    const commentVoteButtons = document.querySelectorAll('.comment-vote-btn');
     console.log("Found comment vote buttons:", commentVoteButtons.length);
     
     commentVoteButtons.forEach(button => {
@@ -277,7 +277,7 @@ function loadVotesFromLocalStorage() {
         console.log("Loading votes from localStorage");
         
         // For posts
-        document.querySelectorAll('a[href*="vote/post"]').forEach(btn => {
+        document.querySelectorAll('.post-vote-btn').forEach(btn => {
             const href = btn.getAttribute('href');
             const postIdMatch = href.match(/vote\/post\/(\d+)\/(up|down)vote/);
             
@@ -302,7 +302,7 @@ function loadVotesFromLocalStorage() {
         });
         
         // For comments
-        document.querySelectorAll('a[href*="vote/comment"]').forEach(btn => {
+        document.querySelectorAll('.comment-vote-btn').forEach(btn => {
             const href = btn.getAttribute('href');
             const commentIdMatch = href.match(/vote\/comment\/(\d+)\/(up|down)vote/);
             
