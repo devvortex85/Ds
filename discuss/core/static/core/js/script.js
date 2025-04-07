@@ -105,10 +105,9 @@ function setupAjaxVoting() {
             
             const voteUrl = this.href;
             fetch(voteUrl, {
-                method: 'POST',  // Use POST for state changes
+                method: 'GET',  // Django view is only set up for GET requests currently
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': getCsrfToken()
                 }
             })
@@ -126,37 +125,37 @@ function setupAjaxVoting() {
                     console.error(`Vote count element not found for post-${postId}-votes`);
                 }
                 
-                // Update active state of vote buttons
-                const upvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/upvote"]`);
-                const downvoteButtons = document.querySelectorAll(`a[href*="vote/post/${postId}/downvote"]`);
+                // Update active state of vote buttons for this post
+                const upvoteBtn = document.querySelector(`.post-vote-btn[href*="/posts/${postId}/vote/upvote"]`);
+                const downvoteBtn = document.querySelector(`.post-vote-btn[href*="/posts/${postId}/vote/downvote"]`);
                 
-                console.log("Found upvote buttons:", upvoteButtons.length);
-                console.log("Found downvote buttons:", downvoteButtons.length);
+                console.log("Found upvote button:", upvoteBtn ? "yes" : "no");
+                console.log("Found downvote button:", downvoteBtn ? "yes" : "no");
                 console.log("Current user vote value:", data.user_vote);
                 
-                upvoteButtons.forEach(btn => {
+                if (upvoteBtn) {
                     if (data.user_vote === 1) {
-                        btn.classList.add('voted');
-                        btn.classList.add('active');
+                        upvoteBtn.classList.add('voted');
+                        upvoteBtn.classList.add('active');
                         console.log("Added 'voted' and 'active' classes to upvote button");
                     } else {
-                        btn.classList.remove('voted');
-                        btn.classList.remove('active');
+                        upvoteBtn.classList.remove('voted');
+                        upvoteBtn.classList.remove('active');
                         console.log("Removed 'voted' and 'active' classes from upvote button");
                     }
-                });
+                }
                 
-                downvoteButtons.forEach(btn => {
+                if (downvoteBtn) {
                     if (data.user_vote === -1) {
-                        btn.classList.add('voted');
-                        btn.classList.add('active');
+                        downvoteBtn.classList.add('voted');
+                        downvoteBtn.classList.add('active');
                         console.log("Added 'voted' and 'active' classes to downvote button");
                     } else {
-                        btn.classList.remove('voted');
-                        btn.classList.remove('active');
+                        downvoteBtn.classList.remove('voted');
+                        downvoteBtn.classList.remove('active');
                         console.log("Removed 'voted' and 'active' classes from downvote button");
                     }
-                });
+                }
                 
                 // Save the vote state to localStorage
                 saveVoteToLocalStorage('post', postId, data.user_vote);
@@ -184,10 +183,9 @@ function setupAjaxVoting() {
             
             const voteUrl = this.href;
             fetch(voteUrl, {
-                method: 'POST',  // Use POST for state changes
+                method: 'GET',  // Django view is only set up for GET requests currently
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': getCsrfToken()
                 }
             })
@@ -279,7 +277,9 @@ function loadVotesFromLocalStorage() {
         // For posts
         document.querySelectorAll('.post-vote-btn').forEach(btn => {
             const href = btn.getAttribute('href');
-            const postIdMatch = href.match(/vote\/post\/(\d+)\/(up|down)vote/);
+            if (!href) return;
+            
+            const postIdMatch = href.match(/posts\/(\d+)\/vote\/(up|down)vote/);
             
             if (postIdMatch && postIdMatch[1]) {
                 const postId = postIdMatch[1];
@@ -304,7 +304,9 @@ function loadVotesFromLocalStorage() {
         // For comments
         document.querySelectorAll('.comment-vote-btn').forEach(btn => {
             const href = btn.getAttribute('href');
-            const commentIdMatch = href.match(/vote\/comment\/(\d+)\/(up|down)vote/);
+            if (!href) return;
+            
+            const commentIdMatch = href.match(/comments\/(\d+)\/vote\/(up|down)vote/);
             
             if (commentIdMatch && commentIdMatch[1]) {
                 const commentId = commentIdMatch[1];

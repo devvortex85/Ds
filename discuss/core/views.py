@@ -645,6 +645,8 @@ def vote_post(request, pk, vote_type):
         except Vote.DoesNotExist:
             pass
         
+        print(f"AJAX vote request: post_id={post.id}, vote_count={post.vote_count}, user_vote={user_vote}")
+        
         # Return JSON response with denormalized vote count
         return JsonResponse({
             'post_id': post.id,
@@ -717,6 +719,8 @@ def vote_comment(request, pk, vote_type):
             user_vote = vote.value
         except Vote.DoesNotExist:
             pass
+            
+        print(f"AJAX comment vote request: comment_id={comment.id}, vote_count={comment.vote_count}, user_vote={user_vote}")
         
         # Return JSON response with denormalized vote count
         return JsonResponse({
