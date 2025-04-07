@@ -1,73 +1,51 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load i18n %}
 
-{% block title %}Processing Payment{% endblock %}
-
-{% block extra_head %}
-{{ form.media }}
-{% endblock %}
+{% block title %}Process Payment{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <div class="card shadow">
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="my-2"><i class="fas fa-money-bill-wave me-2"></i>Complete Your Payment</h2>
+                    <h2 class="mb-0">Complete Your Payment</h2>
                 </div>
                 <div class="card-body">
-                    <div class="py-4">
-                        {% if payment %}
-                            <div class="alert alert-info mb-4">
-                                <p class="lead mb-0">
-                                    You are donating <strong>${{ payment.total }}</strong> to support Discuss.
-                                </p>
-                            </div>
-                            
-                            <div class="py-3">
-                                <form method="post" id="payment-form">
-                                    {% csrf_token %}
-                                    {{ form.non_field_errors }}
-                                    
-                                    {% for field in form.hidden_fields %}
-                                        {{ field }}
-                                    {% endfor %}
-                                    
-                                    {% for field in form.visible_fields %}
-                                        <div class="mb-3">
-                                            {{ field.errors }}
-                                            {{ field.label_tag }}
-                                            {{ field }}
-                                            {% if field.help_text %}
-                                                <div class="form-text text-muted">{{ field.help_text }}</div>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                    
-                                    <div class="d-grid gap-2 mt-4">
-                                        <button type="submit" class="btn btn-primary btn-lg">
-                                            <i class="fas fa-check-circle me-1"></i> Complete Payment
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            
-                            <div class="text-center mt-3">
-                                <a href="{% url 'donation_confirmation' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-1"></i> Back to Payment Options
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="alert alert-warning">
-                                <p>No donation in progress. Please start a new donation.</p>
-                            </div>
-                            <div class="text-center">
-                                <a href="{% url 'donate' %}" class="btn btn-primary">
-                                    <i class="fas fa-hand-holding-heart me-1"></i> Make a Donation
-                                </a>
-                            </div>
-                        {% endif %}
+                    <div class="alert alert-info mb-4">
+                        <p class="mb-0">Please complete your payment information below.</p>
                     </div>
+                    
+                    <div class="payment-summary mb-4">
+                        <h4>Payment Summary</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Amount:</th>
+                                <td>${{ payment.total|floatformat:2 }} USD</td>
+                            </tr>
+                            <tr>
+                                <th>Payment Method:</th>
+                                <td>{{ payment.variant|title }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="payment-form">
+                        <h4>Payment Details</h4>
+                        <form method="post" action="{{ payment.get_process_url }}">
+                            {% csrf_token %}
+                            {{ form.media }}
+                            {{ form }}
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">Complete Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <i class="fas fa-lock"></i> Your payment information is secure and encrypted.
+                    </small>
                 </div>
             </div>
         </div>

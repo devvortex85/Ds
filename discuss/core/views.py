@@ -934,14 +934,17 @@ def donation_view(request):
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
             
-            # Set total and amount based on donation type or custom amount
+            # Set total based on donation type or custom amount
             donation_type = form.cleaned_data.get('donation_type')
             custom_amount = form.cleaned_data.get('custom_amount')
             
-            # Set the amount field in all cases to avoid the null constraint violation
+            # Set both the total and amount fields to avoid null constraint violations
+            # Convert donation_type to int to ensure proper comparison
+            donation_type = int(donation_type)
+            
             if donation_type == 0 and custom_amount:  # 0 means custom amount
                 payment.total = custom_amount
-                payment.amount = custom_amount  # This is the critical field that was missing
+                payment.amount = custom_amount  # Ensure amount is set (our custom field)
             elif donation_type == 5:  # Small
                 payment.total = 5
                 payment.amount = 5
@@ -952,8 +955,10 @@ def donation_view(request):
                 payment.total = 25
                 payment.amount = 25
             else:
+                # Fallback to ensure we never have null values
                 payment.total = 5  # Default to smallest amount
                 payment.amount = 5
+                payment.donation_type = 5  # Ensure this is set to a valid value
             
             # Add additional fields needed by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"

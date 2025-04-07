@@ -1,110 +1,64 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load i18n %}
 
 {% block title %}Confirm Your Donation{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <div class="card shadow">
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="my-2"><i class="fas fa-credit-card me-2"></i>Confirm Your Donation</h2>
+                    <h2 class="mb-0">Confirm Your Donation</h2>
                 </div>
                 <div class="card-body">
-                    <div class="py-4">
-                        {% if payment %}
-                            <div class="alert alert-info my-4">
-                                <p class="lead mb-0">
-                                    You are about to donate <strong>${{ payment.total }}</strong> to support Discuss.
-                                </p>
-                            </div>
-                            
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h5 class="mb-0">Donation Details</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Amount:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            ${{ payment.total }}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Donation Type:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {% if payment.donation_type == 0 %}
-                                                Custom Amount
-                                            {% elif payment.donation_type == 5 %}
-                                                Small ($5)
-                                            {% elif payment.donation_type == 10 %}
-                                                Medium ($10)
-                                            {% elif payment.donation_type == 25 %}
-                                                Large ($25)
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    {% if payment.description %}
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Message:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ payment.description }}
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <form method="post" class="mb-4">
-                                {% csrf_token %}
-                                <div class="mb-4">
-                                    <h5>Select Payment Method</h5>
-                                    <div class="list-group">
-                                        <label class="list-group-item">
-                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="default" checked>
-                                            Test Payment (Dummy Provider)
-                                        </label>
-                                        <label class="list-group-item">
-                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="paypal">
-                                            Pay with PayPal
-                                        </label>
-                                        <label class="list-group-item">
-                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="stripe">
-                                            Pay with Credit/Debit Card
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="fas fa-lock me-1"></i> Proceed to Payment
-                                    </button>
-                                </div>
-                            </form>
-                            
-                            <div class="text-center mt-3">
-                                <a href="{% url 'donate' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-1"></i> Change Donation
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="alert alert-warning">
-                                <p>No donation in progress. Please start a new donation.</p>
-                            </div>
-                            <div class="text-center">
-                                <a href="{% url 'donate' %}" class="btn btn-primary">
-                                    <i class="fas fa-hand-holding-heart me-1"></i> Make a Donation
-                                </a>
-                            </div>
-                        {% endif %}
+                    <div class="alert alert-info">
+                        <p class="mb-0">Please review your donation details before proceeding to payment.</p>
                     </div>
+                    
+                    <div class="donation-summary mt-4">
+                        <h4>Donation Summary</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Amount:</th>
+                                <td>${{ payment.total|floatformat:2 }} USD</td>
+                            </tr>
+                            {% if payment.description %}
+                            <tr>
+                                <th>Message:</th>
+                                <td>{{ payment.description }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Date:</th>
+                                <td>{{ payment.created_at|date }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Payment Method</strong></label>
+                            <select name="payment_variant" class="form-select">
+                                <option value="default" selected>Credit Card</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="stripe">Stripe</option>
+                            </select>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Proceed to Payment
+                            </button>
+                            <a href="{% url 'donate' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Your support means a lot to our community. Thank you!</small>
                 </div>
             </div>
         </div>
