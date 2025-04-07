@@ -117,4 +117,21 @@ class DonationForm(forms.ModelForm):
         if donation_type == 0 and not custom_amount:
             self.add_error('custom_amount', 'Please enter a custom amount')
         
+        # Set the amount field based on donation type to ensure it's never null
+        if donation_type == 0 and custom_amount:
+            # For custom amount
+            cleaned_data['amount'] = custom_amount
+        elif donation_type == 5:
+            # Small donation
+            cleaned_data['amount'] = 5
+        elif donation_type == 10:
+            # Medium donation
+            cleaned_data['amount'] = 10
+        elif donation_type == 25:
+            # Large donation
+            cleaned_data['amount'] = 25
+        else:
+            # Default fallback
+            cleaned_data['amount'] = 5
+        
         return cleaned_data

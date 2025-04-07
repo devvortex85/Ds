@@ -28,13 +28,23 @@
             </a>
             {% endif %}
             
-            <a href="{% url 'postman:archive' message.pk %}?next={{ next_url }}" class="btn btn-secondary">
-                <i class="bi bi-archive"></i> {% trans "Archive" %}
-            </a>
+            <form action="{% url 'postman:archive' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="pks" value="{{ message.pk }}">
+                <input type="hidden" name="next" value="{{ next_url }}">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="bi bi-archive"></i> {% trans "Archive" %}
+                </button>
+            </form>
             
-            <a href="{% url 'postman:delete' message.pk %}?next={{ next_url }}" class="btn btn-danger">
-                <i class="bi bi-trash"></i> {% trans "Delete" %}
-            </a>
+            <form action="{% url 'postman:delete' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="pks" value="{{ message.pk }}">
+                <input type="hidden" name="next" value="{{ next_url }}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> {% trans "Delete" %}
+                </button>
+            </form>
         </div>
     </div>
 </div>

@@ -929,41 +929,18 @@ def donate(request):
     if request.method == 'POST':
         form = DonationForm(request.POST)
         if form.is_valid():
+            # Get amount from cleaned_data (set in form's clean method)
+            amount_value = form.cleaned_data.get('amount', 5)  # Default to 5 if not set
+            
+            # Create payment but don't save yet
             payment = form.save(commit=False)
             payment.user = request.user
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
             
-            # Set total based on donation type or custom amount
-            donation_type = form.cleaned_data.get('donation_type')
-            custom_amount = form.cleaned_data.get('custom_amount')
-            
-            # Set both the total and amount fields to avoid null constraint violations
-            # Convert donation_type to int to ensure proper comparison
-            donation_type = int(donation_type)
-            
-            # Set the amount based on donation type
-            if donation_type == 0 and custom_amount:  # 0 means custom amount
-                amount_value = float(custom_amount)
-                payment.total = amount_value
-                payment.amount = amount_value
-            elif donation_type == 5:  # Small
-                payment.total = 5
-                payment.amount = 5
-            elif donation_type == 10:  # Medium
-                payment.total = 10
-                payment.amount = 10
-            elif donation_type == 25:  # Large
-                payment.total = 25
-                payment.amount = 25
-            else:
-                # Fallback to ensure we never have null values
-                payment.total = 5  # Default to smallest amount
-                payment.amount = 5
-                payment.donation_type = 5  # Ensure this is set to a valid value
-                
-            # Ensure amount is set directly as a decimal to avoid null issues
-            payment.amount = payment.total
+            # Explicitly set total and amount fields to ensure they're not null
+            payment.total = amount_value
+            payment.amount = amount_value  # This is critical - must set both fields
             
             # Add additional fields required by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"
@@ -1005,6 +982,11 @@ def donation_confirmation(request):
     try:
         payment = get_object_or_404(Payment, id=payment_id)
         
+        # Safeguard: ensure payment has an amount set
+        if payment.amount is None or payment.amount == 0:
+            payment.amount = payment.total or 5  # Fallback to 5 if total is also None
+            payment.save(update_fields=['amount'])
+        
         # Handle payment confirmation form submission
         if request.method == 'POST':
             # Get selected payment method from form
@@ -1015,8 +997,9 @@ def donation_confirmation(request):
             
             # Double-check that amount is properly set to prevent null values
             if payment.amount is None or payment.amount == 0:
-                payment.amount = payment.total
+                payment.amount = payment.total or 5
                 
+            # Always save to ensure changes are persisted
             payment.save()
             
             try:
