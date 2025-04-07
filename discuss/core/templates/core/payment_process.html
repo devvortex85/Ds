@@ -35,7 +35,48 @@
                         <form method="post" action="{{ payment.get_process_url }}">
                             {% csrf_token %}
                             {{ form.media }}
-                            {{ form }}
+                            
+                            {% if payment.variant == 'default' %}
+                            <!-- Test credit card fields for dummy provider -->
+                            <div class="mb-3">
+                                <label for="id_number" class="form-label">Card Number</label>
+                                <input type="text" name="number" id="id_number" class="form-control" value="4242424242424242" required>
+                                <div class="form-text">For testing, use 4242424242424242</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_expiration" class="form-label">Expiration Date (MM/YY)</label>
+                                    <input type="text" name="expiration" id="id_expiration" class="form-control" value="12/25" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_cvv2" class="form-label">CVV</label>
+                                    <input type="text" name="cvv2" id="id_cvv2" class="form-control" value="123" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_name" class="form-label">Name on Card</label>
+                                <input type="text" name="name" id="id_name" class="form-control" value="Test User" required>
+                            </div>
+                            {% else %}
+                            <!-- For other providers, show the form fields -->
+                            {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in field.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            
                             <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-success btn-lg">Complete Payment</button>
                             </div>
