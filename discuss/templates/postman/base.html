@@ -12,9 +12,8 @@
             <div class="list-group mb-4">
                 <a href="{% url 'postman:inbox' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'inbox' %}active{% endif %}">
                     {% trans "Inbox" %}
-                    {% with unread_count=user|unread_message_count %}
+                    {% unread_message_count user as unread_count %}
                     {% if unread_count %}<span class="badge bg-danger float-end">{{ unread_count }}</span>{% endif %}
-                    {% endwith %}
                 </a>
                 <a href="{% url 'postman:sent' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'sent' %}active{% endif %}">{% trans "Sent" %}</a>
                 <a href="{% url 'postman:archives' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'archives' %}active{% endif %}">{% trans "Archives" %}</a>
