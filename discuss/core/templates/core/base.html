@@ -40,8 +40,6 @@
             max-width: 100%;
             height: auto;
         }
-            height: auto;
-        }
         .fa-arrow-up {
             color: #6c757d;
         }
@@ -74,8 +72,6 @@
         .nesting-color-6 { background-color: #C0AEDE; }
     </style>
     
-    <!-- User Guide CSS -->
-    <link rel="stylesheet" href="{% static 'css/user-guide.css' %}">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -105,11 +101,13 @@
                             <i class="fas fa-heart"></i> Support Us
                         </a>
                     </li>
+                    {% comment %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_guide' 'new_user' %}">
+                        <a class="nav-link" href="#">
                             <i class="fas fa-question-circle"></i> User Guide
                         </a>
                     </li>
+                    {% endcomment %}
                 </ul>
                 
                 <!-- Search Form -->
@@ -128,13 +126,8 @@
                     {% if user.is_authenticated %}
                         <!-- Notifications -->
                         <li class="nav-item me-2">
-                            <a class="nav-link position-relative" href="{% url 'notifications_list' %}">
+                            <a class="nav-link position-relative" href="#" title="Notifications">
                                 <i class="fas fa-bell"></i>
-                                {% if unread_notification_count > 0 %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ unread_notification_count }}
-                                    </span>
-                                {% endif %}
                             </a>
                         </li>
                         <!-- Messages -->
@@ -264,9 +257,6 @@
     <!-- jQuery (required for some features) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    <!-- User Guide Script -->
-    <script src="{% static 'js/user-guide.js' %}"></script>
-
     <!-- Core App Script -->
     <script src="{% static 'core/js/script.js' %}"></script>
     

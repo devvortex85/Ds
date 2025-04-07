@@ -13,7 +13,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('allauth.urls')),
     # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
-    path('user-guide/', include('user_guide.urls')),
+    # path('user-guide/', include('user_guide.urls')),  # User guide removed from application
     path('messages/', include('postman.urls', namespace='postman')),
     path('', include('core.urls')),
 ]

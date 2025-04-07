@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     
     # Installed apps
     'core',
-    'user_guide',
     
     # Third-party packages
     'rest_framework',

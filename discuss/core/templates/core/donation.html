@@ -64,10 +64,11 @@
 {% endblock %}
 
 {% block custom_js %}
+{% endblock %}
 <script>
     function toggleCustomAmount() {
-        var donationLevel = $('#id_donation_type').val();
-        if (donationLevel === 'custom') {
+        var donationType = $('#id_donation_type').val();
+        if (donationType === '0') {  // Custom amount (value 0)
             $('#custom_amount_container').show();
         } else {
             $('#custom_amount_container').hide();
@@ -85,4 +86,3 @@
         });
     });
 </script>
-{% endblock %}

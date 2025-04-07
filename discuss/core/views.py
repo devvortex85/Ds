@@ -938,9 +938,10 @@ def donation_view(request):
             donation_type = form.cleaned_data.get('donation_type')
             custom_amount = form.cleaned_data.get('custom_amount')
             
+            # Set the amount field in all cases to avoid the null constraint violation
             if donation_type == 0 and custom_amount:  # 0 means custom amount
                 payment.total = custom_amount
-                payment.amount = custom_amount  # Set amount field as well
+                payment.amount = custom_amount
             elif donation_type == 5:  # Small
                 payment.total = 5
                 payment.amount = 5
@@ -969,7 +970,7 @@ def donation_view(request):
         
     context = {
         'form': form,
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }
     
     return render(request, 'core/donation.html', context)
@@ -1000,7 +1001,7 @@ def donation_confirmation(request):
                 return render(request, 'core/payment_process.html', {
                     'form': form,
                     'payment': payment,
-                    'unread_notification_count': get_unread_notification_count(request.user)
+                    'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
                 })
             except RedirectNeeded as redirect_to:
                 return redirect(str(redirect_to))
@@ -1008,7 +1009,7 @@ def donation_confirmation(request):
         # Display confirmation page
         context = {
             'payment': payment,
-            'unread_notification_count': get_unread_notification_count(request.user)
+            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
         }
         return render(request, 'core/donation_confirmation.html', context)
         
@@ -1032,7 +1033,7 @@ def payment_success(request):
             
         context = {
             'payment': payment,
-            'unread_notification_count': get_unread_notification_count(request.user)
+            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
         }
         return render(request, 'core/payment_success.html', context)
     
@@ -1045,7 +1046,7 @@ def payment_failure(request):
     payment_id = request.session.get('payment_id')
     
     context = {
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }
     
     if payment_id:
@@ -1065,7 +1066,7 @@ def donation_history(request):
     
     context = {
         'payments': payments,
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
     }
     
     return render(request, 'core/donation_history.html', context)
