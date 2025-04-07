@@ -1,72 +1,87 @@
-{% extends 'postman/base.html' %}
+{% extends "postman/base.html" %}
 {% load i18n %}
 
 {% block postman_content %}
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-        <h5 class="mb-0">{% trans "Message" %}</h5>
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="my-2">{% trans "Message" %}</h4>
         <div>
-            <a href="{{ message.get_absolute_url }}?reply" class="btn btn-light btn-sm">
-                <i class="fas fa-reply me-1"></i> {% trans "Reply" %}
+            <a href="{{ pm_previous_url }}" class="btn btn-light btn-sm {% if not pm_previous_url %}disabled{% endif %}" role="button">
+                <i class="fas fa-chevron-left"></i> {% trans "newer" %}
+            </a>
+            <a href="{{ pm_next_url }}" class="btn btn-light btn-sm {% if not pm_next_url %}disabled{% endif %}" role="button">
+                {% trans "older" %} <i class="fas fa-chevron-right"></i>
             </a>
         </div>
     </div>
     <div class="card-body">
-        <div class="message-header mb-4">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <h5>{{ message.subject }}</h5>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <strong>{% trans "Subject" %}:</strong> {{ pm_message.subject }}
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <span class="text-muted">{{ message.sent_at|date:"DATETIME_FORMAT" }}</span>
+                <div class="mb-3">
+                    <strong>{% trans "From" %}:</strong> {{ pm_message.obfuscated_sender|or_me:user }}
+                </div>
+                {% if pm_message.obfuscated_recipient %}
+                <div class="mb-3">
+                    <strong>{% trans "To" %}:</strong> {{ pm_message.obfuscated_recipient|or_me:user }}
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                    <strong>{% trans "Date" %}:</strong> {{ pm_message.sent_at|date:"DATETIME_FORMAT" }}
+                </div>
+                <div class="mb-3">
+                    <strong>{% trans "Message" %}:</strong>
+                    <div class="p-3 border rounded">
+                        {{ pm_message.body|linebreaksbr }}
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <strong>{% trans "Sender" %}:</strong> {{ message.sender }}
-                </div>
-                <div class="col-md-6">
-                    <strong>{% trans "Recipient" %}:</strong> {{ message.recipient }}
+            <div class="col-md-4">
+                <div class="d-grid gap-2">
+                    {% if not pm_archived and not pm_deleted_for_user and not pm_deleted_for_all %}
+                    <a href="{% url 'postman:archive' pm_message.pk %}?next={{ pm_next_archive_url }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-archive me-1"></i> {% trans "Archive" %}
+                    </a>
+                    {% endif %}
+                    {% if not pm_deleted_for_all %}
+                    <a href="{% url 'postman:delete' pm_message.pk %}?next={{ pm_next_delete_url }}" class="btn btn-outline-danger">
+                        <i class="fas fa-trash me-1"></i> {% trans "Delete" %}
+                    </a>
+                    {% endif %}
+                    {% if pm_deleted_for_user and not pm_deleted_for_all %}
+                    <a href="{% url 'postman:undelete' pm_message.pk %}?next={{ pm_next_undelete_url }}" class="btn btn-outline-success">
+                        <i class="fas fa-trash-restore me-1"></i> {% trans "Undelete" %}
+                    </a>
+                    {% endif %}
+                    {% if pm_message.sender_id == user.id and pm_message.recipient_archived %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle me-1"></i> {% trans "Recipient has archived this message" %}
+                    </div>
+                    {% endif %}
+                    {% if pm_message.sender_id == user.id and pm_message.recipient_deleted_at %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-1"></i> {% trans "Recipient has deleted this message" %}
+                    </div>
+                    {% endif %}
+                    {% if not pm_message.sender_archived and pm_message.sender_id == user.id %}
+                    <div>
+                        <a href="{% url 'postman:archive_sender' pm_message.pk %}?next={{ pm_next_archive_url }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-archive me-1"></i> {% trans "Archive Sent" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if not pm_deleted %}
+                    <div>
+                        <a href="{% url 'postman:reply' pm_message.pk %}?next={{ pm_next_url }}" class="btn btn-primary">
+                            <i class="fas fa-reply me-1"></i> {% trans "Reply" %}
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
-        </div>
-        <div class="message-body p-3 bg-light rounded">
-            {{ message.body|linebreaksbr }}
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="btn-group">
-            <a href="{% url 'postman:archive' %}?pks={{ message.pk }}" class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-archive me-1"></i> {% trans "Archive" %}
-            </a>
-            <a href="{% url 'postman:delete' %}?pks={{ message.pk }}" class="btn btn-sm btn-outline-danger">
-                <i class="fas fa-trash me-1"></i> {% trans "Delete" %}
-            </a>
         </div>
     </div>
 </div>
-
-{% if reply_form %}
-<div class="card mt-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">{% trans "Reply" %}</h5>
-    </div>
-    <div class="card-body">
-        <form action="{% url 'postman:reply' message.pk %}" method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="{{ reply_form.subject.id_for_label }}" class="form-label">{% trans "Subject" %}</label>
-                {{ reply_form.subject }}
-                {{ reply_form.subject.errors }}
-            </div>
-            <div class="mb-3">
-                <label for="{{ reply_form.body.id_for_label }}" class="form-label">{% trans "Body" %}</label>
-                {{ reply_form.body }}
-                {{ reply_form.body.errors }}
-            </div>
-            <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
-        </form>
-    </div>
-</div>
-{% endif %}
 {% endblock %}

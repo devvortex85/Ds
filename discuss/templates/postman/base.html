@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n static %}{% load postman_tags %}
 
 {% block title %}Messages | Discuss{% endblock %}
 
@@ -11,8 +12,9 @@
                     <h5 class="mb-0">Messages</h5>
                 </div>
                 <div class="list-group list-group-flush">
+                    {% postman_unread as unread_count %}
                     <a href="{% url 'postman:inbox' %}" class="list-group-item list-group-item-action {% if view.folder == 'inbox' %}active{% endif %}">
-                        <i class="fas fa-inbox me-2"></i> Inbox
+                        <i class="fas fa-inbox me-2"></i> Inbox {% if unread_count %} <span class="badge bg-danger">{{ unread_count }}</span>{% endif %}
                     </a>
                     <a href="{% url 'postman:sent' %}" class="list-group-item list-group-item-action {% if view.folder == 'sent' %}active{% endif %}">
                         <i class="fas fa-paper-plane me-2"></i> Sent
@@ -35,3 +37,5 @@
     </div>
 </div>
 {% endblock %}
+
+{% block postman_menu %}{% endblock %}

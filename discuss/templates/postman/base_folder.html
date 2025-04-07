@@ -1,52 +1,95 @@
-{% extends 'postman/base.html' %}
+{% extends "postman/base.html" %}
 {% load i18n %}
 
 {% block postman_content %}
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-        <h5 class="mb-0">{% block pm_folder_title %}{% endblock %}</h5>
-        <div>
-            {% block pm_header_buttons %}{% endblock %}
-        </div>
+    <div class="card-header bg-primary text-white">
+        <h4 class="my-2">{{ pm_messages_title }}</h4>
     </div>
     <div class="card-body">
         {% if pm_messages %}
-            <div class="table-responsive">
+        <form action="{% url action_url %}" method="post">{% csrf_token %}
+            <div class="mb-3">
+                {{ pm_messages.management_form }}
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            {% block pm_sender_header %}
+                        <tr class="align-middle">
+                            <th><input type="checkbox" class="check-all" onclick="$('input:checkbox').prop('checked', this.checked);" /></th>
                             <th>{% trans "Sender" %}</th>
-                            {% endblock %}
                             <th>{% trans "Subject" %}</th>
                             <th>{% trans "Date" %}</th>
-                            <th>{% trans "Action" %}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for message in pm_messages %}
-                            <tr{% if message.is_new %} class="fw-bold"{% endif %}>
-                                {% block pm_sender_cell %}
-                                <td>{{ message.sender }}</td>
-                                {% endblock %}
-                                <td>
-                                    <a href="{% url 'postman:view' message.pk %}">
-                                        {{ message.subject }}
-                                    </a>
-                                </td>
-                                <td>{{ message.sent_at|date:"SHORT_DATETIME_FORMAT" }}</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm">
-                                        {% block pm_actions %}{% endblock %}
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr class="{% if message.is_new %}bg-info bg-opacity-10{% endif %}">
+                            <td>{{ message.form.id }} {{ message.form.instance.pk }} {{ message.form.selected }}</td>
+                            <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>
+                            <td>
+                                {% if message.is_new %}<strong>{% endif %}
+                                <a href="{{ message.url }}">{{ message.subject }}</a>
+                                {% if message.is_new %}</strong>{% endif %}
+                            </td>
+                            <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% if by_conversation and by_message %}
+            <div class="d-flex align-items-center mb-3">
+                <div class="me-3">{% trans "Display:" %}</div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" id="display_by_conversation" name="display" value="conversation"
+                        {% if by_conversation %}checked="checked"{% endif %} />
+                    <label class="form-check-label" for="display_by_conversation">{% trans "by conversation" %}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" id="display_by_message" name="display" value="message"
+                        {% if by_message %}checked="checked"{% endif %} />
+                    <label class="form-check-label" for="display_by_message">{% trans "by message" %}</label>
+                </div>
+                <div class="ms-auto">
+                    <button type="submit" class="btn btn-sm btn-primary" onclick="this.form.action='{% url 'postman:folder_display' view.folder %}'">{% trans "Go" %}</button>
+                </div>
+            </div>
+            {% endif %}
+            <div class="d-flex flex-wrap">
+                <div class="me-auto">
+                    {% trans "Action:" %}
+                    {% if enable_archive %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="this.form.action='{% url 'postman:archive' %}'">{% trans "Archive" %}</button>
+                    {% endif %}
+                    {% if enable_delete %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="this.form.action='{% url 'postman:delete' %}'">{% trans "Delete" %}</button>
+                    {% endif %}
+                    {% if enable_undelete %}
+                    <button type="submit" class="btn btn-sm btn-outline-success" onclick="this.form.action='{% url 'postman:undelete' %}'">{% trans "Undelete" %}</button>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {% if pm_messages.paginator.num_pages > 1 %}
+                    <div class="pagination">
+                        <ul class="pagination">
+                            {% if pm_messages.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ pm_messages.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+                            {% for page_number in pm_messages.paginator.page_range %}
+                            <li class="page-item {% if page_number == pm_messages.number %}active{% endif %}">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if pm_messages.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ pm_messages.next_page_number }}">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
         {% else %}
-            <p class="text-center py-4">{% trans "No messages." %}</p>
+        <div class="alert alert-info">{% trans "No messages." %}</div>
         {% endif %}
     </div>
 </div>

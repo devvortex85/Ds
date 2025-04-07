@@ -107,9 +107,14 @@ class DonationForm(forms.ModelForm):
                 'rows': 3
             }),
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        donation_type = cleaned_data.get('donation_type')
+        custom_amount = cleaned_data.get('custom_amount')
         
-    # Ensure form field name matches the template field name
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'donation_level' in self.fields:
-            self.fields['donation_type'] = self.fields.pop('donation_level')
+        # Validate that if donation_type is Custom (0), then custom_amount is required
+        if donation_type == 0 and not custom_amount:
+            self.add_error('custom_amount', 'Please enter a custom amount')
+        
+        return cleaned_data
