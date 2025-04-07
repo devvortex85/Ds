@@ -244,10 +244,12 @@ class Vote(models.Model):
             elif old_value != self.value:
                 # Changed vote (e.g., upvote -> downvote)
                 if old_value == 1 and self.value == -1:
-                    self.post.upvote_count -= 1
+                    # Ensure positive integer fields don't go negative
+                    self.post.upvote_count = max(0, self.post.upvote_count - 1)
                     self.post.downvote_count += 1
                 elif old_value == -1 and self.value == 1:
-                    self.post.downvote_count -= 1
+                    # Ensure positive integer fields don't go negative
+                    self.post.downvote_count = max(0, self.post.downvote_count - 1)
                     self.post.upvote_count += 1
             
             self.post.save(update_fields=['upvote_count', 'downvote_count'])
@@ -262,10 +264,12 @@ class Vote(models.Model):
             elif old_value != self.value:
                 # Changed vote (e.g., upvote -> downvote)
                 if old_value == 1 and self.value == -1:
-                    self.comment.upvote_count -= 1
+                    # Ensure positive integer fields don't go negative
+                    self.comment.upvote_count = max(0, self.comment.upvote_count - 1)
                     self.comment.downvote_count += 1
                 elif old_value == -1 and self.value == 1:
-                    self.comment.downvote_count -= 1
+                    # Ensure positive integer fields don't go negative
+                    self.comment.downvote_count = max(0, self.comment.downvote_count - 1)
                     self.comment.upvote_count += 1
             
             self.comment.save(update_fields=['upvote_count', 'downvote_count'])
