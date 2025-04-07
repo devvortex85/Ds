@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from postman import urls as postman_urls
+from payments import urls as payment_urls
 
 urlpatterns = [
     # Home and registration
@@ -52,6 +53,9 @@ urlpatterns = [
     path('donate/success/', views.payment_success, name='payment_success'),
     path('donate/failure/', views.payment_failure, name='payment_failure'),
     path('donate/history/', views.donation_history, name='donation_history'),
+    
+    # Django Payments URLs
+    path('payments/', include(payment_urls)),
     
     # Error testing
     path('sentry-test/', views.sentry_test, name='sentry_test'),
