@@ -1,5 +1,4 @@
 from django import template
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
@@ -7,13 +6,22 @@ register = template.Library()
 @register.filter
 def or_me(value, user):
     """
-    Replace the username of the logged user by the translated 'me'.
+    Displays the username, or 'me' if the user is the logged in user.
     
-    This is a custom implementation of the or_me filter used in django-postman 
-    templates to show 'me' instead of the current user's username when viewing 
-    messages.
+    Args:
+        value: The username to display or a user object
+        user: The current logged in user
+        
+    Returns:
+        str: Either the username or translated "me"
     """
-    if isinstance(value, User) and user.is_authenticated and value == user:
-        return str(_('me'))
+    if hasattr(value, 'username'):
+        if value.username == user.username:
+            return _("me")
+        else:
+            return value.username
     else:
-        return str(value)
+        if value == user.username:
+            return _("me")
+        else:
+            return value
