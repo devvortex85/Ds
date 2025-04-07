@@ -178,7 +178,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
+                                    <form id="logout-form" method="post" action="{% url 'account_logout' %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item">
                                             <i class="fas fa-sign-out-alt me-2"></i> Logout

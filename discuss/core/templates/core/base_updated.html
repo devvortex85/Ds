@@ -129,7 +129,7 @@
                                 <li><a class="dropdown-item" href="{% url 'profile' user.username %}">My Profile</a></li>
                                 <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
@@ -204,7 +204,7 @@
                     <ul class="list-unstyled">
                         {% if user.is_authenticated %}
                             <li><a href="{% url 'profile' user.username %}" class="text-white">My Profile</a></li>
-                            <li><a href="{% url 'logout' %}" class="text-white">Logout</a></li>
+                            <li><a href="{% url 'account_logout' %}" class="text-white">Logout</a></li>
                         {% else %}
                             <li><a href="{% url 'account_login' %}" class="text-white">Login</a></li>
                             <li><a href="{% url 'register' %}" class="text-white">Register</a></li>
