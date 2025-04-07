@@ -942,9 +942,11 @@ def donate(request):
             # Convert donation_type to int to ensure proper comparison
             donation_type = int(donation_type)
             
+            # Set the amount based on donation type
             if donation_type == 0 and custom_amount:  # 0 means custom amount
-                payment.total = custom_amount
-                payment.amount = custom_amount  # Ensure amount is set (our custom field)
+                amount_value = float(custom_amount)
+                payment.total = amount_value
+                payment.amount = amount_value
             elif donation_type == 5:  # Small
                 payment.total = 5
                 payment.amount = 5
@@ -959,6 +961,9 @@ def donate(request):
                 payment.total = 5  # Default to smallest amount
                 payment.amount = 5
                 payment.donation_type = 5  # Ensure this is set to a valid value
+                
+            # Ensure amount is set directly as a decimal to avoid null issues
+            payment.amount = payment.total
             
             # Add additional fields required by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"
@@ -1007,6 +1012,11 @@ def donation_confirmation(request):
             
             # Update the payment with the selected variant
             payment.variant = variant
+            
+            # Double-check that amount is properly set to prevent null values
+            if payment.amount is None or payment.amount == 0:
+                payment.amount = payment.total
+                
             payment.save()
             
             try:
@@ -1067,12 +1077,37 @@ def payment_failure(request):
     }
     
     if payment_id:
-        payment = get_object_or_404(Payment, id=payment_id)
-        context['payment'] = payment
-        
-        # Clear the session
-        if 'payment_id' in request.session:
-            del request.session['payment_id']
+        try:
+            payment = get_object_or_404(Payment, id=payment_id)
+            context['payment'] = payment
+            
+            # Add debug information
+            context['error_reason'] = getattr(payment, 'error', 'Unknown error')
+            context['payment_status'] = payment.status
+            context['payment_details'] = {
+                'id': payment.id,
+                'variant': payment.variant,
+                'status': payment.status,
+                'amount': payment.amount,
+                'total': payment.total,
+                'currency': payment.currency,
+                'description': payment.description,
+                'billing_first_name': payment.billing_first_name,
+                'billing_last_name': getattr(payment, 'billing_last_name', 'N/A'),
+                'billing_email': getattr(payment, 'billing_email', 'N/A'),
+            }
+            
+            # Log error information
+            print(f"DEBUG: Payment failure for payment {payment.id}")
+            print(f"DEBUG: Status: {payment.status}")
+            print(f"DEBUG: Error: {getattr(payment, 'error', 'Unknown error')}")
+            
+            # Clear the session
+            if 'payment_id' in request.session:
+                del request.session['payment_id']
+        except Exception as e:
+            context['error_reason'] = str(e)
+            print(f"DEBUG: Error retrieving payment details: {str(e)}")
             
     return render(request, 'core/payment_failure.html', context)
 
