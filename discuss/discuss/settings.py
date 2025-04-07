@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'watson',    # For advanced full-text search
     'payments',   # For processing payments and donations
     'postman',    # For private messaging between users
+    'django_bootstrap5',  # For responsive Bootstrap 5 integration
 ]
 
 MIDDLEWARE = [

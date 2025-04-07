@@ -25,6 +25,39 @@ def get_unread_notification_count(user):
             return 0
     return 0
 
+@login_required
+def notifications_list(request):
+    """View to display all notifications for the current user"""
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    
+    context = {
+        'notifications': notifications,
+        'unread_notification_count': get_unread_notification_count(request.user)
+    }
+    
+    return render(request, 'core/notifications.html', context)
+
+@login_required
+def mark_notification_read(request, pk):
+    """View to mark a notification as read"""
+    notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
+    
+    if request.method == 'POST':
+        notification.is_read = True
+        notification.save()
+        messages.success(request, 'Notification marked as read.')
+    
+    return redirect('notifications_list')
+
+@login_required
+def mark_all_notifications_read(request):
+    """View to mark all notifications as read"""
+    if request.method == 'POST':
+        Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+        messages.success(request, 'All notifications marked as read.')
+    
+    return redirect('notifications_list')
+
 def home(request, template='core/index.html', extra_context=None):
     """
     Homepage view showing a list of posts with various filtering options
@@ -836,45 +869,11 @@ def advanced_search(request):
     
     return render(request, 'core/advanced_search.html', context)
 
-@login_required
-def notifications_list(request):
-    """View all notifications for the current user"""
-    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
-    
-    # Count unread notifications
-    unread_count = notifications.filter(is_read=False).count()
-    
-    context = {
-        'notifications': notifications,
-        'unread_count': unread_count
-    }
-    
-    return render(request, 'core/notifications.html', context)
+# Notification view function is already defined at the top of the file
 
-@login_required
-def mark_notification_read(request, pk):
-    """Mark a notification as read"""
-    notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
-    notification.mark_as_read()
-    
-    # If this is an AJAX request, return JSON
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success': True})
-    
-    # Otherwise redirect back to the notifications list
-    return redirect('notifications_list')
+# Notification mark_as_read view function is already defined at the top of the file
 
-@login_required
-def mark_all_notifications_read(request):
-    """Mark all notifications as read"""
-    Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
-    
-    # If this is an AJAX request, return JSON
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success': True})
-    
-    # Otherwise redirect back to the notifications list
-    return redirect('notifications_list')
+# mark_all_notifications_read view function is already defined at the top of the file
 
 @login_required
 def post_votes_api(request, pk):

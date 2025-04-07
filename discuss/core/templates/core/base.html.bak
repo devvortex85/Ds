@@ -3,19 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Discuss - Community Forum{% endblock %}</title>
+    <title>{% block title %}Discuss{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">  <!-- For AJAX calls -->
+    {% load static %}
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
     
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Vote CSS -->
+    <link href="{% static 'core/css/vote.css' %}" rel="stylesheet">
+    
+    <!-- Comment fixes CSS -->
+    <link href="{% static 'core/css/comment_fixes.css' %}" rel="stylesheet">
     
     <!-- Custom CSS -->
-    {% load static %}
-    {% load dict_tags %}
-    {% load reputation_tags %}
-    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+        .avatar-placeholder {
+            background-color: #e9ecef;
+            color: #6c757d;
+        }
+        .card {
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        .fa-arrow-up {
+            color: #6c757d;
+        }
+        .fa-arrow-down {
+            color: #6c757d;
+        }
+        a:hover .fa-arrow-up {
+            color: #FF4500;
+        }
+        a:hover .fa-arrow-down {
+            color: #7193FF;
+        }
+        /* Comment nesting */
+        .nesting-indicator {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+        }
+        .nested-reply {
+            position: relative;
+            padding-left: 20px;
+        }
+        .nesting-color-1 { background-color: #FF4500; }
+        .nesting-color-2 { background-color: #0079D3; }
+        .nesting-color-3 { background-color: #7193FF; }
+        .nesting-color-4 { background-color: #46D160; }
+        .nesting-color-5 { background-color: #FFADAD; }
+        .nesting-color-6 { background-color: #C0AEDE; }
+    </style>
+    
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -40,6 +95,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'community_list' %}">Communities</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'donate' %}">
+                            <i class="fas fa-heart"></i> Support Us
+                        </a>
+                    </li>
+                    {% comment %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-question-circle"></i> User Guide
+                        </a>
+                    </li>
+                    {% endcomment %}
                 </ul>
                 
                 <!-- Search Form -->
@@ -47,12 +114,35 @@
                     <div class="input-group">
                         <input class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
                         <button class="btn btn-light" type="submit"><i class="fas fa-search"></i></button>
+                        <a href="{% url 'advanced_search' %}" class="btn btn-info text-white" title="Advanced Search">
+                            <i class="fas fa-filter"></i>
+                        </a>
                     </div>
                 </form>
                 
                 <!-- User Account Links -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                        <!-- Notifications -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link position-relative" href="#" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                            </a>
+                        </li>
+                        <!-- Messages -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link position-relative" href="{% url 'postman:inbox' %}" title="Private Messages">
+                                <i class="fas fa-envelope"></i>
+                                {% load postman_tags %}
+                                {% postman_unread as messages_count %}
+                                {% if messages_count > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ messages_count }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <!-- User Dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <div class="nav-avatar me-2">
@@ -77,11 +167,23 @@
                                         <i class="fas fa-cog me-2"></i> Settings
                                     </a>
                                 </li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
+                                    <a class="dropdown-item" href="{% url 'postman:inbox' %}">
+                                        <i class="fas fa-envelope me-2"></i> Messages
+                                    </a>
+                                </li>
+                                    <a class="dropdown-item" href="{% url 'donation_history' %}">
+                                        <i class="fas fa-credit-card me-2"></i> Donation History
+                                    </a>
+                                </li>
+                                <li>
+                                    <form id="logout-form" method="post" action="{% url 'account_logout' %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
                                             <i class="fas fa-sign-out-alt me-2"></i> Logout
                                         </button>
                                     </form>
@@ -90,7 +192,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
+                            <a class="nav-link" href="{% url 'account_login' %}">
                                 <i class="fas fa-sign-in-alt me-1"></i> Login
                             </a>
                         </li>
@@ -105,95 +207,55 @@
         </div>
     </nav>
     
-    <!-- Main Content -->
-    <div class="container mt-4">
-        {% if messages %}
+    <!-- Flash Messages -->
+    {% if messages %}
+        <div class="container mt-3">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
-        {% endif %}
-        
-        <div class="row">
-            <!-- Main Content Column -->
-            <div class="col-lg-8">
-                {% block content %}{% endblock %}
-            </div>
-            
-            <!-- Sidebar Column -->
-            <div class="col-lg-4">
-                <form action="{% url 'search' %}" method="GET" class="d-flex mb-3">
-                    <input type="text" name="query" value="{{ query|default:'' }}" class="form-control me-2" placeholder="Search posts, communities, users, or tags...">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-                
-                <!-- Popular Tags -->
-                {% if all_tags %}
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">Popular Tags</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            {% for tag in all_tags %}
-                                <a href="{% url 'home' %}?tag={{ tag.slug }}" class="badge bg-light text-dark text-decoration-none">
-                                    <i class="fas fa-tag me-1"></i>{{ tag.name }}
-                                    {% if tag.num_times %}<span class="ms-1 badge bg-secondary">{{ tag.num_times }}</span>{% endif %}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                {% block sidebar %}
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="card-title mb-0">Welcome to Discuss</h5>
-                        </div>
-                        <div class="card-body">
-                            <p>Join the conversation in our growing communities.</p>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'create_community' %}" class="btn btn-primary">
-                                    <i class="fas fa-plus-circle me-2"></i>Create Community
-                                </a>
-                            {% else %}
-                                <a href="{% url 'register' %}" class="btn btn-primary">
-                                    <i class="fas fa-user-plus me-2"></i>Join Now
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endblock %}
-            </div>
         </div>
-    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
     
     <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer class="py-4 bg-dark text-white mt-5">
         <div class="container">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <span class="text-muted">&copy; 2025 Discuss</span>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Discuss</h5>
+                    <p class="small">A community platform for discussions and sharing.</p>
                 </div>
-                <div>
-                    <a href="#" class="text-muted me-2">Terms</a>
-                    <a href="#" class="text-muted me-2">Privacy</a>
-                    <a href="#" class="text-muted">Contact</a>
+                <div class="col-md-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-white-50">Home</a></li>
+                        <li><a href="{% url 'community_list' %}" class="text-white-50">Communities</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white-50">Terms of Service</a></li>
+                    </ul>
                 </div>
             </div>
+            <hr class="bg-secondary">
+            <p class="text-center mb-0 small">&copy; 2025 Discuss. All rights reserved.</p>
         </div>
     </footer>
     
-    <!-- Bootstrap 5 JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    {% bootstrap_javascript %}
     
-    <!-- Custom JavaScript -->
+    <!-- jQuery (required for some features) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Core App Script -->
     <script src="{% static 'core/js/script.js' %}"></script>
     
-    {% block extra_js %}{% endblock %}
-</body>
-</html>
