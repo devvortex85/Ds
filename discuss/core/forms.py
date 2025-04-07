@@ -107,3 +107,9 @@ class DonationForm(forms.ModelForm):
                 'rows': 3
             }),
         }
+        
+    # Ensure form field name matches the template field name
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'donation_level' in self.fields:
+            self.fields['donation_type'] = self.fields.pop('donation_level')
