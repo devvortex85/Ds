@@ -1,34 +1,37 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
+{% load static %}
+{% load i18n %}
+{% load core_tags %}
 
-{% block title %}Messages{% endblock %}
+{% block title %}{% trans "Messages" %}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container my-4">
     <div class="row">
         <div class="col-md-3">
             <div class="list-group mb-4">
-                <a href="{% url 'postman:inbox' %}" class="list-group-item list-group-item-action {% if view.view_name == 'inbox' %}active{% endif %}">
-                    <i class="fas fa-inbox me-2"></i> Inbox
-                    {% if postman_unread_count %}
-                    <span class="badge bg-danger rounded-pill float-end">{{ postman_unread_count }}</span>
-                    {% endif %}
+                <a href="{% url 'postman:inbox' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'inbox' %}active{% endif %}">
+                    {% trans "Inbox" %}
+                    {% with unread_count=user|unread_message_count %}
+                    {% if unread_count %}<span class="badge bg-danger float-end">{{ unread_count }}</span>{% endif %}
+                    {% endwith %}
                 </a>
-                <a href="{% url 'postman:sent' %}" class="list-group-item list-group-item-action {% if view.view_name == 'sent' %}active{% endif %}">
-                    <i class="fas fa-paper-plane me-2"></i> Sent
-                </a>
-                <a href="{% url 'postman:archives' %}" class="list-group-item list-group-item-action {% if view.view_name == 'archives' %}active{% endif %}">
-                    <i class="fas fa-archive me-2"></i> Archives
-                </a>
-                <a href="{% url 'postman:trash' %}" class="list-group-item list-group-item-action {% if view.view_name == 'trash' %}active{% endif %}">
-                    <i class="fas fa-trash-alt me-2"></i> Trash
-                </a>
-                <a href="{% url 'postman:write' %}" class="list-group-item list-group-item-action {% if view.view_name == 'write' %}active{% endif %}">
-                    <i class="fas fa-edit me-2"></i> Compose
-                </a>
+                <a href="{% url 'postman:sent' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'sent' %}active{% endif %}">{% trans "Sent" %}</a>
+                <a href="{% url 'postman:archives' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'archives' %}active{% endif %}">{% trans "Archives" %}</a>
+                <a href="{% url 'postman:trash' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'trash' %}active{% endif %}">{% trans "Trash" %}</a>
+                <a href="{% url 'postman:write' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'write' %}active{% endif %}">{% trans "Write" %}</a>
             </div>
         </div>
         <div class="col-md-9">
-            {% block postman_content %}{% endblock %}
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{% block pm_headerblock %}{% trans "Messages" %}{% endblock %}</h2>
+                </div>
+                <div class="card-body">
+                    {% block pm_body %}
+                    {% endblock %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -84,6 +84,11 @@
     // Run on page load to initialize the visibility
     document.addEventListener('DOMContentLoaded', function() {
         toggleCustomAmount();
+        
+        // Add event listener for when the donation type changes
+        document.getElementById('{{ form.donation_type.id_for_label }}').addEventListener('change', function() {
+            toggleCustomAmount();
+        });
     });
 </script>
 {% endblock %}
