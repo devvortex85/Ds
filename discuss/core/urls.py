@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-from postman import urls as postman_urls
 from payments import urls as payment_urls
 
 urlpatterns = [
@@ -44,8 +43,7 @@ urlpatterns = [
     path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     
-    # Messaging with django-postman
-    path('messages/', include(postman_urls)),
+    # Messaging is handled in the main urls.py
     
     # Donations
     path('donate/', views.donate, name='donate'),
