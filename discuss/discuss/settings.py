@@ -54,6 +54,10 @@ INSTALLED_APPS = [
     'payments',   # For processing payments and donations
     'postman',    # For private messaging between users
     'django_bootstrap5',  # For responsive Bootstrap 5 integration
+    
+    # Debugging and developer tools
+    'django_extensions',  # Various developer extensions
+    'silk',  # Advanced request profiling
 ]
 
 MIDDLEWARE = [
@@ -66,7 +70,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # Required by django-allauth
+    'silk.middleware.SilkyMiddleware',  # Django Silk profiling middleware
 ]
+
+# Silk configuration
+SILKY_PYTHON_PROFILER = True  # Enable Python profiling
+SILKY_PYTHON_PROFILER_BINARY = True  # Enable binary profiling (for visualization)
+SILKY_META = True  # Collect metadata about requests
+SILKY_INTERCEPT_PERCENT = 100  # Intercept all requests when debugging
+SILKY_AUTHENTICATION = True  # Only allow authenticated users to access Silk
+SILKY_AUTHORISATION = True  # Only allow superusers to access Silk
 
 # Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']

@@ -26,4 +26,6 @@ dependencies = [
     "django-social-share>=2.3.0",
     "django-postman>=4.5",
     "django-bootstrap5>=25.1",
+    "django-extensions>=3.2.3",
+    "django-silk>=5.3.2",
 ]
