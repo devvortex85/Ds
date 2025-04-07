@@ -38,15 +38,7 @@
                                             <strong>Donation Type:</strong>
                                         </div>
                                         <div class="col-md-6">
-                                            {% if payment.donation_type == 0 %}
-                                                Custom Amount
-                                            {% elif payment.donation_type == 5 %}
-                                                Small ($5)
-                                            {% elif payment.donation_type == 10 %}
-                                                Medium ($10)
-                                            {% elif payment.donation_type == 25 %}
-                                                Large ($25)
-                                            {% endif %}
+                                            {{ payment.get_donation_type_display }}
                                         </div>
                                     </div>
                                     {% if payment.description %}
@@ -68,11 +60,7 @@
                                     <h5>Select Payment Method</h5>
                                     <div class="list-group">
                                         <label class="list-group-item">
-                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="default" checked>
-                                            Test Payment (Dummy Provider)
-                                        </label>
-                                        <label class="list-group-item">
-                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="paypal">
+                                            <input class="form-check-input me-1" type="radio" name="payment_variant" value="paypal" checked>
                                             Pay with PayPal
                                         </label>
                                         <label class="list-group-item">

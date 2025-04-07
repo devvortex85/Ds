@@ -361,7 +361,7 @@ class Payment(BasePayment):
         return reverse('payment_failure')
     
     def get_success_url(self):
-        return reverse('donation_confirmation')
+        return reverse('payment_success')
 
     def get_purchased_items(self):
         from payments.models import PurchasedItem

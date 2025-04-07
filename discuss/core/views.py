@@ -934,14 +934,14 @@ def donation_view(request):
             payment.variant = 'default'  # Start with the default payment processor
             payment.currency = 'USD'
             
-            # Set total based on donation type or custom amount
+            # Set total and amount based on donation type or custom amount
             donation_type = form.cleaned_data.get('donation_type')
             custom_amount = form.cleaned_data.get('custom_amount')
             
             # Set the amount field in all cases to avoid the null constraint violation
             if donation_type == 0 and custom_amount:  # 0 means custom amount
                 payment.total = custom_amount
-                payment.amount = custom_amount
+                payment.amount = custom_amount  # This is the critical field that was missing
             elif donation_type == 5:  # Small
                 payment.total = 5
                 payment.amount = 5
@@ -954,17 +954,24 @@ def donation_view(request):
             else:
                 payment.total = 5  # Default to smallest amount
                 payment.amount = 5
-                
+            
+            # Add additional fields needed by django-payments
             payment.description = f"Donation to Discuss by {request.user.username}"
             payment.billing_first_name = request.user.username
             payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
-            payment.save()
             
-            # Store the payment ID in the session for later reference
-            request.session['payment_id'] = payment.id
-            
-            # Redirect to confirmation page
-            return redirect('donation_confirmation')
+            # Save the payment record to the database
+            try:
+                payment.save()
+                
+                # Store the payment ID in the session for later reference
+                request.session['payment_id'] = payment.id
+                
+                # Redirect to confirmation page
+                return redirect('donation_confirmation')
+            except Exception as e:
+                messages.error(request, f"Error processing donation: {str(e)}")
+                return redirect('donate')
     else:
         form = DonationForm()
         
@@ -986,30 +993,33 @@ def donation_confirmation(request):
     try:
         payment = get_object_or_404(Payment, id=payment_id)
         
-        # Handle payment confirmation
+        # Handle payment confirmation form submission
         if request.method == 'POST':
             # Get selected payment method from form
             variant = request.POST.get('payment_variant', 'default')
+            
+            # Update the payment with the selected variant
             payment.variant = variant
             payment.save()
             
-            # Process payment
             try:
+                # Get the payment form for the selected provider
                 form = payment.get_form()
                 
-                # Handle PayPal and other external redirects
+                # Render the payment process page with the provider's form
                 return render(request, 'core/payment_process.html', {
                     'form': form,
                     'payment': payment,
-                    'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+                    'unread_notification_count': get_unread_notification_count(request.user)
                 })
             except RedirectNeeded as redirect_to:
+                # Some payment providers (like PayPal) may redirect immediately
                 return redirect(str(redirect_to))
         
-        # Display confirmation page
+        # Display confirmation page for GET requests
         context = {
             'payment': payment,
-            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+            'unread_notification_count': get_unread_notification_count(request.user)
         }
         return render(request, 'core/donation_confirmation.html', context)
         

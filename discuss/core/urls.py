@@ -1,17 +1,17 @@
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+from postman import urls as postman_urls
 
 urlpatterns = [
-    # Home and authentication
+    # Home and registration
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     
-    # User profile
-    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    # User profiles
     path('profile/<str:username>/', views.profile, name='profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
     
     # Communities
     path('communities/', views.community_list, name='community_list'),
@@ -21,8 +21,8 @@ urlpatterns = [
     path('communities/<int:pk>/leave/', views.leave_community, name='leave_community'),
     
     # Posts
-    path('posts/new/text/<int:community_id>/', views.create_text_post, name='create_text_post'),
-    path('posts/new/link/<int:community_id>/', views.create_link_post, name='create_link_post'),
+    path('communities/<int:community_id>/post/text/', views.create_text_post, name='create_text_post'),
+    path('communities/<int:community_id>/post/link/', views.create_link_post, name='create_link_post'),
     path('posts/<int:pk>/', views.post_detail, name='post_detail'),
     path('posts/<int:pk>/delete/', views.delete_post, name='delete_post'),
     
@@ -31,21 +31,20 @@ urlpatterns = [
     path('comments/<int:pk>/delete/', views.delete_comment, name='delete_comment'),
     
     # Voting
-    path('vote/post/<int:pk>/<str:vote_type>/', views.vote_post, name='vote_post'),
-    path('vote/comment/<int:pk>/<str:vote_type>/', views.vote_comment, name='vote_comment'),
-    
-    # API endpoints for AJAX
-    path('api/post/<int:pk>/votes/', views.post_votes_api, name='post_votes_api'),
-    path('api/comment/<int:pk>/votes/', views.comment_votes_api, name='comment_votes_api'),
+    path('posts/<int:pk>/vote/<str:vote_type>/', views.vote_post, name='vote_post'),
+    path('comments/<int:pk>/vote/<str:vote_type>/', views.vote_comment, name='vote_comment'),
     
     # Search
     path('search/', views.search, name='search'),
-    path('search/advanced/', views.advanced_search, name='advanced_search'),
+    path('advanced-search/', views.advanced_search, name='advanced_search'),
     
     # Notifications
     path('notifications/', views.notifications_list, name='notifications_list'),
-    path('notifications/<int:pk>/mark-read/', views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    
+    # Messaging with django-postman
+    path('messages/', include(postman_urls)),
     
     # Donations
     path('donate/', views.donation_view, name='donate'),
@@ -54,10 +53,10 @@ urlpatterns = [
     path('donate/failure/', views.payment_failure, name='payment_failure'),
     path('donate/history/', views.donation_history, name='donation_history'),
     
-    # Django Payments URLs
-    path('payments/', include('payments.urls')),
-    
-    # Sentry integration
-    path('sentry/', views.sentry_status, name='sentry_status'),
+    # Error testing
     path('sentry-test/', views.sentry_test, name='sentry_test'),
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

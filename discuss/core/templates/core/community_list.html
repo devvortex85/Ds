@@ -45,7 +45,7 @@
                 {% if user.is_authenticated %}
                     <a href="{% url 'create_community' %}" class="btn btn-primary">Create the first community</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-primary">Login to create a community</a>
+                    <a href="{% url 'account_login' %}" class="btn btn-primary">Login to create a community</a>
                 {% endif %}
             </div>
         {% endif %}
@@ -74,7 +74,7 @@
                 <i class="fas fa-plus-circle me-1"></i> Create Your Own
             </a>
         {% else %}
-            <a href="{% url 'login' %}" class="btn btn-primary w-100 mt-3">Login to Create</a>
+            <a href="{% url 'account_login' %}" class="btn btn-primary w-100 mt-3">Login to Create</a>
         {% endif %}
     </div>
 </div>
