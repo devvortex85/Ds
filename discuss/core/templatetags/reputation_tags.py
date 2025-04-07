@@ -1,93 +1,31 @@
 from django import template
 from django.utils.safestring import mark_safe
-from django_countries.fields import Country
 
 register = template.Library()
 
 @register.filter
-def reputation_badge(karma, min_value=0):
-    """
-    Display a reputation badge with appropriate styling based on karma value.
-    """
-    # Convert karma and min_value to integers if they're strings
-    try:
-        karma_int = int(karma)
-        min_value_int = int(min_value)
-    except (ValueError, TypeError):
-        # If conversion fails, default to 0
-        karma_int = 0
-        min_value_int = 0
-    
-    if karma_int < min_value_int:
-        return mark_safe(f'<span class="reputation-badge reputation-level-new">{karma}</span>')
-    
-    if karma_int < 100:
-        css_class = "reputation-level-new"
-    elif karma_int < 500:
-        css_class = "reputation-level-regular"
-    elif karma_int < 1000:
-        css_class = "reputation-level-established"
-    elif karma_int < 2500:
-        css_class = "reputation-level-trusted"
-    elif karma_int < 5000:
-        css_class = "reputation-level-expert"
-    elif karma_int < 10000:
-        css_class = "reputation-level-leader"
-    else:
-        css_class = "reputation-level-legend"
-    
-    return mark_safe(f'<span class="reputation-badge {css_class}">{karma}</span>')
-
-@register.filter
-def reputation_level_badge(level_name):
-    """
-    Display a badge for a reputation level with appropriate styling.
-    """
-    level_classes = {
-        'New User': 'reputation-level-new',
-        'Regular': 'reputation-level-regular',
-        'Established Member': 'reputation-level-established',
-        'Trusted Contributor': 'reputation-level-trusted',
-        'Expert': 'reputation-level-expert',
-        'Community Leader': 'reputation-level-leader',
-        'Legend': 'reputation-level-legend'
-    }
-    
-    css_class = level_classes.get(level_name, 'reputation-level-new')
-    return mark_safe(f'<span class="reputation-level {css_class}">{level_name}</span>')
-
-@register.filter
 def get_item(dictionary, key):
-    """
-    Get an item from a dictionary using key.
-    Used for checking user votes on posts/comments.
-    """
+    """Get an item from a dictionary using the key"""
     if dictionary is None:
         return None
     return dictionary.get(key)
 
-@register.filter
-def country_flag(user):
-    """
-    Display a country flag for a user if they have a country set in their profile.
-    """
-    if not hasattr(user, 'profile') or not user.profile.country:
-        return ''
+@register.filter(is_safe=True)
+def reputation_badge(karma):
+    """Display a reputation badge based on karma level"""
+    if karma >= 10000:
+        badge = '<span class="badge bg-danger" title="Legend: {0} karma">L</span>'
+    elif karma >= 5000:
+        badge = '<span class="badge bg-warning text-dark" title="Community Leader: {0} karma">CL</span>'
+    elif karma >= 2500:
+        badge = '<span class="badge bg-primary" title="Expert: {0} karma">E</span>'
+    elif karma >= 1000:
+        badge = '<span class="badge bg-info text-dark" title="Trusted Contributor: {0} karma">TC</span>'
+    elif karma >= 500:
+        badge = '<span class="badge bg-success" title="Established Member: {0} karma">EM</span>'
+    elif karma >= 100:
+        badge = '<span class="badge bg-secondary" title="Regular: {0} karma">R</span>'
+    else:
+        badge = '<span class="badge bg-light text-dark" title="New User: {0} karma">NU</span>'
     
-    country = user.profile.country
-    country_name = Country(country).name
-    
-    return mark_safe(
-        f'<img src="{country.flag}" alt="{country_name}" '
-        f'title="{country_name}" class="country-flag" '
-        f'style="height: 10px; width: auto; margin-left: 3px; margin-right: 2px; vertical-align: baseline; display: inline-block;">'
-    )
-
-@register.filter
-def nesting_color(parent_id):
-    """Return a color index for nested comments based on parent_id."""
-    try:
-        parent_id_int = int(parent_id)
-        return parent_id_int % 6  # Cycle through 6 different colors
-    except (ValueError, TypeError):
-        return 0  # Default to the first color
+    return mark_safe(badge.format(karma))

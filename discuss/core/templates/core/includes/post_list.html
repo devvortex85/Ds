@@ -8,7 +8,10 @@
             <!-- Votes section -->
             <div class="vote-controls me-3">
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ request.path }}#post-{{ post.id }}" class="vote-btn upvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active voted{% endif %}">
+                <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ request.path }}#post-{{ post.id }}" 
+                   class="vote-btn upvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active voted{% endif %}"
+                   data-post-id="{{ post.id }}" 
+                   data-vote-type="upvote">
                     <i class="fas fa-arrow-up"></i>
                 </a>
                 {% else %}
@@ -20,7 +23,10 @@
                 <div class="vote-count" id="post-{{ post.id }}-votes">{{ post.vote_count }}</div>
                 
                 {% if user.is_authenticated %}
-                <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}#post-{{ post.id }}" class="vote-btn downvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active voted{% endif %}">
+                <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ request.path }}#post-{{ post.id }}" 
+                   class="vote-btn downvote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active voted{% endif %}"
+                   data-post-id="{{ post.id }}" 
+                   data-vote-type="downvote">
                     <i class="fas fa-arrow-down"></i>
                 </a>
                 {% else %}

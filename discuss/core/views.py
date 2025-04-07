@@ -118,6 +118,24 @@ def home(request, template='core/index.html', extra_context=None):
     # Get unread notification count for the current user
     unread_notification_count = get_unread_notification_count(request.user)
     
+    # Get user's votes on posts for better vote button highlighting
+    user_post_votes = {}
+    if request.user.is_authenticated:
+        for vote in Vote.objects.filter(user=request.user, post__in=posts):
+            user_post_votes[vote.post_id] = vote.value
+    
+    # Check if we have a recent vote in the session to ensure proper visual state after page refresh
+    last_post_vote = request.session.pop('last_post_vote', None)
+    if last_post_vote and request.user.is_authenticated:
+        post_id = last_post_vote.get('post_id')
+        vote_type = last_post_vote.get('vote_type')
+        
+        # Update the user_post_votes with the most recent vote value
+        if vote_type == 'upvote':
+            user_post_votes[int(post_id)] = 1  # Upvote
+        elif vote_type == 'downvote':
+            user_post_votes[int(post_id)] = -1  # Downvote
+    
     context = {
         'posts': posts,
         'top_communities': top_communities,
@@ -126,6 +144,7 @@ def home(request, template='core/index.html', extra_context=None):
         'active_tag': active_tag,
         'active_sort': sort,
         'unread_notification_count': unread_notification_count,
+        'user_post_votes': user_post_votes,  # Add the votes to context
     }
     
     # Add any extra context if provided
@@ -643,6 +662,10 @@ def vote_post(request, pk, vote_type):
         next_url, fragment = next_url.split('#', 1)
         fragment = '#' + fragment
     
+    # Use session to store the vote temporarily for this request cycle
+    # This helps with the flash of unstyled content issue when redirecting
+    request.session['last_post_vote'] = {'post_id': pk, 'vote_type': vote_type}
+    
     return redirect(next_url + fragment)
 
 @login_required
@@ -716,6 +739,10 @@ def vote_comment(request, pk, vote_type):
         post_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
         if post_url in next_url:
             fragment = f'#comment-{comment.id}'
+    
+    # Use session to store the vote temporarily for this request cycle
+    # This helps with the flash of unstyled content issue when redirecting
+    request.session['last_comment_vote'] = {'comment_id': pk, 'vote_type': vote_type}
     
     return redirect(next_url + fragment)
 

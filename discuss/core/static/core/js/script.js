@@ -137,20 +137,24 @@ function setupAjaxVoting() {
                 upvoteButtons.forEach(btn => {
                     if (data.user_vote === 1) {
                         btn.classList.add('voted');
-                        console.log("Added 'voted' class to upvote button");
+                        btn.classList.add('active');
+                        console.log("Added 'voted' and 'active' classes to upvote button");
                     } else {
                         btn.classList.remove('voted');
-                        console.log("Removed 'voted' class from upvote button");
+                        btn.classList.remove('active');
+                        console.log("Removed 'voted' and 'active' classes from upvote button");
                     }
                 });
                 
                 downvoteButtons.forEach(btn => {
                     if (data.user_vote === -1) {
                         btn.classList.add('voted');
-                        console.log("Added 'voted' class to downvote button");
+                        btn.classList.add('active');
+                        console.log("Added 'voted' and 'active' classes to downvote button");
                     } else {
                         btn.classList.remove('voted');
-                        console.log("Removed 'voted' class from downvote button");
+                        btn.classList.remove('active');
+                        console.log("Removed 'voted' and 'active' classes from downvote button");
                     }
                 });
                 
@@ -214,20 +218,24 @@ function setupAjaxVoting() {
                     if (upvoteBtn) {
                         if (data.user_vote === 1) {
                             upvoteBtn.classList.add('voted');
-                            console.log("Added 'voted' class to comment upvote button");
+                            upvoteBtn.classList.add('active');
+                            console.log("Added 'voted' and 'active' classes to comment upvote button");
                         } else {
                             upvoteBtn.classList.remove('voted');
-                            console.log("Removed 'voted' class from comment upvote button");
+                            upvoteBtn.classList.remove('active');
+                            console.log("Removed 'voted' and 'active' classes from comment upvote button");
                         }
                     }
                     
                     if (downvoteBtn) {
                         if (data.user_vote === -1) {
                             downvoteBtn.classList.add('voted');
-                            console.log("Added 'voted' class to comment downvote button");
+                            downvoteBtn.classList.add('active');
+                            console.log("Added 'voted' and 'active' classes to comment downvote button");
                         } else {
                             downvoteBtn.classList.remove('voted');
-                            console.log("Removed 'voted' class from comment downvote button");
+                            downvoteBtn.classList.remove('active');
+                            console.log("Removed 'voted' and 'active' classes from comment downvote button");
                         }
                     }
                     
@@ -283,9 +291,11 @@ function loadVotesFromLocalStorage() {
                 
                 if (savedVote === '1' && voteType === 'up') {
                     btn.classList.add('voted');
+                    btn.classList.add('active');
                     console.log(`Applied saved upvote for post ${postId}`);
                 } else if (savedVote === '-1' && voteType === 'down') {
                     btn.classList.add('voted');
+                    btn.classList.add('active');
                     console.log(`Applied saved downvote for post ${postId}`);
                 }
             }
@@ -306,9 +316,11 @@ function loadVotesFromLocalStorage() {
                 
                 if (savedVote === '1' && voteType === 'up') {
                     btn.classList.add('voted');
+                    btn.classList.add('active');
                     console.log(`Applied saved upvote for comment ${commentId}`);
                 } else if (savedVote === '-1' && voteType === 'down') {
                     btn.classList.add('voted');
+                    btn.classList.add('active');
                     console.log(`Applied saved downvote for comment ${commentId}`);
                 }
             }

@@ -1,1 +1,1 @@
-# Init file for templatetags package
+# Initialize templatetags package
