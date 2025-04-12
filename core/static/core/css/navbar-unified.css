@@ -145,29 +145,18 @@ body .navbar .search-container .search-input {
     height: 26px !important;
     min-height: 26px !important;
     font-size: 0.8rem !important;
-    border-radius: 4px 0 0 4px !important; /* Smoother left corners */
+    border-radius: 4px !important; /* Rounded corners on both sides */
     color: #fff !important;
     padding: 0.15rem 0.5rem !important;
     flex: 1 !important;
     box-shadow: none !important; /* Remove any shadow */
+    width: 160px !important; /* Fixed width since we don't have a button */
 }
 
-body .navbar .search-container .btn,
-body .navbar .search-container .search-btn {
-    background-color: #2c2c2c !important; /* Same as input for seamless look */
-    border: 1px solid #333 !important; /* Darker, less visible border */
-    height: 26px !important;
-    min-height: 26px !important;
-    width: 16px !important; /* Narrower button without the icon */
-    min-width: 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 0 4px 4px 0 !important; /* Smoother right corners */
-    color: #fff !important;
-    padding: 0 !important;
-    margin-left: -1px !important; /* Fix the border overlap issue */
-    box-shadow: none !important; /* Remove any shadow */
+/* Style for standalone search without a button */
+body .navbar .search-container .standalone-search {
+    border-radius: 4px !important; /* Rounded corners on both sides */
+    text-align: center !important; /* Center the placeholder text */
 }
 
 body .navbar .search-container .btn i.bi,
@@ -360,11 +349,12 @@ body .navbar .avatar-placeholder {
         max-height: 22px !important;
         font-size: 0.7rem !important; /* Further reduced font */
         padding: 0 0.25rem !important; /* Minimal padding */
-        width: 90px !important; /* Increased width for better visibility */
+        width: 120px !important; /* Increased width for better visibility */
         min-width: 90px !important;
-        border-radius: 4px 0 0 4px !important; /* Smoother left corners */
+        border-radius: 4px !important; /* Rounded corners on both sides */
         border: 1px solid #333 !important; /* Darker, less visible border */
         box-shadow: none !important; /* Remove any shadow */
+        text-align: center !important; /* Center the placeholder text */
     }
     
     /* Search button specific styling */
