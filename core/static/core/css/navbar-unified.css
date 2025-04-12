@@ -1,7 +1,12 @@
 /*! 
- * Unified Navigation Bar Styling
- * THIS SINGLE FILE NOW CONTROLS ALL NAVIGATION STYLING ON ALL DEVICES
- * Any styles in this file override all other CSS files for navigation elements
+ * COMPLETE UNIFIED INTERFACE STYLING
+ * THIS SINGLE FILE CONTAINS ALL STYLING FOR THE ENTIRE APPLICATION
+ * - Navigation bar
+ * - Square avatars
+ * - Mobile layout fixes
+ * - Content alignment
+ * - Dark theme
+ * - Responsive design
  */
 
 /* Reset all navbar styles to ensure we start clean */
@@ -280,4 +285,141 @@ body .navbar .avatar-placeholder {
     body .navbar .main-nav .nav-link span {
         font-size: 0.85rem !important;
     }
+}
+
+/* ============================
+   GLOBAL STYLES FOR ENTIRE APP  
+   ============================ */
+
+/* Global dark theme */
+body {
+    background-color: #272b30 !important;
+    color: #f8f9fa !important;
+}
+
+/* Make all avatars square everywhere, not just in navbar */
+.avatar, 
+.avatar img, 
+.profile-avatar,
+.profile-avatar img,
+.nav-avatar,
+.nav-avatar img,
+.comment-avatar,
+.comment-avatar img,
+.post-avatar,
+.post-avatar img,
+.avatar-placeholder,
+.rounded-circle,
+.user-avatar,
+.user-avatar img,
+img.avatar {
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Standardize avatar sizes */
+.avatar-sm, .avatar-sm img {
+    width: 22px !important;
+    height: 22px !important;
+}
+
+.avatar, .avatar img {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.avatar-lg, .avatar-lg img {
+    width: 64px !important;
+    height: 64px !important;
+}
+
+/* Post layout and voting fixes */
+.post-item,
+.post-item .d-flex,
+.comment-item,
+.comment-item .d-flex,
+.nested-reply {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+}
+
+/* Special override to ensure all vote columns are vertical regardless of screen size */
+.vote-column,
+.vote-controls,
+.post-item .vote-column,
+.comment-item .vote-column,
+.mobile-stack.vote-column,
+.mobile-stack.vote-controls,
+.post-item .mobile-stack.vote-column,
+.post-item .mobile-stack.vote-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    margin-right: 0.5rem !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    width: 36px !important;
+    padding-top: 0.25rem !important;
+}
+
+/* Force post content to take remaining width */
+.post-item .post-content,
+.post-item .post-content-column,
+.comment-item .comment-content-column,
+.nested-reply .reply-content-column {
+    flex: 1 !important;
+    width: calc(100% - 36px) !important;
+}
+
+/* Make vote icons large enough */
+.vote-btn i.bi,
+.vote-btn i.bi-arrow-up-short,
+.vote-btn i.bi-arrow-down-short {
+    font-size: 1.5rem !important;
+}
+
+/* Compact buttons and forms */
+.btn {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.8rem !important;
+    min-height: 28px !important;
+    border-radius: 0.25rem !important;
+}
+
+.btn-sm {
+    padding: 0.1rem 0.3rem !important;
+    font-size: 0.75rem !important;
+    min-height: 24px !important;
+}
+
+.form-control, .form-select {
+    font-size: 0.9rem !important;
+    padding: 0.25rem 0.5rem !important;
+    min-height: 32px !important;
+    border-radius: 0.25rem !important;
+    background-color: #2c2c2c !important;
+    border: 1px solid #444 !important;
+    color: #f8f9fa !important;
+}
+
+/* Card styling */
+.card {
+    background-color: #32383e !important;
+    border: 1px solid #444 !important;
+    border-radius: 0.25rem !important;
+}
+
+.card-body {
+    padding: 0.75rem !important;
+}
+
+/* Fix icon sizes */
+.bi {
+    font-size: 0.9rem !important;
+    width: auto !important;
+    height: auto !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
 }
