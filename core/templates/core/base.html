@@ -207,7 +207,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" aria-label="Main navigation">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-comments me-2" aria-hidden="true"></i>
+                <i class="bi bi-chat-dots me-2" aria-hidden="true"></i>
                 Discuss
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -334,12 +334,12 @@
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'account_login' %}">
-                                <i class="fas fa-sign-in-alt me-1" aria-hidden="true"></i> Login
+                                <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus me-1" aria-hidden="true"></i> Register
+                                <i class="bi bi-person-plus me-1" aria-hidden="true"></i> Register
                             </a>
                         </li>
                     {% endif %}
