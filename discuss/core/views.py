@@ -49,17 +49,42 @@ def mark_notification_read(request, pk):
     if request.method == 'POST':
         notification.is_read = True
         notification.save()
+        
+        # If AJAX request, return a JSON response
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Notification marked as read',
+            })
+        
+        # Otherwise, redirect back to notifications list
         messages.success(request, 'Notification marked as read.')
+        return redirect('notifications_list')
     
-    return redirect('notifications_list')
+    # For GET requests, just show the notification
+    return render(request, 'core/notification_detail.html', {
+        'notification': notification,
+        'unread_notification_count': get_unread_notification_count(request.user)
+    })
 
 @login_required
 def mark_all_notifications_read(request):
     """View to mark all notifications as read"""
     if request.method == 'POST':
         Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+        
+        # If AJAX request, return a JSON response
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'All notifications marked as read',
+            })
+        
+        # Otherwise, redirect back to notifications list
         messages.success(request, 'All notifications marked as read.')
+        return redirect('notifications_list')
     
+    # If not a POST request, redirect to notifications list
     return redirect('notifications_list')
 
 def home(request, template='core/index.html', extra_context=None):
