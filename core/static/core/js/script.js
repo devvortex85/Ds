@@ -264,14 +264,22 @@ function setupAjaxVoting() {
             // Logging details for debugging
             console.log("Sending post vote request to:", voteUrl);
             
+            // For GET requests, we don't technically need to set CSRF
+            // But we'll prepare headers properly for future compatibility
+            const headers = {
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            // Only add CSRF token for non-GET requests, but we'll set it anyway
+            if (csrfToken) {
+                headers['X-CSRFToken'] = csrfToken;
+                console.log("Added CSRF token to post vote request headers");
+            }
+            
             fetch(voteUrl, {
                 method: 'GET',  // Django view is only set up for GET requests currently
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin' // Include cookies in the request
+                headers: headers,
+                credentials: 'include' // Include cookies in the request (include works across domains)
             })
             .then(response => response.json())
             .then(data => {
@@ -388,14 +396,22 @@ function setupAjaxVoting() {
             // Logging details for debugging
             console.log("Sending comment vote request to:", voteUrl);
             
+            // For GET requests, we don't technically need to set CSRF
+            // But we'll prepare headers properly for future compatibility
+            const headers = {
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            // Only add CSRF token for non-GET requests, but we'll set it anyway
+            if (csrfToken) {
+                headers['X-CSRFToken'] = csrfToken;
+                console.log("Added CSRF token to comment vote request headers");
+            }
+            
             fetch(voteUrl, {
                 method: 'GET',  // Django view is only set up for GET requests currently
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin' // Include cookies in the request
+                headers: headers,
+                credentials: 'include' // Include cookies in the request (include works across domains)
             })
             .then(response => response.json())
             .then(data => {
@@ -479,21 +495,28 @@ function setupAjaxVoting() {
 
 // Function to get CSRF token
 function getCsrfToken() {
-    // First try to get it from the meta tag
+    // First try to get it from the meta tag (Django sets this with {% csrf_token %})
     const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (metaToken) {
+        console.log("Found CSRF token in meta tag");
         return metaToken;
     }
     
-    // Then try to get it from the cookie
-    const cookieMatch = document.cookie.match(/csrftoken=([^;]+)/);
-    if (cookieMatch && cookieMatch[1]) {
-        return cookieMatch[1];
+    // Then try to get it from the cookie (Django's default method)
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    
+    if (cookieValue) {
+        console.log("Found CSRF token in cookie");
+        return cookieValue;
     }
     
     // Finally try to get it from a form input
     const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
     if (csrfInput) {
+        console.log("Found CSRF token in form input");
         return csrfInput.value;
     }
     
