@@ -26,6 +26,7 @@ body .navbar {
     position: sticky !important;
     top: 0 !important;
     z-index: 1030 !important;
+    border: none !important; /* Remove any borders */
 }
 
 body .navbar .container {
@@ -95,7 +96,7 @@ body .navbar .search-container {
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    max-width: 300px !important; /* Increased from 240px for wider search bar */
+    max-width: 350px !important; /* Further increased from 300px for an even wider search bar */
     display: flex !important;
     align-items: center !important;
     z-index: 2 !important;
@@ -265,7 +266,7 @@ body .navbar .avatar-placeholder {
         position: absolute !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        max-width: 90px !important; /* Even narrower for mobile */
+        max-width: 120px !important; /* Increased from 90px for more visibility */
         z-index: 2 !important;
     }
     
