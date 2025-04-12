@@ -1,0 +1,209 @@
+/* 
+ * Unified Navigation Bar Styling
+ * A single file for consistent navigation across all devices
+ */
+
+/* Base navbar structure */
+.navbar {
+    background-color: #272b30 !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar .container {
+    padding: 0.5rem 1rem !important;
+}
+
+/* Common navbar elements */
+.navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.navbar-brand i {
+    font-size: 1.2rem !important;
+    margin-right: 0.5rem !important;
+}
+
+/* Unified search bar */
+.search-container {
+    width: 100% !important;
+    max-width: 350px !important;
+    margin: 0.5rem auto !important;
+}
+
+.search-container .input-group {
+    height: 32px !important;
+}
+
+.search-container .form-control {
+    background-color: #2c2c2c !important;
+    border: 1px solid #444 !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.search-container .btn {
+    background-color: #3e444c !important;
+    border: 1px solid #444 !important;
+    border-left: none !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+/* Main navigation links - horizontal for both mobile and desktop */
+.main-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+    margin: 0.5rem 0 !important;
+    padding: 0.5rem 0 !important;
+    border-top: 1px solid #444 !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+.main-nav .nav-item {
+    flex: 1 !important;
+    text-align: center !important;
+}
+
+.main-nav .nav-link {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem !important;
+    color: #aaa !important;
+    transition: color 0.2s ease !important;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link:focus {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+.main-nav .nav-link i {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.main-nav .nav-link span {
+    font-size: 0.8rem !important;
+    display: block !important;
+}
+
+/* User menu area */
+.user-menu {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    margin-left: auto !important;
+}
+
+.user-menu .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem 0.75rem !important;
+    position: relative !important;
+}
+
+.user-menu .dropdown-menu {
+    min-width: 200px !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 0.5rem !important;
+    background-color: #3e444c !important;
+    border: 1px solid #444 !important;
+}
+
+.user-menu .dropdown-item {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+    color: #ddd !important;
+}
+
+.user-menu .dropdown-item:hover,
+.user-menu .dropdown-item:focus {
+    background-color: #4e5460 !important;
+}
+
+/* Badge notifications */
+.badge-notification {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    transform: translate(50%, -50%) !important;
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.35rem !important;
+}
+
+/* Square avatars */
+.avatar, .nav-avatar img {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 0 !important; /* Square avatars */
+    object-fit: cover !important;
+}
+
+.avatar-placeholder {
+    width: 22px !important;
+    height: 22px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border-radius: 0 !important; /* Square placeholder */
+    font-size: 0.75rem !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    /* Compact for mobile */
+    .navbar .container {
+        flex-direction: column !important;
+        padding: 0.5rem !important;
+    }
+    
+    .header-row {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .search-container {
+        margin: 0.5rem auto !important;
+    }
+}
+
+@media (min-width: 768px) {
+    /* More spacious for desktop */
+    .navbar .container {
+        flex-direction: column !important;
+    }
+    
+    .header-row {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    
+    .main-nav {
+        max-width: 500px !important;
+        margin: 0.5rem auto !important;
+    }
+    
+    .main-nav .nav-link span {
+        font-size: 0.85rem !important;
+    }
+}
