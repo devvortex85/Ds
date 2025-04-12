@@ -95,7 +95,7 @@ body .navbar .search-container {
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    max-width: 240px !important; /* Increased from 180px */
+    max-width: 300px !important; /* Increased from 240px for wider search bar */
     display: flex !important;
     align-items: center !important;
     z-index: 2 !important;
@@ -151,10 +151,12 @@ body .navbar .user-menu {
 body .navbar .user-menu .nav-link {
     display: flex !important;
     align-items: center !important;
-    padding: 0.35rem !important; /* Reduced from 0.5rem 0.75rem */
+    justify-content: center !important;
+    padding: 0.25rem !important; /* Further reduced for tighter spacing */
     position: relative !important;
     color: #aaa !important;
     text-decoration: none !important;
+    border: none !important; /* Remove any borders */
 }
 
 body .navbar .user-menu .nav-link:hover,
@@ -205,13 +207,23 @@ body .navbar .badge-notification {
     justify-content: center !important;
 }
 
-/* Square avatars */
+/* Square avatars - aligned with other header elements */
 body .navbar .avatar, 
 body .navbar .nav-avatar img {
     width: 22px !important;
     height: 22px !important;
     border-radius: 0 !important; /* Square avatars */
     object-fit: cover !important;
+    margin: 0 !important; /* Remove any margins */
+    display: inline-flex !important;
+    vertical-align: middle !important; /* Align with text */
+}
+
+body .navbar .nav-avatar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
 }
 
 body .navbar .avatar-placeholder {
@@ -224,6 +236,7 @@ body .navbar .avatar-placeholder {
     color: #fff !important;
     border-radius: 0 !important; /* Square placeholder */
     font-size: 0.75rem !important;
+    margin: 0 !important;
 }
 
 /* Responsive adjustments - Mobile First */

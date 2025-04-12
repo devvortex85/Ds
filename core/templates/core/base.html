@@ -208,12 +208,12 @@
                 <div class="header-left">
                     <!-- Logo - only icon, no text -->
                     <a class="navbar-brand" href="{% url 'home' %}" aria-label="Discuss Home">
-                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                        <i class="bi bi-chat-dots adaptive-icon" aria-hidden="true"></i>
                     </a>
                     
                     <!-- Donation Link -->
                     <a href="{% url 'donate' %}" class="nav-link donation-link" aria-label="Support with donation">
-                        <i class="bi bi-currency-euro" aria-hidden="true"></i>
+                        <i class="bi bi-currency-euro adaptive-icon" aria-hidden="true"></i>
                     </a>
                 </div>
                 
@@ -224,10 +224,10 @@
                             <label for="search-input" class="sr-only">Search</label>
                             <input id="search-input" class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
                             <button class="btn btn-dark" type="submit" aria-label="Submit search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <i class="bi bi-search adaptive-icon" aria-hidden="true"></i>
                             </button>
                             <a href="{% url 'advanced_search' %}" class="btn btn-info text-white" title="Advanced Search" aria-label="Advanced Search">
-                                <i class="bi bi-funnel" aria-hidden="true"></i>
+                                <i class="bi bi-funnel adaptive-icon" aria-hidden="true"></i>
                             </a>
                         </div>
                     </form>
@@ -238,7 +238,7 @@
                     {% if user.is_authenticated %}
                         <!-- Notifications -->
                         <a class="nav-link position-relative" href="{% url 'notifications_list' %}" aria-label="Notifications">
-                            <i class="bi bi-bell" aria-hidden="true"></i>
+                            <i class="bi bi-bell adaptive-icon" aria-hidden="true"></i>
                             {% if unread_notification_count > 0 %}
                                 <span class="badge bg-danger badge-notification" aria-label="{{ unread_notification_count }} unread notifications">
                                     {{ unread_notification_count }}
@@ -248,7 +248,7 @@
                         
                         <!-- Messages -->
                         <a class="nav-link position-relative" href="{% url 'postman:inbox' %}" aria-label="Private Messages">
-                            <i class="bi bi-envelope" aria-hidden="true"></i>
+                            <i class="bi bi-envelope adaptive-icon" aria-hidden="true"></i>
                             {% load postman_tags %}
                             {% postman_unread as messages_count %}
                             {% if messages_count > 0 %}
@@ -260,12 +260,12 @@
                         
                         <!-- User Dropdown - No arrow -->
                         <div class="dropdown">
-                            <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link d-flex align-items-center justify-content-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.1rem !important; height: 100%;">
                                 <div class="nav-avatar">
                                     {% if user.profile.avatar %}
-                                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" width="22" height="22">
+                                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" width="22" height="22" class="adaptive-icon">
                                     {% else %}
-                                        <div class="avatar-placeholder">
+                                        <div class="avatar-placeholder adaptive-icon">
                                             <span>{{ user.username|first|upper }}</span>
                                         </div>
                                     {% endif %}
@@ -299,11 +299,11 @@
                         </div>
                     {% else %}
                         <a class="nav-link" href="{% url 'account_login' %}">
-                            <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                            <i class="bi bi-box-arrow-in-right adaptive-icon me-1" aria-hidden="true"></i>
                             <span class="d-none d-md-inline">Login</span>
                         </a>
                         <a class="nav-link" href="{% url 'register' %}">
-                            <i class="bi bi-person-plus me-1" aria-hidden="true"></i>
+                            <i class="bi bi-person-plus adaptive-icon me-1" aria-hidden="true"></i>
                             <span class="d-none d-md-inline">Register</span>
                         </a>
                     {% endif %}

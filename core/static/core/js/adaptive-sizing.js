@@ -81,5 +81,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.style.fontSize = '1rem';
             }
         });
+        
+        // Apply special adaptive sizing for header navigation icons
+        adaptHeaderIcons();
+    }
+    
+    // Function to adapt header icons based on available space
+    function adaptHeaderIcons() {
+        // Get the navbar and its width
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        const navbarWidth = navbar.offsetWidth;
+        const headerIcons = navbar.querySelectorAll('.header-left .bi, .user-menu .bi');
+        
+        // Scale the icons based on navbar width
+        let iconSize;
+        if (navbarWidth < 360) {
+            // Extra small mobile devices
+            iconSize = '0.8rem';
+        } else if (navbarWidth < 576) {
+            // Small mobile devices
+            iconSize = '0.85rem';
+        } else if (navbarWidth < 768) {
+            // Medium mobile devices
+            iconSize = '0.9rem';
+        } else if (navbarWidth < 992) {
+            // Tablets
+            iconSize = '1rem';
+        } else if (navbarWidth < 1200) {
+            // Small desktops
+            iconSize = '1.1rem';
+        } else {
+            // Large desktops
+            iconSize = '1.2rem';
+        }
+        
+        // Apply the calculated size
+        headerIcons.forEach(function(icon) {
+            icon.style.fontSize = iconSize;
+        });
     }
 });
