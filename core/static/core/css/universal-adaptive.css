@@ -217,10 +217,20 @@ a.btn-sm,
 .reply-btn,
 .share-btn,
 .action-link,
-.nav-btn-sm {
+.nav-btn-sm,
+.btn-outline-secondary,
+.btn-outline-danger,
+.btn-outline-primary,
+.btn-group .btn,
+.dropdown-toggle,
+.post-actions .btn,
+.post-actions .btn-group .btn {
     font-size: calc(0.8rem * var(--adaptive-scale)) !important;
     padding: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale)) !important;
     min-height: calc(32px * var(--adaptive-scale)) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 /* Large buttons */
@@ -554,6 +564,28 @@ img.rounded-circle,
         :root {
             --adaptive-scale: 0.8;
         }
+    }
+    
+    /* Post actions buttons on mobile */
+    .post-actions .btn,
+    .post-actions .btn-group .btn,
+    .post-actions .btn-sm,
+    .post-actions .btn-outline-primary,
+    .post-actions .btn-outline-secondary,
+    .post-actions .btn-outline-danger {
+        font-size: 0.75rem !important;
+        padding: 0.1rem 0.3rem !important;
+        min-height: 24px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Icons inside buttons on mobile */
+    .post-actions .btn i,
+    .post-actions .btn .bi {
+        font-size: 0.85rem !important;
+        margin-right: 0.1rem !important;
     }
 }
 
