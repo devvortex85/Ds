@@ -31,6 +31,9 @@
     <!-- Dark theme CSS -->
     <link href="{% static 'core/css/dark-theme.css' %}" rel="stylesheet">
     
+    <!-- Mobile layout fixes -->
+    <link href="{% static 'core/css/mobile-fixes.css' %}" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <style>
         /* Global Styles */
@@ -220,7 +223,7 @@
                     
                     <!-- Donate button for mobile -->
                     <a class="btn btn-sm btn-outline-light ms-2" href="{% url 'donate' %}">
-                        <i class="bi bi-heart" aria-hidden="true"></i>
+                        <i class="bi bi-currency-euro" aria-hidden="true"></i>
                         <span class="sr-only">Support Us</span>
                     </a>
                 </div>
@@ -347,7 +350,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'donate' %}">
-                            <i class="bi bi-heart" aria-hidden="true"></i> Support Us
+                            <i class="bi bi-currency-euro" aria-hidden="true"></i> Support Us
                         </a>
                     </li>
                 </ul>
