@@ -257,12 +257,21 @@ function setupAjaxVoting() {
             const isUpvote = voteUrl.includes('upvote');
             const voteType = isUpvote ? 'upvote' : 'downvote';
             
+            // Get CSRF token
+            const csrfToken = getCsrfToken();
+            console.log("Using CSRF token for post vote:", csrfToken ? "Found token" : "No token found");
+            
+            // Logging details for debugging
+            console.log("Sending post vote request to:", voteUrl);
+            
             fetch(voteUrl, {
                 method: 'GET',  // Django view is only set up for GET requests currently
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': getCsrfToken()
-                }
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin' // Include cookies in the request
             })
             .then(response => response.json())
             .then(data => {
@@ -372,12 +381,21 @@ function setupAjaxVoting() {
             const isUpvote = voteUrl.includes('upvote');
             const voteType = isUpvote ? 'upvote' : 'downvote';
             
+            // Get CSRF token
+            const csrfToken = getCsrfToken();
+            console.log("Using CSRF token for comment vote:", csrfToken ? "Found token" : "No token found");
+            
+            // Logging details for debugging
+            console.log("Sending comment vote request to:", voteUrl);
+            
             fetch(voteUrl, {
                 method: 'GET',  // Django view is only set up for GET requests currently
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': getCsrfToken()
-                }
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin' // Include cookies in the request
             })
             .then(response => response.json())
             .then(data => {
