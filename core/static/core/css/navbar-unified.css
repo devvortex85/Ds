@@ -103,6 +103,7 @@ body .navbar-brand {
     display: flex !important;
     align-items: center !important;
     margin: 0 !important;
+    margin-left: 10px !important; /* Added margin to move away from left edge */
     padding: 0 !important;
     font-size: 1.2rem !important;
     font-weight: bold !important;
@@ -207,6 +208,7 @@ body .navbar .user-menu {
     align-items: center !important;
     justify-content: flex-end !important;
     margin-left: auto !important;
+    margin-right: 10px !important; /* Added margin to move away from right edge */
     width: 100px !important; /* Increased to match header-left (100px) */
     z-index: 3 !important; /* Stay above search bar */
 }
@@ -392,6 +394,7 @@ body .navbar .avatar-placeholder {
         flex: 0 0 auto !important;
         display: flex !important;
         align-items: center !important;
+        margin-right: 8px !important; /* Add some space from right edge on mobile */
     }
     
     /* All icons on same line with consistent separation */
