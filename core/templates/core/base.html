@@ -202,19 +202,38 @@
     <!-- Unified Navbar for All Devices -->
     <nav class="navbar navbar-dark sticky-top" aria-label="Main navigation">
         <div class="container">
-            <!-- Header Row with Logo and User Menu -->
+            <!-- Single Header Row with all elements -->
             <div class="header-row">
-                <!-- Logo - only icon, no text -->
-                <a class="navbar-brand" href="{% url 'home' %}" aria-label="Discuss Home">
-                    <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                </a>
+                <!-- Left side: Logo and icons -->
+                <div class="header-left">
+                    <!-- Logo - only icon, no text -->
+                    <a class="navbar-brand" href="{% url 'home' %}" aria-label="Discuss Home">
+                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                    </a>
+                    
+                    <!-- Donation Link -->
+                    <a href="{% url 'donate' %}" class="nav-link donation-link" aria-label="Support with donation">
+                        <i class="bi bi-currency-euro" aria-hidden="true"></i>
+                    </a>
+                </div>
                 
-                <!-- Donation Link -->
-                <a href="{% url 'donate' %}" class="nav-link donation-link" aria-label="Support with donation">
-                    <i class="bi bi-currency-euro" aria-hidden="true"></i>
-                </a>
+                <!-- Center: Search bar -->
+                <div class="search-container">
+                    <form action="{% url 'search' %}" method="GET" role="search">
+                        <div class="input-group">
+                            <label for="search-input" class="sr-only">Search</label>
+                            <input id="search-input" class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-dark" type="submit" aria-label="Submit search">
+                                <i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                            <a href="{% url 'advanced_search' %}" class="btn btn-info text-white" title="Advanced Search" aria-label="Advanced Search">
+                                <i class="bi bi-funnel" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
                 
-                <!-- User Account Menu -->
+                <!-- Right side: User menu -->
                 <div class="user-menu">
                     {% if user.is_authenticated %}
                         <!-- Notifications -->
@@ -289,22 +308,6 @@
                         </a>
                     {% endif %}
                 </div>
-            </div>
-            
-            <!-- Search Row -->
-            <div class="search-container">
-                <form action="{% url 'search' %}" method="GET" role="search">
-                    <div class="input-group">
-                        <label for="search-input" class="sr-only">Search</label>
-                        <input id="search-input" class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-dark" type="submit" aria-label="Submit search">
-                            <i class="bi bi-search" aria-hidden="true"></i>
-                        </button>
-                        <a href="{% url 'advanced_search' %}" class="btn btn-info text-white" title="Advanced Search" aria-label="Advanced Search">
-                            <i class="bi bi-funnel" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </form>
             </div>
             
             <!-- No Navigation Links Here -->
