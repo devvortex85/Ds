@@ -40,10 +40,25 @@ body .navbar .container {
 /* Header row with logo and user menu */
 body .navbar .header-row {
     display: flex !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important; /* Changed from space-between to flex-start */
     align-items: center !important;
     width: 100% !important;
     margin-bottom: 0.5rem !important;
+}
+
+/* Donation link styles */
+body .navbar .donation-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 0.5rem !important;
+    padding: 0.5rem !important;
+    color: #5bc0de !important;
+}
+
+body .navbar .donation-link:hover,
+body .navbar .donation-link:focus {
+    color: #fff !important;
 }
 
 /* Common navbar elements */
@@ -68,7 +83,10 @@ body .navbar-brand i {
 body .navbar .search-container {
     width: 100% !important;
     max-width: 350px !important;
-    margin: 0.5rem auto !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 body .navbar .search-container .input-group {
@@ -212,7 +230,10 @@ body .navbar .avatar-placeholder {
     }
     
     body .navbar .search-container {
-        margin: 0.5rem auto !important;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
         width: 90% !important;
     }
 }

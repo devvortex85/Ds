@@ -204,10 +204,14 @@
         <div class="container">
             <!-- Header Row with Logo and User Menu -->
             <div class="header-row">
-                <!-- Logo -->
+                <!-- Logo - only icon, no text -->
                 <a class="navbar-brand" href="{% url 'home' %}" aria-label="Discuss Home">
                     <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                    <span>Discuss</span>
+                </a>
+                
+                <!-- Donation Link -->
+                <a href="{% url 'donate' %}" class="nav-link donation-link" aria-label="Support with donation">
+                    <i class="bi bi-currency-euro" aria-hidden="true"></i>
                 </a>
                 
                 <!-- User Account Menu -->
@@ -235,10 +239,10 @@
                             {% endif %}
                         </a>
                         
-                        <!-- User Dropdown -->
+                        <!-- User Dropdown - No arrow -->
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="nav-avatar me-2">
+                            <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-avatar">
                                     {% if user.profile.avatar %}
                                         <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" width="22" height="22">
                                     {% else %}
@@ -247,7 +251,6 @@
                                         </div>
                                     {% endif %}
                                 </div>
-                                <span class="d-none d-md-inline">{{ user.username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li>
