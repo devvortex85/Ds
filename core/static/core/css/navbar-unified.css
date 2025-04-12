@@ -256,8 +256,8 @@ body .navbar .avatar-placeholder {
         flex-wrap: nowrap !important;
         justify-content: space-between !important;
         gap: 0 !important; /* No gaps between elements */
-        height: 26px !important; /* Ultra-compact height for mobile */
-        padding: 0 !important; /* No padding */
+        height: 32px !important; /* Increased from 26px for better tap targets */
+        padding: 0.15rem 0 !important; /* Added a little vertical padding */
     }
     
     /* Make the header-left take minimal space */
@@ -319,15 +319,15 @@ body .navbar .avatar-placeholder {
     /* Make avatars perfectly aligned with other elements */
     body .navbar .avatar, 
     body .navbar .nav-avatar img {
-        width: 18px !important; /* Smaller avatars on mobile */
-        height: 18px !important;
+        width: 22px !important; /* Increased from 18px for better visibility */
+        height: 22px !important;
         margin: 0 !important;
         vertical-align: middle !important;
     }
     
     body .navbar .avatar-placeholder {
-        width: 18px !important;
-        height: 18px !important;
+        width: 22px !important;
+        height: 22px !important;
     }
 }
 
@@ -668,7 +668,12 @@ img.avatar {
 @media (max-width: 576px) {
     /* Extra small devices */
     .bi {
-        font-size: 0.8rem !important;
+        font-size: 1rem !important; /* Increased from 0.8rem for better visibility on mobile */
+    }
+    
+    /* Header icons - make them slightly larger for better tap targets */
+    body .navbar .bi.adaptive-icon {
+        font-size: 1.1rem !important; /* Special size for header icons */
     }
     
     /* Special large icons that need to remain visible */
