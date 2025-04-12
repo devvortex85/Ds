@@ -1,0 +1,176 @@
+/* Responsive design enhancements for Discuss platform */
+
+/* Base mobile-friendly styles */
+html {
+  font-size: 16px;
+}
+
+/* Ensure proper sizing for mobile tappable elements */
+.btn, .nav-link, .dropdown-item, .vote-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+}
+
+.mobile-friendly-tap {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Stacking for mobile */
+@media (max-width: 768px) {
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-hide {
+    display: none !important;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  .mobile-my-2 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .mobile-mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Convert voting controls to horizontal on mobile */
+  .vote-column, .vote-controls {
+    flex-direction: row !important;
+    margin-bottom: 0.5rem !important;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .vote-column .vote-btn,
+  .vote-controls .vote-btn {
+    padding: 0.5rem;
+  }
+  
+  .vote-count {
+    margin: 0 0.5rem !important;
+  }
+  
+  /* Make headings smaller on mobile */
+  h1, .h1 { font-size: 1.75rem !important; }
+  h2, .h2 { font-size: 1.5rem !important; }
+  h3, .h3 { font-size: 1.3rem !important; }
+  h4, .h4 { font-size: 1.2rem !important; }
+  h5, .h5 { font-size: 1.1rem !important; }
+  h6, .h6 { font-size: 1rem !important; }
+  
+  /* Adjust form layouts for mobile */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  textarea.form-control {
+    min-height: 80px;
+  }
+  
+  /* Adjust card spacing for mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  /* Nested comments need more indentation on mobile for clarity */
+  .nested-reply {
+    padding-left: 0.5rem;
+  }
+  
+  /* Adjust margins for post actions on mobile */
+  .post-actions button,
+  .post-actions .btn,
+  .post-actions .btn-group {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Adjust post meta data for mobile */
+  .post-meta, .comment-meta, .reply-meta {
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 1.6;
+  }
+}
+
+/* Tablet-specific styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tablet-flex-column {
+    flex-direction: column !important;
+  }
+  
+  .tablet-text-center {
+    text-align: center !important;
+  }
+  
+  .tablet-my-2 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Adjust sidebar for tablet */
+  .tablet-sidebar {
+    order: 2;
+    width: 100% !important;
+    margin-top: 1rem;
+  }
+  
+  /* Adjust layout for community listings */
+  .community-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Larger desktop/PC styles */
+@media (min-width: 1025px) {
+  .container {
+    max-width: 1200px;
+  }
+  
+  /* Enhanced desktop experience */
+  .post-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  /* Ensure controls have proper borders */
+  .btn, .card, .form-control, .nav-link {
+    border: 1px solid;
+  }
+  
+  /* Force colors to respect high contrast settings */
+  a, .btn, .text-muted {
+    forced-color-adjust: none;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

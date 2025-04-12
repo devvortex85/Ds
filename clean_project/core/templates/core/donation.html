@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block title %}Donate to Discuss{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Support Discuss</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Your donations help us keep the lights on and improve the platform for everyone.</p>
+                    
+                    {% if messages %}
+                    <div class="alert alert-danger">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.donation_type.id_for_label }}" class="form-label">
+                                <strong>Donation Amount</strong>
+                            </label>
+                            {{ form.donation_type }}
+                            {% if form.donation_type.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.donation_type.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div id="custom-amount-group" class="form-group mb-3" style="display: none;">
+                            <label for="{{ form.custom_amount.id_for_label }}" class="form-label">
+                                <strong>Custom Amount ($)</strong>
+                            </label>
+                            {{ form.custom_amount }}
+                            {% if form.custom_amount.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.custom_amount.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <strong>Message (Optional)</strong>
+                            </label>
+                            {{ form.description }}
+                        </div>
+                        
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Continue to Payment</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Payments are secure and processed via our payment provider.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleCustomAmount() {
+        var donationTypeSelect = document.getElementById('{{ form.donation_type.id_for_label }}');
+        var customAmountGroup = document.getElementById('custom-amount-group');
+        
+        if (donationTypeSelect.value == '0') {
+            customAmountGroup.style.display = 'block';
+        } else {
+            customAmountGroup.style.display = 'none';
+        }
+    }
+    
+    // Run on page load to initialize the visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleCustomAmount();
+        
+        // Add event listener for when the donation type changes
+        document.getElementById('{{ form.donation_type.id_for_label }}').addEventListener('change', function() {
+            toggleCustomAmount();
+        });
+    });
+</script>
+{% endblock %}

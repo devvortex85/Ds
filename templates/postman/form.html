@@ -1,0 +1,22 @@
+{% load postman_tags %}
+
+<div class="mb-3">
+    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+    {% if field|field_type == 'CharField' and not field|field_type == 'Textarea' %}
+        <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="form-control{% if field.errors %} is-invalid{% endif %}" value="{{ field.value|default:'' }}" {% if field.field.required %}required{% endif %}>
+    {% elif field|field_type == 'Textarea' %}
+        <textarea name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="form-control{% if field.errors %} is-invalid{% endif %}" rows="5" {% if field.field.required %}required{% endif %}>{{ field.value|default:'' }}</textarea>
+    {% else %}
+        {{ field }}
+    {% endif %}
+    
+    {% if field.help_text %}
+        <div class="form-text">{{ field.help_text }}</div>
+    {% endif %}
+    
+    {% if field.errors %}
+        <div class="invalid-feedback">
+            {% for error in field.errors %}{{ error }}{% endfor %}
+        </div>
+    {% endif %}
+</div>
