@@ -889,10 +889,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Add adaptive classes to card elements
+        document.querySelectorAll('.card, .post-card, .post-item, .comment-card, .community-card, .profile-card').forEach(el => {
+            if (!el.classList.contains('adaptive-card')) {
+                el.classList.add('adaptive-card');
+                el.style.transition = 'all 0.2s ease-in-out';
+                el.style.marginBottom = 'var(--spacing-md)';
+                el.style.borderRadius = '0.25rem';
+                
+                // Find and style card body if exists
+                const cardBody = el.querySelector('.card-body');
+                if (cardBody) {
+                    cardBody.style.padding = 'var(--spacing-md)';
+                    cardBody.style.transition = 'padding 0.2s ease-in-out';
+                }
+            }
+        });
+        
         // Identify containers that should have adaptive spacing
-        document.querySelectorAll('.card, .list-group-item, .nav-item, .dropdown-item').forEach(el => {
+        document.querySelectorAll('.list-group-item, .nav-item, .dropdown-item').forEach(el => {
             if (!el.classList.contains('adaptive-spacing')) {
                 el.classList.add('adaptive-spacing');
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
@@ -909,6 +927,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 el.style.fontSize = 'var(--input-font-size)';
                 el.style.padding = 'var(--input-padding)';
+                el.style.transition = 'all 0.2s ease-in-out';
+                el.style.backgroundColor = '#2c2c2c';
+                el.style.border = '1px solid #444';
+                el.style.color = '#f8f9fa';
+                el.style.borderRadius = '0.25rem';
             }
         });
         
@@ -917,35 +940,66 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!el.classList.contains('adaptive-form-label')) {
                 el.classList.add('adaptive-form-label');
                 el.style.fontSize = 'var(--label-font-size)';
+                el.style.fontWeight = '500';
+                el.style.marginBottom = '0.3rem';
+                el.style.color = '#e9ecef';
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
-        // Add content adaptive classes
-        document.querySelectorAll('.post-title, h1.article-title').forEach(el => {
+        // Add content adaptive classes to all headings
+        document.querySelectorAll('.post-title, h1.article-title, .community-title, .profile-name, .page-title, h1, h2.card-title, h2 a.post-title').forEach(el => {
             if (!el.classList.contains('adaptive-post-title')) {
                 el.classList.add('adaptive-post-title');
                 el.style.fontSize = 'var(--post-title-size)';
+                el.style.fontWeight = '600';
+                el.style.lineHeight = '1.3';
+                el.style.marginBottom = '0.5rem';
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
-        document.querySelectorAll('.post-meta, .post-info, .post-details').forEach(el => {
-            if (!el.classList.contains('adaptive-post-meta')) {
-                el.classList.add('adaptive-post-meta');
+        // Add adaptive classes to meta information
+        document.querySelectorAll('.post-meta, .post-info, .post-details, .meta-info, .card-subtitle, .submission-info, .timestamp, .author, .community-name, .meta-text, .small.text-muted').forEach(el => {
+            if (!el.classList.contains('adaptive-meta')) {
+                el.classList.add('adaptive-meta');
                 el.style.fontSize = 'var(--post-meta-size)';
+                el.style.color = '#adb5bd';
+                el.style.marginBottom = '0.5rem';
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
-        document.querySelectorAll('.post-content, .post-body, .post-text').forEach(el => {
-            if (!el.classList.contains('adaptive-post-content')) {
-                el.classList.add('adaptive-post-content');
+        // Add adaptive classes to content
+        document.querySelectorAll('.post-content, .post-body, .post-text, .card-text, .markdown-content, article, .text, .content-text, p:not(.meta-info):not(.card-subtitle)').forEach(el => {
+            if (!el.classList.contains('adaptive-content')) {
+                el.classList.add('adaptive-content');
                 el.style.fontSize = 'var(--post-content-size)';
+                el.style.lineHeight = '1.5';
+                el.style.marginBottom = '1rem';
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
-        document.querySelectorAll('.comment-body, .comment-content, .reply-body, .reply-content').forEach(el => {
+        // Add adaptive classes to URLs and links
+        document.querySelectorAll('.post-url, .card a:not(.btn):not(.post-title), .external-link').forEach(el => {
+            if (!el.classList.contains('adaptive-link')) {
+                el.classList.add('adaptive-link');
+                el.style.fontSize = 'calc(var(--post-meta-size) * 1.05)';
+                el.style.overflowWrap = 'break-word';
+                el.style.wordWrap = 'break-word';
+                el.style.wordBreak = 'break-word';
+                el.style.transition = 'all 0.2s ease-in-out';
+            }
+        });
+        
+        // Add adaptive classes to comments
+        document.querySelectorAll('.comment-body, .comment-content, .reply-body, .reply-content, .comment-text').forEach(el => {
             if (!el.classList.contains('adaptive-comment-content')) {
                 el.classList.add('adaptive-comment-content');
                 el.style.fontSize = 'var(--comment-content-size)';
+                el.style.lineHeight = '1.4';
+                el.style.transition = 'all 0.2s ease-in-out';
             }
         });
         
@@ -953,11 +1007,221 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!el.classList.contains('adaptive-comment-meta')) {
                 el.classList.add('adaptive-comment-meta');
                 el.style.fontSize = 'var(--comment-meta-size)';
+                el.style.color = '#adb5bd';
+                el.style.transition = 'all 0.2s ease-in-out';
+            }
+        });
+        
+        // Add adaptive classes to vote controls
+        document.querySelectorAll('.vote-column, .vote-controls').forEach(el => {
+            if (!el.classList.contains('adaptive-vote-control')) {
+                el.classList.add('adaptive-vote-control');
+                el.style.display = 'flex';
+                el.style.flexDirection = 'column';
+                el.style.alignItems = 'center';
+                el.style.marginRight = '0.5rem';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.minWidth = 'var(--vote-btn-size-mobile)';
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.minWidth = 'var(--vote-btn-size-tablet)';
+                } else {
+                    el.style.minWidth = 'var(--vote-btn-size-desktop)';
+                }
+            }
+        });
+        
+        // Style vote buttons
+        document.querySelectorAll('.vote-btn').forEach(el => {
+            if (!el.classList.contains('adaptive-vote-btn')) {
+                el.classList.add('adaptive-vote-btn');
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.justifyContent = 'center';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.minWidth = 'var(--vote-btn-size-mobile)';
+                    el.style.minHeight = 'var(--vote-btn-size-mobile)';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'var(--vote-icon-size-mobile)';
+                    }
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.minWidth = 'var(--vote-btn-size-tablet)';
+                    el.style.minHeight = 'var(--vote-btn-size-tablet)';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'var(--vote-icon-size-tablet)';
+                    }
+                } else {
+                    el.style.minWidth = 'var(--vote-btn-size-desktop)';
+                    el.style.minHeight = 'var(--vote-btn-size-desktop)';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'var(--vote-icon-size-desktop)';
+                    }
+                }
+            }
+        });
+        
+        // Style vote count
+        document.querySelectorAll('.vote-count').forEach(el => {
+            if (!el.classList.contains('adaptive-vote-count')) {
+                el.classList.add('adaptive-vote-count');
+                el.style.textAlign = 'center';
+                el.style.fontWeight = '600';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.fontSize = 'calc(var(--font-size-xs) * 1.1)';
+                    el.style.margin = '0.1rem 0';
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.fontSize = 'var(--font-size-sm)';
+                    el.style.margin = '0.15rem 0';
+                } else {
+                    el.style.fontSize = 'var(--font-size-md)';
+                    el.style.margin = '0.2rem 0';
+                    el.style.fontWeight = '700';
+                }
+            }
+        });
+        
+        // Style avatars
+        document.querySelectorAll('.avatar, .profile-avatar, .comment-avatar, img.rounded-circle:not(.nav-avatar)').forEach(el => {
+            if (!el.classList.contains('adaptive-avatar')) {
+                el.classList.add('adaptive-avatar');
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    if (el.classList.contains('profile-avatar')) {
+                        el.style.width = '80px';
+                        el.style.height = '80px';
+                    } else if (el.classList.contains('comment-avatar')) {
+                        el.style.width = '24px';
+                        el.style.height = '24px';
+                    } else {
+                        el.style.width = '32px';
+                        el.style.height = '32px';
+                    }
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    if (el.classList.contains('profile-avatar')) {
+                        el.style.width = '100px';
+                        el.style.height = '100px';
+                    } else if (el.classList.contains('comment-avatar')) {
+                        el.style.width = '28px';
+                        el.style.height = '28px';
+                    } else {
+                        el.style.width = '36px';
+                        el.style.height = '36px';
+                    }
+                } else {
+                    if (el.classList.contains('profile-avatar')) {
+                        el.style.width = '120px';
+                        el.style.height = '120px';
+                    } else if (el.classList.contains('comment-avatar')) {
+                        el.style.width = '32px';
+                        el.style.height = '32px';
+                    } else {
+                        el.style.width = '40px';
+                        el.style.height = '40px';
+                    }
+                }
+                
+                // Common styles
+                el.style.objectFit = 'cover';
+            }
+        });
+        
+        // Style country flags
+        document.querySelectorAll('.country-flag').forEach(el => {
+            if (!el.classList.contains('adaptive-flag')) {
+                el.classList.add('adaptive-flag');
+                el.style.verticalAlign = 'middle';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.width = 'var(--flag-width-mobile)';
+                    el.style.height = 'var(--flag-height-mobile)';
+                    el.style.margin = '0 0.15rem';
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.width = 'var(--flag-width-tablet)';
+                    el.style.height = 'var(--flag-height-tablet)';
+                    el.style.margin = '0 0.2rem';
+                } else {
+                    el.style.width = 'var(--flag-width-desktop)';
+                    el.style.height = 'var(--flag-height-desktop)';
+                    el.style.margin = '0 0.25rem';
+                }
+            }
+        });
+        
+        // Style tags and badges
+        document.querySelectorAll('.badge, .tag, .post-tags .badge, .tag-list .tag, .tag-item').forEach(el => {
+            if (!el.classList.contains('adaptive-tag')) {
+                el.classList.add('adaptive-tag');
+                el.style.display = 'inline-flex';
+                el.style.alignItems = 'center';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.fontSize = 'var(--tag-font-size-xs)';
+                    el.style.padding = 'var(--tag-padding-xs)';
+                    el.style.margin = '0.1rem';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--tag-font-size-xs) * 1.1)';
+                        icon.style.marginRight = '0.15rem';
+                    }
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.fontSize = 'var(--tag-font-size-sm)';
+                    el.style.padding = 'var(--tag-padding-sm)';
+                    el.style.margin = '0.15rem';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--tag-font-size-sm) * 1.1)';
+                        icon.style.marginRight = '0.2rem';
+                    }
+                } else {
+                    el.style.fontSize = 'var(--tag-font-size-md)';
+                    el.style.padding = 'var(--tag-padding-md)';
+                    el.style.margin = '0.2rem';
+                    
+                    // Style icon inside
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--tag-font-size-md) * 1.1)';
+                        icon.style.marginRight = '0.25rem';
+                    }
+                }
             }
         });
         
         // Add adaptive classes to action buttons (comment, share, delete)
-        document.querySelectorAll('.btn-sm, .action-btn, .comment-btn, .share-btn, .delete-btn, a[title="Share"], a[title="Delete"], a[title="Reply"], button[aria-label="Share"], button[aria-label="Delete"]').forEach(el => {
+        document.querySelectorAll('.btn-sm, .action-btn, .comment-btn, .share-btn, .delete-btn, .reply-btn, a[title="Share"], a[title="Delete"], a[title="Reply"], button[aria-label="Share"], button[aria-label="Delete"], button[aria-label="Reply"], a.btn-outline-primary, a.btn-outline-secondary, a.btn-outline-danger').forEach(el => {
             if (!el.classList.contains('adaptive-action-btn')) {
                 el.classList.add('adaptive-action-btn');
                 
@@ -970,6 +1234,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.style.padding = 'var(--btn-padding-xs)';
                     el.style.minHeight = '28px';
                     el.style.lineHeight = '1.2';
+                    el.style.margin = '0.1rem';
                     
                     // Find icon inside button if exists
                     const icon = el.querySelector('i');
@@ -982,6 +1247,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.style.fontSize = 'calc(var(--font-size-sm) * 0.95)';
                     el.style.padding = 'var(--btn-padding-sm)';
                     el.style.minHeight = '32px';
+                    el.style.margin = '0.15rem';
                     
                     // Find icon inside button if exists
                     const icon = el.querySelector('i');
@@ -994,6 +1260,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.style.fontSize = 'var(--font-size-sm)';
                     el.style.padding = 'var(--btn-padding-md)';
                     el.style.minHeight = '36px';
+                    el.style.margin = '0.2rem';
                     
                     // Find icon inside button if exists
                     const icon = el.querySelector('i');
@@ -1007,6 +1274,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.display = 'inline-flex';
                 el.style.alignItems = 'center';
                 el.style.justifyContent = 'center';
+                el.style.transition = 'all 0.2s ease-in-out';
+            }
+        });
+        
+        // Make images responsive
+        document.querySelectorAll('img:not(.avatar):not(.nav-avatar):not(.country-flag), .content-image, .post-image').forEach(el => {
+            if (!el.classList.contains('adaptive-image')) {
+                el.classList.add('adaptive-image');
+                el.style.maxWidth = '100%';
+                el.style.height = 'auto';
+                el.style.transition = 'all 0.2s ease-in-out';
+                
+                // Size based on device width for max-height
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 576) {
+                    el.style.maxHeight = '200px';
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    el.style.maxHeight = '300px';
+                } else {
+                    el.style.maxHeight = '400px';
+                }
             }
         });
     }
