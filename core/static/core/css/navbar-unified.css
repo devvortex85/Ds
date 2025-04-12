@@ -55,7 +55,7 @@ body .navbar .header-left {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    width: 70px !important; /* Fixed width to ensure consistent space for the search bar */
+    width: 100px !important; /* Increased from 70px to accommodate donate text */
     z-index: 3 !important; /* Stay above search bar */
     border: none !important; /* Ensure no borders */
 }
@@ -74,14 +74,15 @@ body .navbar .donation-link {
 /* Donate text styling */
 body .navbar .donate-text {
     color: #FF8C00 !important; /* Orange color */
-    font-size: 0.7rem !important;
+    font-size: 0.75rem !important; /* Slightly larger */
     font-weight: bold !important;
-    margin-left: 0.15rem !important;
+    margin-left: 0.2rem !important; /* Increased spacing */
     text-transform: lowercase !important;
+    display: inline-block !important; /* Ensure it's displayed */
 }
 
-/* Hide donate text on extra small screens */
-@media (max-width: 400px) {
+/* Only hide donate text on very small screens */
+@media (max-width: 350px) {
     body .navbar .donate-text {
         display: none !important;
     }
@@ -170,7 +171,7 @@ body .navbar .user-menu {
     align-items: center !important;
     justify-content: flex-end !important;
     margin-left: auto !important;
-    width: 70px !important; /* Fixed width to match header-left */
+    width: 100px !important; /* Increased to match header-left (100px) */
     z-index: 3 !important; /* Stay above search bar */
 }
 
@@ -291,7 +292,7 @@ body .navbar .avatar-placeholder {
         position: absolute !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        max-width: 120px !important; /* Increased from 90px for more visibility */
+        max-width: 110px !important; /* Reduced slightly to give more room for donation text */
         z-index: 2 !important;
     }
     
@@ -324,6 +325,14 @@ body .navbar .avatar-placeholder {
     body .navbar .donation-link {
         padding: 0.15rem !important;
         margin: 0 0.1rem !important; /* Small consistent spacing */
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    /* Mobile specific donate text styling */
+    body .navbar .donate-text {
+        font-size: 0.7rem !important; /* Slightly smaller on mobile */
+        margin-left: 0.1rem !important; /* Less spacing on mobile */
     }
     
     body .navbar .user-menu .nav-link {
