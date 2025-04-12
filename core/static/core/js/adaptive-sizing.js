@@ -1343,4 +1343,46 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.style.fontSize = iconSize;
         });
     }
+    
+    /**
+     * Sets the --adaptive-scale CSS variable based on screen size
+     * This is used by the universal-adaptive.css file to scale all elements
+     */
+    function setAdaptiveScale() {
+        const windowWidth = window.innerWidth;
+        let adaptiveScale = 1; // Default scale
+        
+        // Set different scales based on breakpoints
+        if (windowWidth < 360) {
+            // Extra small mobile phones
+            adaptiveScale = 0.8;
+        } else if (windowWidth < 576) {
+            // Mobile phones
+            adaptiveScale = 0.85;
+        } else if (windowWidth < 768) {
+            // Large mobile phones / small tablets
+            adaptiveScale = 0.9;
+        } else if (windowWidth < 992) {
+            // Tablets
+            adaptiveScale = 0.92; 
+        } else if (windowWidth < 1400) {
+            // Desktops
+            adaptiveScale = 1;
+        } else {
+            // Large desktops
+            adaptiveScale = 1.1;
+        }
+        
+        // Set the CSS variable
+        document.documentElement.style.setProperty('--adaptive-scale', adaptiveScale);
+        console.log("Setting adaptive scale to:", adaptiveScale);
+    }
+    
+    // Call setAdaptiveScale on page load
+    setAdaptiveScale();
+    
+    // Update adaptive scale on window resize
+    window.addEventListener('resize', function() {
+        setAdaptiveScale();
+    });
 });
