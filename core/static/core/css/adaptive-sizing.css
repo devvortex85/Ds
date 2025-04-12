@@ -488,18 +488,80 @@ img.img-adaptive {
     /* Action buttons in posts */
     .btn-group > .btn, 
     .post-actions .btn,
-    .comment-actions .btn {
+    .comment-actions .btn,
+    a[title="Share"],
+    a[title="Delete"],
+    button[aria-label="Share"],
+    button[aria-label="Delete"],
+    a.btn-outline-primary,
+    a.btn-outline-secondary,
+    a.btn-outline-danger {
         font-size: var(--font-size-xs) !important;
         padding: var(--btn-padding-xs) !important;
         min-height: 28px !important;
         margin: 0.1rem !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     .btn-group > .btn i, 
     .post-actions .btn i,
-    .comment-actions .btn i {
+    .comment-actions .btn i,
+    a[title="Share"] i,
+    a[title="Delete"] i,
+    button[aria-label="Share"] i,
+    button[aria-label="Delete"] i,
+    a.btn i {
         font-size: calc(var(--font-size-xs) * 1.2) !important;
         margin-right: 0.2rem !important;
+    }
+    
+    /* Search bar specific styling */
+    .search-container {
+        max-width: 180px;
+    }
+    
+    .search-container .form-control {
+        height: 30px;
+        font-size: var(--font-size-xs) !important;
+        padding: 0.15rem 0.3rem !important;
+    }
+    
+    .search-container .btn {
+        height: 30px;
+        min-width: 30px;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-container .btn i.bi {
+        font-size: calc(var(--font-size-xs) * 1.2) !important;
+    }
+    
+    /* Comment section */
+    .comment-section .btn,
+    .comment-form .btn,
+    textarea.form-control {
+        font-size: var(--font-size-xs) !important;
+        padding: var(--btn-padding-xs) !important;
+    }
+    
+    textarea.form-control {
+        min-height: 60px !important;
+    }
+    
+    /* Comment button at bottom */
+    button[type="submit"].btn-primary,
+    a.btn-primary {
+        height: auto !important;
+        min-height: 32px !important;
+        padding: 0.3rem 0.6rem !important;
+        font-size: var(--font-size-sm) !important;
+        font-weight: 600 !important;
     }
 }
 
@@ -566,18 +628,80 @@ img.img-adaptive {
     /* Action buttons in posts */
     .btn-group > .btn, 
     .post-actions .btn,
-    .comment-actions .btn {
+    .comment-actions .btn,
+    a[title="Share"],
+    a[title="Delete"],
+    button[aria-label="Share"],
+    button[aria-label="Delete"],
+    a.btn-outline-primary,
+    a.btn-outline-secondary,
+    a.btn-outline-danger {
         font-size: calc(var(--font-size-sm) * 0.95) !important;
         padding: var(--btn-padding-sm) !important;
         min-height: 32px !important;
         margin: 0.15rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     .btn-group > .btn i, 
     .post-actions .btn i,
-    .comment-actions .btn i {
+    .comment-actions .btn i,
+    a[title="Share"] i,
+    a[title="Delete"] i,
+    button[aria-label="Share"] i,
+    button[aria-label="Delete"] i,
+    a.btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.25rem !important;
+    }
+    
+    /* Search bar specific styling */
+    .search-container {
+        max-width: 220px;
+    }
+    
+    .search-container .form-control {
+        height: 34px;
+        font-size: var(--font-size-sm) !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    
+    .search-container .btn {
+        height: 34px;
+        min-width: 34px;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-container .btn i.bi {
+        font-size: calc(var(--font-size-sm) * 1.1) !important;
+    }
+    
+    /* Comment section */
+    .comment-section .btn,
+    .comment-form .btn {
+        font-size: var(--font-size-sm) !important;
+        padding: var(--btn-padding-sm) !important;
+    }
+    
+    textarea.form-control {
+        min-height: 80px !important;
+        font-size: var(--font-size-sm) !important;
+        padding: 0.4rem !important;
+    }
+    
+    /* Comment button at bottom */
+    button[type="submit"].btn-primary,
+    a.btn-primary {
+        height: auto !important;
+        min-height: 36px !important;
+        padding: 0.4rem 0.8rem !important;
+        font-size: var(--font-size-md) !important;
+        font-weight: 600 !important;
     }
 }
 
@@ -644,17 +768,79 @@ img.img-adaptive {
     /* Action buttons in posts */
     .btn-group > .btn, 
     .post-actions .btn,
-    .comment-actions .btn {
+    .comment-actions .btn,
+    a[title="Share"],
+    a[title="Delete"],
+    button[aria-label="Share"],
+    button[aria-label="Delete"],
+    a.btn-outline-primary,
+    a.btn-outline-secondary,
+    a.btn-outline-danger {
         font-size: var(--font-size-sm) !important;
         padding: var(--btn-padding-md) !important;
         min-height: 36px !important;
         margin: 0.2rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     .btn-group > .btn i, 
     .post-actions .btn i,
-    .comment-actions .btn i {
+    .comment-actions .btn i,
+    a[title="Share"] i,
+    a[title="Delete"] i,
+    button[aria-label="Share"] i,
+    button[aria-label="Delete"] i,
+    a.btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.3rem !important;
+    }
+    
+    /* Search bar specific styling */
+    .search-container {
+        max-width: 280px;
+    }
+    
+    .search-container .form-control {
+        height: 38px;
+        font-size: var(--font-size-md) !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+    
+    .search-container .btn {
+        height: 38px;
+        min-width: 38px;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-container .btn i.bi {
+        font-size: calc(var(--font-size-md) * 1.1) !important;
+    }
+    
+    /* Comment section */
+    .comment-section .btn,
+    .comment-form .btn {
+        font-size: var(--font-size-md) !important;
+        padding: var(--btn-padding-md) !important;
+    }
+    
+    textarea.form-control {
+        min-height: 100px !important;
+        font-size: var(--font-size-md) !important;
+        padding: 0.5rem !important;
+    }
+    
+    /* Comment button at bottom */
+    button[type="submit"].btn-primary,
+    a.btn-primary {
+        height: auto !important;
+        min-height: 40px !important;
+        padding: 0.5rem 1rem !important;
+        font-size: var(--font-size-md) !important;
+        font-weight: 600 !important;
     }
 }
