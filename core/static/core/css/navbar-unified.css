@@ -135,7 +135,7 @@ body .navbar .search-container .input-group {
     flex-direction: row !important;
     align-items: stretch !important;
     border-radius: 3px !important;
-    overflow: hidden !important;
+    overflow: visible !important; /* Changed from hidden to prevent border issues */
 }
 
 body .navbar .search-container .form-control,
@@ -145,7 +145,7 @@ body .navbar .search-container .search-input {
     height: 26px !important;
     min-height: 26px !important;
     font-size: 0.8rem !important;
-    border-radius: 0 !important;
+    border-radius: 3px 0 0 3px !important; /* Round the left corners */
     color: #fff !important;
     padding: 0.15rem 0.5rem !important;
     flex: 1 !important;
@@ -155,7 +155,6 @@ body .navbar .search-container .btn,
 body .navbar .search-container .search-btn {
     background-color: #3e444c !important;
     border: 1px solid #444 !important;
-    border-left: none !important;
     height: 26px !important;
     min-height: 26px !important;
     width: 26px !important;
@@ -166,6 +165,7 @@ body .navbar .search-container .search-btn {
     border-radius: 0 3px 3px 0 !important; /* Round the right corners */
     color: #fff !important;
     padding: 0 !important;
+    margin-left: -1px !important; /* Fix the border overlap issue */
 }
 
 body .navbar .search-container .btn i.bi,
@@ -347,6 +347,7 @@ body .navbar .avatar-placeholder {
         height: 22px !important; /* Even smaller height */
         min-height: 22px !important;
         max-height: 22px !important;
+        overflow: visible !important; /* Ensure borders are visible */
     }
     
     /* Search input field specific styling */
@@ -359,6 +360,7 @@ body .navbar .avatar-placeholder {
         padding: 0 0.25rem !important; /* Minimal padding */
         width: 90px !important; /* Increased width for better visibility */
         min-width: 90px !important;
+        border-radius: 3px 0 0 3px !important; /* Round the left corners */
     }
     
     /* Search button specific styling */
@@ -375,6 +377,7 @@ body .navbar .avatar-placeholder {
         align-items: center !important;
         justify-content: center !important;
         border-radius: 0 3px 3px 0 !important; /* Round right corners */
+        margin-left: -1px !important; /* Fix the border overlap issue */
     }
     
     /* Search icons specific styling */
