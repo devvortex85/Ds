@@ -71,47 +71,41 @@
 }
 
 /* ---- NAVBAR FIXES ---- */
-/* Mobile header adjustments */
-.mobile-header {
+/* Mobile header structure */
+.navbar .d-lg-none {
     padding: 0.2rem 0 !important;
-    display: flex !important;
+}
+
+.navbar .d-lg-none .d-flex {
     align-items: center !important;
     justify-content: space-between !important;
 }
 
-.mobile-header-left, .mobile-header-right {
+/* Header section styling */
+.navbar .d-flex .align-items-center {
     display: flex !important;
     align-items: center !important;
 }
 
-.mobile-header-center {
+/* Make search bar responsive */
+.navbar .flex-grow-1 {
     flex: 1 !important;
-    max-width: 130px !important;
-    margin: 0 0.5rem !important;
-}
-
-/* Make search bar visible and match height */
-.mobile-header-center {
-    flex: 1 !important;
-    max-width: 300px !important;
-    margin: 0 auto !important;
-    padding: 0 0.5rem !important;
+    margin: 0 0.25rem !important;
 }
 
 .search-form {
     width: 100% !important;
 }
 
-.navbar .input-group,
-.mobile-header-center .input-group {
+.navbar .input-group {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     width: 100% !important;
+    height: 22px !important;
 }
 
-.navbar .input-group .form-control,
-.mobile-header-center .input-group .form-control {
+.navbar .input-group .form-control {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     height: 22px !important;
@@ -124,8 +118,7 @@
     border-bottom-right-radius: 0 !important;
 }
 
-.navbar .input-group .btn,
-.mobile-header-center .input-group .btn {
+.navbar .input-group .btn {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     border-left: none !important;
@@ -141,16 +134,8 @@
     margin: 0 !important;
 }
 
-/* Ensure form-control and button line up perfectly */
-.mobile-header-center .input-group {
-    display: flex !important;
-    align-items: stretch !important;
-    height: 22px !important;
-}
-
 /* Navbar button sizing */
-.navbar .btn,
-.mobile-header-right .btn {
+.navbar .btn {
     min-height: 22px !important;
     min-width: 22px !important;
     max-height: 22px !important;

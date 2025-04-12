@@ -43,7 +43,8 @@
 .nav-avatar img,
 .avatar-placeholder,
 .post-item .avatar-placeholder,
-.comment-item .avatar-placeholder {
+.comment-item .avatar-placeholder,
+.rounded-circle {
     border-radius: 0 !important; /* Square avatars as requested */
     overflow: hidden !important;
 }
