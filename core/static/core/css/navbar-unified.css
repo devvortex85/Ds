@@ -141,31 +141,33 @@ body .navbar .search-container .input-group {
 body .navbar .search-container .form-control,
 body .navbar .search-container .search-input {
     background-color: #2c2c2c !important;
-    border: 1px solid #444 !important;
+    border: 1px solid #333 !important; /* Darker, less visible border */
     height: 26px !important;
     min-height: 26px !important;
     font-size: 0.8rem !important;
-    border-radius: 3px 0 0 3px !important; /* Round the left corners */
+    border-radius: 4px 0 0 4px !important; /* Smoother left corners */
     color: #fff !important;
     padding: 0.15rem 0.5rem !important;
     flex: 1 !important;
+    box-shadow: none !important; /* Remove any shadow */
 }
 
 body .navbar .search-container .btn,
 body .navbar .search-container .search-btn {
-    background-color: #3e444c !important;
-    border: 1px solid #444 !important;
+    background-color: #2c2c2c !important; /* Same as input for seamless look */
+    border: 1px solid #333 !important; /* Darker, less visible border */
     height: 26px !important;
     min-height: 26px !important;
-    width: 26px !important;
-    min-width: 26px !important;
+    width: 16px !important; /* Narrower button without the icon */
+    min-width: 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border-radius: 0 3px 3px 0 !important; /* Round the right corners */
+    border-radius: 0 4px 4px 0 !important; /* Smoother right corners */
     color: #fff !important;
     padding: 0 !important;
     margin-left: -1px !important; /* Fix the border overlap issue */
+    box-shadow: none !important; /* Remove any shadow */
 }
 
 body .navbar .search-container .btn i.bi,
@@ -360,7 +362,9 @@ body .navbar .avatar-placeholder {
         padding: 0 0.25rem !important; /* Minimal padding */
         width: 90px !important; /* Increased width for better visibility */
         min-width: 90px !important;
-        border-radius: 3px 0 0 3px !important; /* Round the left corners */
+        border-radius: 4px 0 0 4px !important; /* Smoother left corners */
+        border: 1px solid #333 !important; /* Darker, less visible border */
+        box-shadow: none !important; /* Remove any shadow */
     }
     
     /* Search button specific styling */
@@ -369,15 +373,18 @@ body .navbar .avatar-placeholder {
         height: 22px !important;
         min-height: 22px !important;
         max-height: 22px !important;
-        width: 22px !important;
-        min-width: 22px !important;
-        max-width: 22px !important;
+        width: 16px !important; /* Narrower button without the icon */
+        min-width: 16px !important;
+        max-width: 16px !important;
         padding: 0 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        border-radius: 0 3px 3px 0 !important; /* Round right corners */
+        border-radius: 0 4px 4px 0 !important; /* Smoother right corners */
         margin-left: -1px !important; /* Fix the border overlap issue */
+        background-color: #2c2c2c !important; /* Same as input for seamless look */
+        border: 1px solid #333 !important; /* Darker, less visible border */
+        box-shadow: none !important; /* Remove any shadow */
     }
     
     /* Search icons specific styling */
