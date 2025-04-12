@@ -55,6 +55,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 --font-size-lg: calc(1.25rem * var(--adaptive-scale));
                 --font-size-xl: calc(1.5rem * var(--adaptive-scale));
                 
+                /* Form element sizes */
+                --input-height: calc(38px * var(--adaptive-scale));
+                --input-font-size: calc(0.9rem * var(--adaptive-scale));
+                --input-padding: calc(0.4rem * var(--adaptive-scale)) calc(0.6rem * var(--adaptive-scale));
+                --textarea-height: calc(80px * var(--adaptive-scale));
+                --label-font-size: calc(0.9rem * var(--adaptive-scale));
+                --helper-font-size: calc(0.85rem * var(--adaptive-scale));
+                
+                /* Post and content sizes */
+                --post-title-size: calc(1.4rem * var(--adaptive-scale));
+                --post-meta-size: calc(0.85rem * var(--adaptive-scale));
+                --post-content-size: calc(1rem * var(--adaptive-scale));
+                --comment-content-size: calc(0.95rem * var(--adaptive-scale));
+                --comment-meta-size: calc(0.8rem * var(--adaptive-scale));
+                
                 /* Components sizes */
                 --icon-size-xs: calc(0.7rem * var(--adaptive-scale));
                 --icon-size-sm: calc(0.9rem * var(--adaptive-scale));
