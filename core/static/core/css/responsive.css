@@ -1,27 +1,75 @@
-/* Responsive design enhancements for Discuss platform */
+/* Responsive design enhancements for Discuss platform - Dark Theme */
 
 /* Base mobile-friendly styles */
 html {
-  font-size: 16px;
+  font-size: 15px; /* Slightly smaller base font size */
 }
 
-/* Ensure proper sizing for mobile tappable elements */
+/* 
+ * Compact mobile elements with square corners
+ * Reduced tap target sizes while maintaining accessibility
+ */
 .btn, .nav-link, .dropdown-item, .vote-btn {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 36px;
+  min-width: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem !important; /* Square with smooth corners */
 }
 
 .mobile-friendly-tap {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 36px;
+  min-width: 36px;
 }
 
-/* Stacking for mobile */
+/* Custom button shape */
+.btn {
+  border-radius: 0.25rem !important;
+}
+
+/* Custom card shape */
+.card {
+  border-radius: 0.25rem !important;
+}
+
+/* Dark theme form controls */
+.form-control, .form-select {
+  background-color: var(--dark-surface);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--dark-surface);
+  color: var(--dark-text-primary);
+}
+
+/* Dark theme list groups and dropdowns */
+.list-group-item {
+  background-color: var(--dark-card);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.dropdown-menu {
+  background-color: var(--dark-card);
+  border-color: var(--dark-border);
+}
+
+.dropdown-item {
+  color: var(--dark-text-primary);
+}
+
+.dropdown-item:hover {
+  background-color: var(--dark-hover);
+  color: var(--dark-text-primary);
+}
+
+/* Compact mobile styling */
 @media (max-width: 768px) {
+  /* Base utility classes */
   .mobile-stack {
     flex-direction: column !important;
   }
@@ -38,9 +86,9 @@ html {
     text-align: center !important;
   }
   
-  .mobile-my-2 {
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+  .mobile-my-1 {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
   }
   
   .mobile-mx-0 {
@@ -48,66 +96,161 @@ html {
     margin-right: 0 !important;
   }
   
-  /* Convert voting controls to horizontal on mobile */
+  /* More compact elements on mobile */
+  .card {
+    margin-bottom: 0.75rem;
+    border-radius: 0.25rem !important;
+  }
+  
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .card-header, .card-footer {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  /* Smaller headings on mobile for compact design */
+  h1, .h1 { font-size: 1.5rem !important; }
+  h2, .h2 { font-size: 1.3rem !important; }
+  h3, .h3 { font-size: 1.2rem !important; }
+  h4, .h4 { font-size: 1.1rem !important; }
+  h5, .h5 { font-size: 1rem !important; }
+  h6, .h6 { font-size: 0.9rem !important; }
+  
+  /* Mobile avatars */
+  .avatar, img.avatar, .nav-avatar {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  /* Horizontal voting controls on mobile */
   .vote-column, .vote-controls {
     flex-direction: row !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.35rem !important;
     width: 100%;
     justify-content: center;
   }
   
   .vote-column .vote-btn,
   .vote-controls .vote-btn {
-    padding: 0.5rem;
+    padding: 0.3rem;
+    font-size: 0.9rem;
   }
   
   .vote-count {
-    margin: 0 0.5rem !important;
+    margin: 0 0.35rem !important;
+    font-size: 0.85rem;
   }
   
-  /* Make headings smaller on mobile */
-  h1, .h1 { font-size: 1.75rem !important; }
-  h2, .h2 { font-size: 1.5rem !important; }
-  h3, .h3 { font-size: 1.3rem !important; }
-  h4, .h4 { font-size: 1.2rem !important; }
-  h5, .h5 { font-size: 1.1rem !important; }
-  h6, .h6 { font-size: 1rem !important; }
-  
-  /* Adjust form layouts for mobile */
+  /* Smaller form elements */
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   textarea.form-control {
-    min-height: 80px;
+    min-height: 60px;
   }
   
-  /* Adjust card spacing for mobile */
-  .card {
-    margin-bottom: 1rem;
+  .form-control, .form-select, .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
   }
   
-  .card-body {
-    padding: 1rem;
+  /* More compact buttons */
+  .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.85rem;
   }
   
-  /* Nested comments need more indentation on mobile for clarity */
+  .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Reduced comment spacing */
   .nested-reply {
     padding-left: 0.5rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    margin-left: 8px;
   }
   
-  /* Adjust margins for post actions on mobile */
+  .nested-comments {
+    margin-top: 0.5rem;
+    padding-left: 0.25rem;
+  }
+  
+  /* Compact post actions */
   .post-actions button,
   .post-actions .btn,
   .post-actions .btn-group {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    margin-right: 0.3rem;
   }
   
-  /* Adjust post meta data for mobile */
+  /* Compact meta data */
   .post-meta, .comment-meta, .reply-meta {
     display: flex;
     flex-wrap: wrap;
-    line-height: 1.6;
+    line-height: 1.4;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Custom mobile navbar */
+  .navbar {
+    padding: 0.3rem 0.5rem !important;
+  }
+  
+  .navbar-brand {
+    font-size: 1.1rem !important;
+    padding: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  /* Mobile navigation positioning */
+  .navbar .nav-item {
+    margin-right: 0.1rem !important;
+  }
+  
+  .navbar-nav .nav-link {
+    padding: 0.25rem 0.4rem !important;
+  }
+  
+  /* Enhanced mobile search */
+  .navbar .input-group .form-control {
+    height: 32px;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .navbar .input-group .btn {
+    height: 32px;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  /* Custom mobile header */
+  .mobile-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .mobile-header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-header-center {
+    flex: 1;
+    max-width: 160px; /* Controlled width for search */
+    margin: 0 0.5rem;
   }
 }
 

@@ -1,26 +1,57 @@
-/* Main color scheme */
+/* Main color scheme - Dark theme */
 :root {
+    /* Base colors */
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
     --success-color: #198754;
     --danger-color: #dc3545;
+    
+    /* Dark theme colors */
+    --dark-bg: #121212;
+    --dark-surface: #1e1e1e;
+    --dark-card: #242424;
+    --dark-border: #333333;
+    --dark-text-primary: #e0e0e0;
+    --dark-text-secondary: #aaaaaa;
+    --dark-text-muted: #888888;
+    --dark-hover: #2c2c2c;
+    
+    /* Original light colors - kept for reference */
     --dark-color: #212529;
     --light-color: #f8f9fa;
-    --body-bg: #f5f5f5;
+    --body-bg: var(--dark-bg);
     
-    /* Nesting colors */
-    --nesting-color-0: #0d6efd; /* primary/blue */
-    --nesting-color-1: #198754; /* success/green */
-    --nesting-color-2: #dc3545; /* danger/red */
-    --nesting-color-3: #ffc107; /* warning/yellow */
-    --nesting-color-4: #9c27b0; /* purple */
-    --nesting-color-5: #17a2b8; /* info/teal */
+    /* Nesting colors - adjusted for dark theme */
+    --nesting-color-0: #3281ff; /* primary/blue - brightened */
+    --nesting-color-1: #27af6b; /* success/green - brightened */
+    --nesting-color-2: #e74c3c; /* danger/red - brightened */
+    --nesting-color-3: #ffce3a; /* warning/yellow - brightened */
+    --nesting-color-4: #b133d0; /* purple - brightened */
+    --nesting-color-5: #22c7df; /* info/teal - brightened */
 }
 
-/* Body and general styles */
+/* Body and general styles - Dark Theme */
 body {
-    background-color: var(--body-bg);
+    background-color: var(--dark-bg);
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--dark-text-primary);
+}
+
+/* Text colors for dark theme */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--dark-text-primary);
+}
+
+p, .text-muted {
+    color: var(--dark-text-secondary) !important;
+}
+
+a {
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: #3281ff;
 }
 
 /* Navbar styles */
@@ -29,29 +60,97 @@ body {
     font-weight: 700;
 }
 
-/* Card styling */
+.navbar-dark {
+    background-color: var(--dark-surface) !important;
+    border-bottom: 1px solid var(--dark-border);
+}
+
+/* Card styling - Dark Theme */
 .card {
     margin-bottom: 1.5rem;
-    border: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: var(--dark-card);
+    border-radius: 0.375rem;
 }
 
 .card-header {
     font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid var(--dark-border);
+    color: var(--dark-text-primary);
 }
 
-/* Voting buttons */
+.card-body {
+    color: var(--dark-text-primary);
+}
+
+.card-footer {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-top: 1px solid var(--dark-border);
+}
+
+/* Dark theme form controls and inputs */
+.form-control, .form-select {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-primary);
+    border-color: rgba(50, 129, 255, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(50, 129, 255, 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--dark-text-muted);
+}
+
+/* Dark theme list groups */
+.list-group-item {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+.list-group-item-action:hover {
+    background-color: var(--dark-hover);
+    color: var(--dark-text-primary);
+}
+
+/* Dark theme tables */
+.table {
+    color: var(--dark-text-primary);
+    border-color: var(--dark-border);
+}
+
+.table thead th {
+    border-bottom-color: var(--dark-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Badges in dark theme */
+.badge {
+    border-radius: 0.25rem;
+}
+
+/* Voting buttons - Dark theme */
 .vote-column {
     min-width: 40px;
 }
 
 .vote-btn {
-    color: var(--secondary-color);
+    color: var(--dark-text-secondary);
     transition: color 0.2s;
 }
 
 .vote-btn:hover {
-    color: var(--dark-color);
+    color: var(--dark-text-primary);
 }
 
 .upvote-btn.voted {
@@ -64,6 +163,7 @@ body {
 
 .vote-count {
     font-size: 1rem;
+    color: var(--dark-text-primary);
 }
 
 /* Post styling */
