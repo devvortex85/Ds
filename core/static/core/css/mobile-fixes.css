@@ -73,24 +73,36 @@
 }
 
 /* Make search bar visible and match height */
-.navbar .input-group .form-control {
+.navbar .input-group .form-control,
+.mobile-header-center .input-group .form-control {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     height: 26px !important;
     font-size: 0.8rem !important;
     padding: 0.2rem 0.4rem !important;
+    margin: 0 !important;
+    line-height: 1 !important;
 }
 
-.navbar .input-group .btn {
+.navbar .input-group .btn,
+.mobile-header-center .input-group .btn {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     border-left: none !important;
     height: 26px !important;
-    width: 28px !important;
+    width: 26px !important;
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    margin: 0 !important;
+}
+
+/* Ensure form-control and button line up perfectly */
+.mobile-header-center .input-group {
+    display: flex !important;
+    align-items: stretch !important;
+    height: 26px !important;
 }
 
 /* Navbar button sizing */
