@@ -278,12 +278,12 @@
                         
                         <!-- Profile -->
                         <div class="dropdown">
-                            <a class="btn btn-sm btn-dark dropdown-toggle d-flex align-items-center p-1" href="#" id="mobileUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="btn btn-sm btn-dark d-flex align-items-center p-1" href="#" id="mobileUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="nav-avatar">
                                     {% if user.profile.avatar %}
-                                        <img src="{{ user.profile.avatar.url }}" class="rounded-circle" alt="{{ user.username }}'s avatar" width="22" height="22">
+                                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" width="22" height="22">
                                     {% else %}
-                                        <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light" style="width: 22px; height: 22px;" aria-hidden="true">
+                                        <div class="avatar-placeholder d-flex align-items-center justify-content-center bg-light" style="width: 22px; height: 22px;" aria-hidden="true">
                                             <span class="small">{{ user.username|first|upper }}</span>
                                         </div>
                                     {% endif %}
@@ -304,6 +304,11 @@
                                 <li>
                                     <a class="dropdown-item" href="{% url 'community_list' %}">
                                         <i class="bi bi-people me-2" aria-hidden="true"></i> Communities
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'postman:inbox' %}">
+                                        <i class="bi bi-envelope me-2" aria-hidden="true"></i> Messages
                                     </a>
                                 </li>
                                 <li>
@@ -406,9 +411,9 @@
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="nav-avatar me-2">
                                     {% if user.profile.avatar %}
-                                        <img src="{{ user.profile.avatar.url }}" class="rounded-circle" alt="{{ user.username }}'s avatar" width="22" height="22">
+                                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" width="22" height="22">
                                     {% else %}
-                                        <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light" style="width: 22px; height: 22px;" aria-hidden="true">
+                                        <div class="avatar-placeholder d-flex align-items-center justify-content-center bg-light" style="width: 22px; height: 22px;" aria-hidden="true">
                                             <span class="small">{{ user.username|first|upper }}</span>
                                         </div>
                                     {% endif %}
