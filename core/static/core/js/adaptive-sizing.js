@@ -955,6 +955,60 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.fontSize = 'var(--comment-meta-size)';
             }
         });
+        
+        // Add adaptive classes to action buttons (comment, share, delete)
+        document.querySelectorAll('.btn-sm, .action-btn, .comment-btn, .share-btn, .delete-btn, a[title="Share"], a[title="Delete"], a[title="Reply"], button[aria-label="Share"], button[aria-label="Delete"]').forEach(el => {
+            if (!el.classList.contains('adaptive-action-btn')) {
+                el.classList.add('adaptive-action-btn');
+                
+                // Get device size to adapt button styling
+                const windowWidth = window.innerWidth;
+                
+                if (windowWidth < 576) {
+                    // Mobile styling
+                    el.style.fontSize = 'var(--font-size-xs)';
+                    el.style.padding = 'var(--btn-padding-xs)';
+                    el.style.minHeight = '28px';
+                    el.style.lineHeight = '1.2';
+                    
+                    // Find icon inside button if exists
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--font-size-xs) * 1.2)';
+                        icon.style.marginRight = '0.2rem';
+                    }
+                } else if (windowWidth >= 576 && windowWidth < 992) {
+                    // Tablet styling
+                    el.style.fontSize = 'calc(var(--font-size-sm) * 0.95)';
+                    el.style.padding = 'var(--btn-padding-sm)';
+                    el.style.minHeight = '32px';
+                    
+                    // Find icon inside button if exists
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--font-size-sm) * 1.1)';
+                        icon.style.marginRight = '0.25rem';
+                    }
+                } else {
+                    // Desktop styling
+                    el.style.fontSize = 'var(--font-size-sm)';
+                    el.style.padding = 'var(--btn-padding-md)';
+                    el.style.minHeight = '36px';
+                    
+                    // Find icon inside button if exists
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        icon.style.fontSize = 'calc(var(--font-size-sm) * 1.1)';
+                        icon.style.marginRight = '0.3rem';
+                    }
+                }
+                
+                // Apply common styles for all sizes
+                el.style.display = 'inline-flex';
+                el.style.alignItems = 'center';
+                el.style.justifyContent = 'center';
+            }
+        });
     }
     
     /**

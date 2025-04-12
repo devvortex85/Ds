@@ -643,15 +643,20 @@ input[type="file"].form-control {
     .comment-actions .btn,
     a[title="Share"],
     a[title="Delete"],
+    a[title="Reply"],
     button[aria-label="Share"],
     button[aria-label="Delete"],
+    button[aria-label="Reply"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
     a.btn-outline-danger,
     .action-btn,
     .comment-btn,
     .share-btn,
-    .delete-btn {
+    .reply-btn,
+    .delete-btn,
+    .btn-sm,
+    .adaptive-action-btn {
         font-size: var(--font-size-xs) !important;
         padding: var(--btn-padding-xs) !important;
         min-height: 28px !important;
@@ -667,13 +672,18 @@ input[type="file"].form-control {
     .comment-actions .btn i,
     a[title="Share"] i,
     a[title="Delete"] i,
+    a[title="Reply"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
+    button[aria-label="Reply"] i,
     a.btn i,
     .action-btn i,
     .comment-btn i,
     .share-btn i,
-    .delete-btn i {
+    .reply-btn i,
+    .delete-btn i,
+    .btn-sm i,
+    .adaptive-action-btn i {
         font-size: calc(var(--font-size-xs) * 1.2) !important;
         margin-right: 0.2rem !important;
     }
@@ -791,15 +801,20 @@ input[type="file"].form-control {
     .comment-actions .btn,
     a[title="Share"],
     a[title="Delete"],
+    a[title="Reply"],
     button[aria-label="Share"],
     button[aria-label="Delete"],
+    button[aria-label="Reply"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
     a.btn-outline-danger,
     .action-btn,
     .comment-btn,
     .share-btn,
-    .delete-btn {
+    .reply-btn,
+    .delete-btn,
+    .btn-sm,
+    .adaptive-action-btn {
         font-size: calc(var(--font-size-sm) * 0.95) !important;
         padding: var(--btn-padding-sm) !important;
         min-height: 32px !important;
@@ -814,13 +829,18 @@ input[type="file"].form-control {
     .comment-actions .btn i,
     a[title="Share"] i,
     a[title="Delete"] i,
+    a[title="Reply"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
+    button[aria-label="Reply"] i,
     a.btn i,
     .action-btn i,
     .comment-btn i,
     .share-btn i,
-    .delete-btn i {
+    .reply-btn i,
+    .delete-btn i,
+    .btn-sm i,
+    .adaptive-action-btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.25rem !important;
     }
@@ -939,15 +959,20 @@ input[type="file"].form-control {
     .comment-actions .btn,
     a[title="Share"],
     a[title="Delete"],
+    a[title="Reply"],
     button[aria-label="Share"],
     button[aria-label="Delete"],
+    button[aria-label="Reply"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
     a.btn-outline-danger,
     .action-btn,
     .comment-btn,
     .share-btn,
-    .delete-btn {
+    .reply-btn,
+    .delete-btn,
+    .btn-sm,
+    .adaptive-action-btn {
         font-size: var(--font-size-sm) !important;
         padding: var(--btn-padding-md) !important;
         min-height: 36px !important;
@@ -962,13 +987,18 @@ input[type="file"].form-control {
     .comment-actions .btn i,
     a[title="Share"] i,
     a[title="Delete"] i,
+    a[title="Reply"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
+    button[aria-label="Reply"] i,
     a.btn i,
     .action-btn i,
     .comment-btn i,
     .share-btn i,
-    .delete-btn i {
+    .reply-btn i,
+    .delete-btn i,
+    .btn-sm i,
+    .adaptive-action-btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.3rem !important;
     }
