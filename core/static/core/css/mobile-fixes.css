@@ -18,38 +18,56 @@
 }
 
 /* ---- POST LAYOUT FIXES ---- */
-/* Proper side positioning for voting elements */
-.post-item {
+/* Post items should always be row-oriented with voting on left side */
+.post-item,
+.post-item .d-flex,
+.comment-item,
+.comment-item .d-flex,
+.nested-reply {
     display: flex !important;
     flex-direction: row !important;
+    width: 100% !important;
 }
 
-/* Mobile-stack elements vertically, but with exceptions for voting controls */
-.mobile-stack:not(.vote-controls):not(.vote-column) {
-    flex-direction: column !important;
-}
-
-/* Post specific layout */
+/* Special override to ensure all vote columns are vertical regardless of screen size */
+.vote-column,
+.vote-controls,
+.post-item .vote-column,
+.comment-item .vote-column,
+.mobile-stack.vote-column,
 .mobile-stack.vote-controls,
-.mobile-stack.vote-column {
-    flex-direction: column !important;
-    min-width: 30px !important;
-    align-items: center !important;
-    margin-right: 0.5rem !important;
-}
-
-.post-item .vote-column {
+.post-item .mobile-stack.vote-column,
+.post-item .mobile-stack.vote-controls {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    padding-right: 0.5rem !important;
+    margin-right: 0.5rem !important;
     min-width: 36px !important;
+    max-width: 36px !important;
+    width: 36px !important;
     padding-top: 0.25rem !important;
 }
 
-.post-item .post-content-column {
+/* Make sure vote icons are large enough */
+.vote-btn i.bi,
+.vote-btn i.bi-arrow-up-short,
+.vote-btn i.bi-arrow-down-short {
+    font-size: 1.5rem !important;
+}
+
+/* Force post content to take remaining width */
+.post-item .post-content,
+.post-item .post-content-column,
+.comment-item .comment-content-column,
+.nested-reply .reply-content-column {
     flex: 1 !important;
+    width: calc(100% - 36px) !important;
+}
+
+/* Override the d-flex to ensure layout is correct */
+.post-item .d-flex {
+    flex-direction: row !important;
 }
 
 /* ---- NAVBAR FIXES ---- */
