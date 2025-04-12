@@ -495,7 +495,11 @@ img.img-adaptive {
     button[aria-label="Delete"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
-    a.btn-outline-danger {
+    a.btn-outline-danger,
+    .action-btn,
+    .comment-btn,
+    .share-btn,
+    .delete-btn {
         font-size: var(--font-size-xs) !important;
         padding: var(--btn-padding-xs) !important;
         min-height: 28px !important;
@@ -513,7 +517,11 @@ img.img-adaptive {
     a[title="Delete"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
-    a.btn i {
+    a.btn i,
+    .action-btn i,
+    .comment-btn i,
+    .share-btn i,
+    .delete-btn i {
         font-size: calc(var(--font-size-xs) * 1.2) !important;
         margin-right: 0.2rem !important;
     }
@@ -635,7 +643,11 @@ img.img-adaptive {
     button[aria-label="Delete"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
-    a.btn-outline-danger {
+    a.btn-outline-danger,
+    .action-btn,
+    .comment-btn,
+    .share-btn,
+    .delete-btn {
         font-size: calc(var(--font-size-sm) * 0.95) !important;
         padding: var(--btn-padding-sm) !important;
         min-height: 32px !important;
@@ -652,7 +664,11 @@ img.img-adaptive {
     a[title="Delete"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
-    a.btn i {
+    a.btn i,
+    .action-btn i,
+    .comment-btn i,
+    .share-btn i,
+    .delete-btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.25rem !important;
     }

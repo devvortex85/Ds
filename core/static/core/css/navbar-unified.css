@@ -122,45 +122,86 @@ body .navbar .search-container {
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    max-width: 350px !important; /* Further increased from 300px for an even wider search bar */
+    max-width: 350px !important; /* Base max width for larger screens */
     display: flex !important;
     align-items: center !important;
     z-index: 2 !important;
 }
 
 body .navbar .search-container .input-group {
-    height: 24px !important; /* Further reduced from 28px */
+    height: 24px !important;
     width: 100% !important;
     display: flex !important;
     flex-direction: row !important;
+    align-items: stretch !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
 }
 
 body .navbar .search-container .form-control {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
-    height: 24px !important; /* Further reduced from 28px */
-    font-size: 0.8rem !important; /* Further reduced from 0.85rem */
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+    height: 24px !important;
+    font-size: 0.8rem !important;
+    border-radius: 0 !important;
     color: #fff !important;
-    padding: 0.15rem 0.3rem !important; /* Further reduced padding */
+    padding: 0.15rem 0.3rem !important;
     flex: 1 !important;
-    min-height: 24px !important; /* Further reduced from 28px */
+    min-height: 24px !important;
 }
 
 body .navbar .search-container .btn {
     background-color: #3e444c !important;
     border: 1px solid #444 !important;
     border-left: none !important;
-    height: 24px !important; /* Further reduced from 28px */
-    min-height: 24px !important; /* Further reduced from 28px */
+    height: 24px !important;
+    min-height: 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
+    border-radius: 0 !important;
     color: #fff !important;
-    padding: 0 0.35rem !important; /* Further reduced from 0.5rem */
+    padding: 0 !important;
+}
+
+body .navbar .search-container .btn i.bi {
+    font-size: 0.75rem !important;
+}
+
+/* Responsive adjustments for the search bar */
+@media (max-width: 767.98px) {
+    body .navbar .search-container {
+        max-width: 150px !important;
+    }
+    
+    body .navbar .search-container .form-control {
+        width: 100px !important;
+        min-width: 80px !important;
+        padding: 0.1rem 0.2rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    body .navbar .search-container .btn {
+        width: 24px !important;
+        min-width: 24px !important;
+    }
+    
+    body .navbar .search-container .btn i.bi {
+        font-size: 0.7rem !important;
+    }
+}
+
+@media (max-width: 400px) {
+    body .navbar .search-container {
+        max-width: 120px !important;
+    }
+    
+    body .navbar .search-container .form-control {
+        width: 70px !important;
+        min-width: 50px !important;
+    }
 }
 
 /* Main navigation removed - No longer needed */
