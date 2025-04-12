@@ -30,7 +30,7 @@ body .navbar {
 }
 
 body .navbar .container {
-    padding: 0.25rem 0.5rem !important; /* Reduced padding */
+    padding: 0.2rem 0.4rem !important; /* Ultra-compact padding */
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
@@ -44,8 +44,8 @@ body .navbar .header-row {
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
-    padding: 0.25rem 0 !important;
-    height: 36px !important;
+    padding: 0.2rem 0 !important; /* Reduced padding */
+    height: 32px !important; /* Reduced height */
     position: relative !important; /* Needed for absolute positioning of search */
 }
 
@@ -252,7 +252,7 @@ body .navbar .avatar-placeholder {
         flex-wrap: nowrap !important;
         justify-content: space-between !important;
         gap: 0 !important; /* No gaps between elements */
-        height: 28px !important; /* Further reduced height */
+        height: 26px !important; /* Ultra-compact height for mobile */
         padding: 0 !important; /* No padding */
     }
     
@@ -295,15 +295,15 @@ body .navbar .avatar-placeholder {
         align-items: center !important;
     }
     
-    /* All icons on same line with no separation */
+    /* All icons on same line with consistent separation */
     body .navbar .donation-link {
-        padding: 0.1rem !important;
-        margin: 0 !important;
+        padding: 0.15rem !important;
+        margin: 0 0.1rem !important; /* Small consistent spacing */
     }
     
     body .navbar .user-menu .nav-link {
-        padding: 0.1rem !important;
-        margin: 0 !important;
+        padding: 0.15rem !important;
+        margin: 0 0.1rem !important; /* Small consistent spacing */
     }
     
     /* Make navbar brand icon smaller on mobile */

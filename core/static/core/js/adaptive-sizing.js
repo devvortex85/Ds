@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!navbar) return;
         
         const navbarWidth = navbar.offsetWidth;
-        const headerIcons = navbar.querySelectorAll('.header-left .bi, .user-menu .bi');
+        const headerIcons = navbar.querySelectorAll('.adaptive-icon');
         
         // Scale the icons based on navbar width
         let iconSize;
