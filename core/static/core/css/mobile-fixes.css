@@ -73,24 +73,36 @@
 /* ---- NAVBAR FIXES ---- */
 /* Mobile header structure */
 .navbar .d-lg-none {
-    padding: 0.2rem 0 !important;
+    padding: 0.5rem 0 !important;
 }
 
-.navbar .d-lg-none .d-flex {
-    align-items: center !important;
-    justify-content: space-between !important;
+/* Mobile navigation styling */
+.navbar .d-lg-none .nav-link {
+    padding: 0.2rem 0.5rem !important;
+    text-align: center !important;
+    font-size: 0.8rem !important;
 }
 
-/* Header section styling */
-.navbar .d-flex .align-items-center {
-    display: flex !important;
-    align-items: center !important;
+.navbar .d-lg-none .nav-link i {
+    font-size: 1.1rem !important;
+    display: block !important;
+    margin-bottom: 0.1rem !important;
+}
+
+/* Desktop navbar two-row structure */
+.navbar .d-none.d-lg-flex {
+    padding: 0.5rem 0 !important;
+}
+
+/* Desktop navigation row */
+.navbar .d-none.d-lg-flex .border-top {
+    border-top: 1px solid #444 !important;
 }
 
 /* Make search bar responsive */
-.navbar .flex-grow-1 {
-    flex: 1 !important;
-    margin: 0 0.25rem !important;
+.navbar .w-75 {
+    max-width: 300px !important;
+    margin: 0 auto !important;
 }
 
 .search-form {
