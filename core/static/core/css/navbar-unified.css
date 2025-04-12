@@ -136,7 +136,7 @@ body .navbar .search-container .input-group {
     flex-direction: row !important;
     align-items: stretch !important;
     border-radius: 3px !important;
-    overflow: visible !important; /* Changed from hidden to prevent border issues */
+    overflow: hidden !important; /* Fix search bar background extending issue */
 }
 
 body .navbar .search-container .form-control,
@@ -341,7 +341,7 @@ body .navbar .avatar-placeholder {
         height: 22px !important; /* Even smaller height */
         min-height: 22px !important;
         max-height: 22px !important;
-        overflow: visible !important; /* Ensure borders are visible */
+        overflow: hidden !important; /* Fix search bar background extending issue */
     }
     
     /* Search input field specific styling */

@@ -411,8 +411,14 @@ button i,
 .user-avatar,
 .profile-avatar,
 img.rounded-circle,
-.user-img {
+.user-img,
+.avatar img,
+.user-avatar img,
+.profile-avatar img,
+.rounded-circle img {
     object-fit: cover !important;
+    border-radius: 0 !important; /* Square avatars everywhere */
+    aspect-ratio: 1/1 !important; /* Force square ratio */
 }
 
 .avatar-xs,
