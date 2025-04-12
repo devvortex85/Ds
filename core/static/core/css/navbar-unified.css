@@ -47,6 +47,7 @@ body .navbar .header-row {
     padding: 0.2rem 0 !important; /* Reduced padding */
     height: 32px !important; /* Reduced height */
     position: relative !important; /* Needed for absolute positioning of search */
+    border: none !important; /* Ensure no borders */
 }
 
 /* Left side with logo and donation link */
@@ -56,6 +57,7 @@ body .navbar .header-left {
     justify-content: flex-start !important;
     width: 70px !important; /* Fixed width to ensure consistent space for the search bar */
     z-index: 3 !important; /* Stay above search bar */
+    border: none !important; /* Ensure no borders */
 }
 
 /* Donation link styles */
@@ -63,9 +65,10 @@ body .navbar .donation-link {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-left: 0.5rem !important;
-    padding: 0.5rem !important;
+    margin-left: 0 !important; /* Removed margin */
+    padding: 0.2rem !important; /* Reduced padding */
     color: #5bc0de !important;
+    border: none !important; /* Ensure no borders */
 }
 
 body .navbar .donation-link:hover,
@@ -87,8 +90,9 @@ body .navbar-brand {
 
 body .navbar-brand i {
     font-size: 1.2rem !important;
-    margin-right: 0.5rem !important;
+    margin-right: 0 !important; /* Removed margin */
     color: #5bc0de !important;
+    border: none !important; /* Ensure no borders */
 }
 
 /* Unified search bar */
