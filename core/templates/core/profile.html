@@ -29,7 +29,7 @@
                     {% endif %}
                 </h3>
                 <div class="d-flex align-items-center mb-2">
-                    <span class="me-2">{{ profile_user.profile.karma|reputation_badge }} reputation</span>
+                    <span class="me-2">{{ profile_user.profile.karma|reputation_badge }} {{ profile_user.profile.karma }} reputation</span>
                 </div>
                 
                 <div class="user-details mb-3">
@@ -277,7 +277,7 @@
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Reputation
-                <span>{{ profile_user.profile.karma|reputation_badge }}</span>
+                <span>{{ profile_user.profile.karma|reputation_badge }} {{ profile_user.profile.karma }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 Member Since
