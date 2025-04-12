@@ -29,3 +29,22 @@ def reputation_badge(karma):
         badge = '<span class="badge bg-light text-dark" title="New User: {0} karma">NU</span>'
     
     return mark_safe(badge.format(karma))
+
+@register.filter(is_safe=True)
+def reputation_level_badge(level_name, karma=0):
+    """Display a reputation level badge with appropriate styling"""
+    level_badges = {
+        'New User': '<span class="badge bg-light text-dark">New User</span>',
+        'Regular': '<span class="badge bg-secondary">Regular</span>',
+        'Established Member': '<span class="badge bg-success">Established Member</span>',
+        'Trusted Contributor': '<span class="badge bg-info text-dark">Trusted Contributor</span>',
+        'Expert': '<span class="badge bg-primary">Expert</span>',
+        'Community Leader': '<span class="badge bg-warning text-dark">Community Leader</span>',
+        'Legend': '<span class="badge bg-danger">Legend</span>',
+    }
+    
+    if level_name in level_badges:
+        return mark_safe(level_badges[level_name])
+    else:
+        # Default badge if level name not found
+        return mark_safe('<span class="badge bg-secondary">{0}</span>'.format(level_name))
