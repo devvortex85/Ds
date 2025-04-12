@@ -36,6 +36,36 @@
     /* Touch targets */
     --touch-target-size: calc(44px * var(--adaptive-scale));
     --min-touch-target: calc(32px * var(--adaptive-scale));
+    
+    /* Tag and badge sizes */
+    --tag-font-size-xs: calc(0.65rem * var(--adaptive-scale));
+    --tag-font-size-sm: calc(0.75rem * var(--adaptive-scale));
+    --tag-font-size-md: calc(0.8rem * var(--adaptive-scale));
+    --tag-padding-xs: calc(0.15rem * var(--adaptive-scale)) calc(0.3rem * var(--adaptive-scale));
+    --tag-padding-sm: calc(0.2rem * var(--adaptive-scale)) calc(0.4rem * var(--adaptive-scale));
+    --tag-padding-md: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale));
+    
+    /* Button and control sizes */
+    --btn-padding-xs: calc(0.15rem * var(--adaptive-scale)) calc(0.3rem * var(--adaptive-scale));
+    --btn-padding-sm: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale));
+    --btn-padding-md: calc(0.375rem * var(--adaptive-scale)) calc(0.75rem * var(--adaptive-scale));
+    --btn-padding-lg: calc(0.5rem * var(--adaptive-scale)) calc(1rem * var(--adaptive-scale));
+    
+    /* Flag sizes */
+    --flag-width-mobile: calc(16px * var(--adaptive-scale));
+    --flag-height-mobile: calc(10px * var(--adaptive-scale));
+    --flag-width-tablet: calc(18px * var(--adaptive-scale));
+    --flag-height-tablet: calc(12px * var(--adaptive-scale));
+    --flag-width-desktop: calc(20px * var(--adaptive-scale));
+    --flag-height-desktop: calc(13px * var(--adaptive-scale));
+    
+    /* Vote control sizes */
+    --vote-btn-size-mobile: calc(28px * var(--adaptive-scale));
+    --vote-btn-size-tablet: calc(32px * var(--adaptive-scale));
+    --vote-btn-size-desktop: calc(36px * var(--adaptive-scale));
+    --vote-icon-size-mobile: calc(1.2rem * var(--adaptive-scale));
+    --vote-icon-size-tablet: calc(1.4rem * var(--adaptive-scale));
+    --vote-icon-size-desktop: calc(1.5rem * var(--adaptive-scale));
 }
 
 /* Adaptive Typography Classes */
@@ -391,5 +421,240 @@ img.img-adaptive {
     .row-adaptive {
         margin-left: calc(-1 * var(--spacing-xs)) !important;
         margin-right: calc(-1 * var(--spacing-xs)) !important;
+    }
+}
+
+/* Adaptive tag and badge styling */
+/* Mobile devices (up to 575.98px) */
+@media (max-width: 575.98px) {
+    .badge {
+        font-size: var(--tag-font-size-xs) !important;
+        padding: var(--tag-padding-xs) !important;
+        margin: 0.1rem !important;
+        border-radius: var(--border-radius-sm) !important;
+    }
+    
+    .post-tags .badge, .tag {
+        font-size: var(--tag-font-size-xs) !important;
+        padding: var(--tag-padding-xs) !important;
+        margin-bottom: 0.1rem !important;
+        margin-right: 0.1rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    
+    .post-tags .badge .bi, .tag .bi {
+        font-size: calc(var(--tag-font-size-xs) * 1.1) !important;
+        margin-right: 0.15rem !important;
+    }
+    
+    /* Country flags */
+    .country-flag {
+        width: var(--flag-width-mobile) !important;
+        height: var(--flag-height-mobile) !important;
+        margin: 0 0.15rem !important;
+        vertical-align: middle !important;
+    }
+    
+    /* Vote controls */
+    .vote-column, 
+    .vote-controls {
+        min-width: var(--vote-btn-size-mobile) !important;
+        margin-right: 0.35rem !important;
+    }
+    
+    .vote-btn {
+        min-width: var(--vote-btn-size-mobile) !important;
+        min-height: var(--vote-btn-size-mobile) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .vote-btn .bi-arrow-up-short,
+    .vote-btn .bi-arrow-down-short,
+    .vote-btn i.bi,
+    .vote-btn i.fa,
+    .vote-btn i.fas {
+        font-size: var(--vote-icon-size-mobile) !important;
+    }
+    
+    .vote-count {
+        font-size: calc(var(--font-size-xs) * 1.1) !important;
+        margin: 0.1rem 0 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Action buttons in posts */
+    .btn-group > .btn, 
+    .post-actions .btn,
+    .comment-actions .btn {
+        font-size: var(--font-size-xs) !important;
+        padding: var(--btn-padding-xs) !important;
+        min-height: 28px !important;
+        margin: 0.1rem !important;
+    }
+    
+    .btn-group > .btn i, 
+    .post-actions .btn i,
+    .comment-actions .btn i {
+        font-size: calc(var(--font-size-xs) * 1.2) !important;
+        margin-right: 0.2rem !important;
+    }
+}
+
+/* Tablet devices (576px to 991.98px) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .badge {
+        font-size: var(--tag-font-size-sm) !important;
+        padding: var(--tag-padding-sm) !important;
+        margin: 0.15rem !important;
+        border-radius: var(--border-radius-md) !important;
+    }
+    
+    .post-tags .badge, .tag {
+        font-size: var(--tag-font-size-sm) !important;
+        padding: var(--tag-padding-sm) !important;
+        margin-bottom: 0.15rem !important;
+        margin-right: 0.15rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    
+    .post-tags .badge .bi, .tag .bi {
+        font-size: calc(var(--tag-font-size-sm) * 1.1) !important;
+        margin-right: 0.2rem !important;
+    }
+    
+    /* Country flags */
+    .country-flag {
+        width: var(--flag-width-tablet) !important;
+        height: var(--flag-height-tablet) !important;
+        margin: 0 0.2rem !important;
+        vertical-align: middle !important;
+    }
+    
+    /* Vote controls */
+    .vote-column, 
+    .vote-controls {
+        min-width: var(--vote-btn-size-tablet) !important;
+        margin-right: 0.5rem !important;
+    }
+    
+    .vote-btn {
+        min-width: var(--vote-btn-size-tablet) !important;
+        min-height: var(--vote-btn-size-tablet) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .vote-btn .bi-arrow-up-short,
+    .vote-btn .bi-arrow-down-short,
+    .vote-btn i.bi,
+    .vote-btn i.fa,
+    .vote-btn i.fas {
+        font-size: var(--vote-icon-size-tablet) !important;
+    }
+    
+    .vote-count {
+        font-size: var(--font-size-sm) !important;
+        margin: 0.15rem 0 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Action buttons in posts */
+    .btn-group > .btn, 
+    .post-actions .btn,
+    .comment-actions .btn {
+        font-size: calc(var(--font-size-sm) * 0.95) !important;
+        padding: var(--btn-padding-sm) !important;
+        min-height: 32px !important;
+        margin: 0.15rem !important;
+    }
+    
+    .btn-group > .btn i, 
+    .post-actions .btn i,
+    .comment-actions .btn i {
+        font-size: calc(var(--font-size-sm) * 1.1) !important;
+        margin-right: 0.25rem !important;
+    }
+}
+
+/* Desktop devices (992px and up) */
+@media (min-width: 992px) {
+    .badge {
+        font-size: var(--tag-font-size-md) !important;
+        padding: var(--tag-padding-md) !important;
+        margin: 0.2rem !important;
+        border-radius: var(--border-radius-md) !important;
+    }
+    
+    .post-tags .badge, .tag {
+        font-size: var(--tag-font-size-md) !important;
+        padding: var(--tag-padding-md) !important;
+        margin-bottom: 0.2rem !important;
+        margin-right: 0.2rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    
+    .post-tags .badge .bi, .tag .bi {
+        font-size: calc(var(--tag-font-size-md) * 1.1) !important;
+        margin-right: 0.25rem !important;
+    }
+    
+    /* Country flags */
+    .country-flag {
+        width: var(--flag-width-desktop) !important;
+        height: var(--flag-height-desktop) !important;
+        margin: 0 0.25rem !important;
+        vertical-align: middle !important;
+    }
+    
+    /* Vote controls */
+    .vote-column, 
+    .vote-controls {
+        min-width: var(--vote-btn-size-desktop) !important;
+        margin-right: 0.75rem !important;
+    }
+    
+    .vote-btn {
+        min-width: var(--vote-btn-size-desktop) !important;
+        min-height: var(--vote-btn-size-desktop) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .vote-btn .bi-arrow-up-short,
+    .vote-btn .bi-arrow-down-short,
+    .vote-btn i.bi,
+    .vote-btn i.fa,
+    .vote-btn i.fas {
+        font-size: var(--vote-icon-size-desktop) !important;
+    }
+    
+    .vote-count {
+        font-size: var(--font-size-md) !important;
+        margin: 0.2rem 0 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Action buttons in posts */
+    .btn-group > .btn, 
+    .post-actions .btn,
+    .comment-actions .btn {
+        font-size: var(--font-size-sm) !important;
+        padding: var(--btn-padding-md) !important;
+        min-height: 36px !important;
+        margin: 0.2rem !important;
+    }
+    
+    .btn-group > .btn i, 
+    .post-actions .btn i,
+    .comment-actions .btn i {
+        font-size: calc(var(--font-size-sm) * 1.1) !important;
+        margin-right: 0.3rem !important;
     }
 }
