@@ -1,0 +1,288 @@
+{% load mptt_tags %}
+{% load reputation_tags %}
+{% load dict_tags %}
+
+<div class="comments-container" aria-label="Comments section">
+    {% if user.is_authenticated %}
+    <!-- Main comment form at the top level -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <form action="{% url 'add_comment' post.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="content" class="form-label">Add a comment</label>
+                    <textarea name="content" id="content" class="form-control comment-textarea" rows="3" placeholder="What are your thoughts?" required></textarea>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button type="submit" class="btn btn-primary">Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <!-- Prompt to log in to comment -->
+    <div class="card mb-3">
+        <div class="card-body text-center">
+            <p class="mb-2">Log in or sign up to leave a comment</p>
+            <div>
+                <a href="{% url 'account_login' %}" class="btn btn-primary me-2">Log In</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary">Sign Up</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Comments list with reddit-style nesting -->
+    {% if comments %}
+        {% for root_comment in comments %}
+            <div class="comment-thread" id="thread-{{ root_comment.id }}" data-comment-id="{{ root_comment.id }}">
+                <!-- Root comment -->
+                <article id="comment-{{ root_comment.id }}" class="comment-item">
+                    <div class="comment-wrapper">
+                        <!-- Vote controls -->
+                        <div class="vote-column">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'vote_comment' root_comment.id 'upvote' %}?next={{ request.path }}#comment-{{ root_comment.id }}" 
+                               class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and root_comment.id in user_comment_votes and user_comment_votes|get_item:root_comment.id == 1 %}active voted{% endif %}"
+                               data-comment-id="{{ root_comment.id }}" 
+                               data-vote-type="upvote"
+                               aria-label="Upvote"
+                               role="button"
+                               tabindex="0">
+                                <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                                <span class="sr-only">Upvote</span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
+                                <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                                <span class="sr-only">Login to upvote</span>
+                            </a>
+                            {% endif %}
+                            
+                            <div class="vote-count" id="comment-{{ root_comment.id }}-votes" aria-live="polite" aria-label="Comment score: {{ root_comment.vote_count }}">{{ root_comment.vote_count }}</div>
+                            
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'vote_comment' root_comment.id 'downvote' %}?next={{ request.path }}#comment-{{ root_comment.id }}" 
+                               class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and root_comment.id in user_comment_votes and user_comment_votes|get_item:root_comment.id == -1 %}active voted{% endif %}"
+                               data-comment-id="{{ root_comment.id }}" 
+                               data-vote-type="downvote"
+                               aria-label="Downvote"
+                               role="button"
+                               tabindex="0">
+                                <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                                <span class="sr-only">Downvote</span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
+                                <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                                <span class="sr-only">Login to downvote</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Comment content -->
+                        <div class="comment-content-column">
+                            <div class="comment-meta">
+                                <span class="collapse-indicator">▼</span>
+                                {% if root_comment.author.profile.avatar %}
+                                    <img src="{{ root_comment.author.profile.avatar.url }}" alt="{{ root_comment.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
+                                {% else %}
+                                    <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+                                {% endif %}
+                                <a href="{% url 'profile' root_comment.author.username %}" class="comment-author me-1">{{ root_comment.author.username }}</a>
+                                
+                                {% if root_comment.author.profile.country %}
+                                <img src="{{ root_comment.author.profile.country.flag }}" alt="{{ root_comment.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
+                                {% endif %}
+                                 
+                                {{ root_comment.author.profile.karma|reputation_badge }}
+                                <span class="mx-1">•</span>
+                                <span>{{ root_comment.created_at|timesince }} ago</span>
+                            </div>
+                            
+                            <div class="comment-body">
+                                {{ root_comment.content|linebreaks }}
+                            </div>
+                            
+                            <div class="comment-actions">
+                                {% if user.is_authenticated %}
+                                <button type="button" class="comment-action-btn reply-toggle" 
+                                        data-comment-id="{{ root_comment.id }}"
+                                        aria-controls="reply-form-{{ root_comment.id }}"
+                                        aria-expanded="false">
+                                    <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
+                                </button>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Reply form (hidden by default) -->
+                            {% if user.is_authenticated %}
+                            <div id="reply-form-{{ root_comment.id }}" class="reply-form" aria-hidden="true">
+                                <form action="{% url 'add_comment' post.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="parent_id" value="{{ root_comment.id }}">
+                                    <div class="form-group">
+                                        <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+                                    </div>
+                                    <div class="reply-form-actions">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+                                                data-comment-id="{{ root_comment.id }}"
+                                                aria-controls="reply-form-{{ root_comment.id }}">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Collapsed thread comment count (shown when thread is collapsed) -->
+                            <div class="collapsed-count">
+                                <i class="bi bi-chat-fill me-1" aria-hidden="true"></i>
+                                {{ root_comment.get_descendant_count }} more repl{% if root_comment.get_descendant_count != 1 %}ies{% else %}y{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Nested comments with thread collapse line -->
+                {% if not root_comment.is_leaf_node %}
+                    <!-- Thread collapse line (clickable to collapse/expand thread) -->
+                    <div class="thread-collapse-line" data-thread-id="{{ root_comment.id }}" role="button" tabindex="0" aria-label="Collapse or expand comment thread"></div>
+                    
+                    <div class="nested-comments" aria-label="Replies to this comment">
+                        {% for node in root_comment.get_descendants %}
+                            <article id="comment-{{ node.id }}" class="comment-item">
+                                <!-- Comment indentation markers - one for each level -->
+                                {% with level=node.level %}
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= level %}
+                                            <div class="comment-indent indent-level-{{ forloop.counter }}"></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                                
+                                <div class="comment-wrapper">
+                                    <!-- Vote controls -->
+                                    <div class="vote-column">
+                                        {% if user.is_authenticated %}
+                                        <a href="{% url 'vote_comment' node.id 'upvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
+                                           class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == 1 %}active voted{% endif %}"
+                                           data-comment-id="{{ node.id }}" 
+                                           data-vote-type="upvote"
+                                           aria-label="Upvote"
+                                           role="button"
+                                           tabindex="0">
+                                            <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                                            <span class="sr-only">Upvote</span>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
+                                            <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                                            <span class="sr-only">Login to upvote</span>
+                                        </a>
+                                        {% endif %}
+                                        
+                                        <div class="vote-count" id="comment-{{ node.id }}-votes" aria-live="polite" aria-label="Comment score: {{ node.vote_count }}">{{ node.vote_count }}</div>
+                                        
+                                        {% if user.is_authenticated %}
+                                        <a href="{% url 'vote_comment' node.id 'downvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
+                                           class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == -1 %}active voted{% endif %}"
+                                           data-comment-id="{{ node.id }}" 
+                                           data-vote-type="downvote"
+                                           aria-label="Downvote"
+                                           role="button"
+                                           tabindex="0">
+                                            <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                                            <span class="sr-only">Downvote</span>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
+                                            <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                                            <span class="sr-only">Login to downvote</span>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Comment content -->
+                                    <div class="comment-content-column">
+                                        <div class="comment-meta">
+                                            {% if node.author.profile.avatar %}
+                                                <img src="{{ node.author.profile.avatar.url }}" alt="{{ node.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
+                                            {% else %}
+                                                <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+                                            {% endif %}
+                                            <a href="{% url 'profile' node.author.username %}" class="comment-author me-1">{{ node.author.username }}</a>
+                                            
+                                            {% if node.author.profile.country %}
+                                            <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
+                                            {% endif %}
+                                             
+                                            {{ node.author.profile.karma|reputation_badge }}
+                                            <span class="mx-1">•</span>
+                                            <span>{{ node.created_at|timesince }} ago</span>
+                                        </div>
+                                        
+                                        <div class="comment-body">
+                                            {{ node.content|linebreaks }}
+                                        </div>
+                                        
+                                        <div class="comment-actions">
+                                            {% if user.is_authenticated %}
+                                            <button type="button" class="comment-action-btn reply-toggle" 
+                                                    data-comment-id="{{ node.id }}"
+                                                    aria-controls="reply-form-{{ node.id }}"
+                                                    aria-expanded="false">
+                                                <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <!-- Reply form (hidden by default) -->
+                                        {% if user.is_authenticated %}
+                                        <div id="reply-form-{{ node.id }}" class="reply-form" aria-hidden="true">
+                                            <form action="{% url 'add_comment' post.id %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="parent_id" value="{{ node.id }}">
+                                                <div class="form-group">
+                                                    <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+                                                </div>
+                                                <div class="reply-form-actions">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+                                                            data-comment-id="{{ node.id }}"
+                                                            aria-controls="reply-form-{{ node.id }}">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </article>
+                            
+                            <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
+                            {% if node.level >= 5 and not node.is_leaf_node %}
+                                <div class="deep-nesting-indicator">
+                                    <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
+                                        <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
+                                        Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
+                                    </a>
+                                </div>
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <!-- No comments yet -->
+        <div class="card">
+            <div class="card-body text-center">
+                <p class="text-muted mb-0">No comments yet. Be the first to comment!</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
