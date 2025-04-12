@@ -3,11 +3,18 @@
 /* ---- ICON FIXES ---- */
 /* Fix icon size issues and remove outlines */
 .bi {
-    font-size: 0.95rem !important;
-    width: 0.95rem !important;
-    height: 0.95rem !important;
+    font-size: 0.9rem !important;
+    width: auto !important;
+    height: auto !important;
     line-height: 1 !important;
     vertical-align: middle !important;
+    outline: none !important;
+    display: inline-block !important;
+}
+
+/* Fix donate icon */
+.bi-currency-euro, .donate-icon {
+    font-size: 0.85rem !important;
 }
 
 /* ---- POST LAYOUT FIXES ---- */
@@ -110,10 +117,28 @@
     min-height: 26px !important;
 }
 
-/* Post content */
+/* Post content and field sizing */
 .post-content, .comment-content {
     font-size: 0.95rem !important;
     line-height: 1.4 !important;
+}
+
+/* Reduce form field sizes */
+.form-control, .form-select {
+    font-size: 0.9rem !important;
+    padding: 0.25rem 0.5rem !important;
+    min-height: 32px !important;
+}
+
+textarea.form-control {
+    min-height: 100px !important;
+}
+
+/* Make post form fields more compact */
+.post-form .form-control, 
+.comment-form .form-control {
+    font-size: 0.9rem !important;
+    padding: 0.25rem 0.5rem !important;
 }
 
 /* Card body padding */
