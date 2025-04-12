@@ -21,7 +21,7 @@ body .navbar *:after {
 body .navbar {
     background-color: #272b30 !important;
     padding: 0 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important; /* Lighter, smaller shadow */
     width: 100% !important;
     position: sticky !important;
     top: 0 !important;
@@ -29,12 +29,12 @@ body .navbar {
 }
 
 body .navbar .container {
-    padding: 0.5rem 1rem !important;
+    padding: 0.25rem 0.5rem !important; /* Reduced padding */
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
     max-width: 1200px !important;
-    border-bottom: 1px solid #444 !important;
+    border-bottom: none !important; /* Removed border */
 }
 
 /* Header row with all elements in single row */
@@ -223,14 +223,16 @@ body .navbar .avatar-placeholder {
 @media (max-width: 767.98px) {
     /* Compact for mobile */
     body .navbar .container {
-        padding: 0.25rem !important; /* Reduced from 0.5rem */
+        padding: 0 !important; /* Removed padding completely */
+        border-bottom: none !important; /* Remove bottom border */
     }
     
     body .navbar .header-row {
         flex-wrap: nowrap !important;
         justify-content: space-between !important;
-        gap: 2px !important; /* Reduced from 5px */
-        height: 32px !important; /* Reduced height for mobile */
+        gap: 0 !important; /* No gaps between elements */
+        height: 28px !important; /* Further reduced height */
+        padding: 0 !important; /* No padding */
     }
     
     /* Make the header-left take minimal space */
@@ -238,30 +240,67 @@ body .navbar .avatar-placeholder {
         flex: 0 0 auto !important;
     }
 
-    /* Make search container expand to fill available space */
+    /* Make search container extremely small on mobile */
     body .navbar .search-container {
-        flex: 1 !important;
-        margin: 0 2px !important; /* Reduced from 5px */
-        max-width: none !important;
+        flex: 0 1 auto !important; /* Don't expand to fill space */
+        margin: 0 !important; /* No margins */
+        max-width: 120px !important; /* Extremely narrow */
+    }
+    
+    /* Input group settings for mobile */
+    body .navbar .search-container .input-group {
+        height: 22px !important; /* Even smaller height */
+    }
+    
+    body .navbar .search-container .form-control {
+        height: 22px !important;
+        min-height: 22px !important;
+        font-size: 0.75rem !important;
+        padding: 0.1rem 0.25rem !important;
+    }
+    
+    body .navbar .search-container .btn {
+        height: 22px !important;
+        min-height: 22px !important;
+        padding: 0 0.25rem !important;
     }
     
     /* User menu takes minimal space and right-aligned */
     body .navbar .user-menu {
         flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
     }
     
-    /* Make icons smaller on mobile */
+    /* All icons on same line with no separation */
     body .navbar .donation-link {
-        padding: 0.15rem !important; /* Further reduced from 0.25rem */
+        padding: 0.1rem !important;
+        margin: 0 !important;
     }
     
     body .navbar .user-menu .nav-link {
-        padding: 0.15rem !important; /* Further reduced from 0.25rem */
+        padding: 0.1rem !important;
+        margin: 0 !important;
     }
     
     /* Make navbar brand icon smaller on mobile */
     body .navbar-brand i {
-        font-size: 1rem !important; /* Reduced from 1.2rem */
+        font-size: 0.9rem !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Make avatars perfectly aligned with other elements */
+    body .navbar .avatar, 
+    body .navbar .nav-avatar img {
+        width: 18px !important; /* Smaller avatars on mobile */
+        height: 18px !important;
+        margin: 0 !important;
+        vertical-align: middle !important;
+    }
+    
+    body .navbar .avatar-placeholder {
+        width: 18px !important;
+        height: 18px !important;
     }
 }
 
