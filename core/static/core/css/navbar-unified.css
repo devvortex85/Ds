@@ -95,7 +95,7 @@ body .navbar .search-container {
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    max-width: 180px !important;
+    max-width: 240px !important; /* Increased from 180px */
     display: flex !important;
     align-items: center !important;
     z-index: 2 !important;
@@ -350,20 +350,82 @@ img.avatar {
     overflow: hidden !important;
 }
 
-/* Standardize avatar sizes */
+/* Standardize avatar sizes with adaptive sizing */
 .avatar-sm, .avatar-sm img {
     width: 22px !important;
     height: 22px !important;
+    transition: width 0.2s ease, height 0.2s ease !important;
 }
 
 .avatar, .avatar img {
     width: 32px !important;
     height: 32px !important;
+    transition: width 0.2s ease, height 0.2s ease !important;
 }
 
 .avatar-lg, .avatar-lg img {
     width: 64px !important;
     height: 64px !important;
+    transition: width 0.2s ease, height 0.2s ease !important;
+}
+
+/* Adaptive avatar sizing breakpoints */
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .avatar-sm, .avatar-sm img {
+        width: 18px !important;
+        height: 18px !important;
+    }
+    
+    .avatar, .avatar img {
+        width: 26px !important;
+        height: 26px !important;
+    }
+    
+    .avatar-lg, .avatar-lg img {
+        width: 48px !important;
+        height: 48px !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    /* Small devices */
+    .avatar-sm, .avatar-sm img {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    
+    .avatar, .avatar img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    
+    .avatar-lg, .avatar-lg img {
+        width: 56px !important;
+        height: 56px !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Medium devices - default sizes apply */
+}
+
+@media (min-width: 993px) {
+    /* Large devices */
+    .avatar-sm, .avatar-sm img {
+        width: 24px !important;
+        height: 24px !important;
+    }
+    
+    .avatar, .avatar img {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
+    .avatar-lg, .avatar-lg img {
+        width: 72px !important;
+        height: 72px !important;
+    }
 }
 
 /* Post layout and voting fixes */
@@ -413,18 +475,70 @@ img.avatar {
     font-size: 1.5rem !important;
 }
 
-/* Compact buttons and forms */
+/* Compact buttons and forms with adaptive sizing */
 .btn {
     padding: 0.2rem 0.4rem !important;
     font-size: 0.8rem !important;
     min-height: 28px !important;
     border-radius: 0.25rem !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .btn-sm {
     padding: 0.1rem 0.3rem !important;
     font-size: 0.75rem !important;
     min-height: 24px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Adaptive button sizing */
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .btn {
+        padding: 0.15rem 0.3rem !important;
+        font-size: 0.75rem !important;
+        min-height: 24px !important;
+    }
+    
+    .btn-sm {
+        padding: 0.1rem 0.25rem !important;
+        font-size: 0.7rem !important;
+        min-height: 22px !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    /* Small devices */
+    .btn {
+        padding: 0.15rem 0.35rem !important;
+        font-size: 0.75rem !important;
+        min-height: 26px !important;
+    }
+    
+    .btn-sm {
+        padding: 0.1rem 0.25rem !important;
+        font-size: 0.7rem !important;
+        min-height: 22px !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Medium devices - default sizes apply */
+}
+
+@media (min-width: 993px) {
+    /* Large devices - slightly larger buttons */
+    .btn {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.85rem !important;
+        min-height: 32px !important;
+    }
+    
+    .btn-sm {
+        padding: 0.15rem 0.4rem !important;
+        font-size: 0.8rem !important;
+        min-height: 28px !important;
+    }
 }
 
 .form-control, .form-select {
@@ -435,24 +549,145 @@ img.avatar {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     color: #f8f9fa !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-/* Card styling */
+/* Adaptive form control sizing */
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .form-control, .form-select {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.4rem !important;
+        min-height: 28px !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    /* Small devices */
+    .form-control, .form-select {
+        font-size: 0.85rem !important;
+        padding: 0.2rem 0.45rem !important;
+        min-height: 30px !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Medium devices - default sizes apply */
+}
+
+@media (min-width: 993px) {
+    /* Large devices */
+    .form-control, .form-select {
+        font-size: 0.95rem !important;
+        padding: 0.3rem 0.6rem !important;
+        min-height: 34px !important;
+    }
+}
+
+/* Card styling with adaptive sizing */
 .card {
     background-color: #32383e !important;
     border: 1px solid #444 !important;
     border-radius: 0.25rem !important;
+    margin-bottom: 1rem !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .card-body {
     padding: 0.75rem !important;
+    transition: padding 0.2s ease-in-out !important;
 }
 
-/* Fix icon sizes */
+/* Adaptive card styling */
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .card {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .card-body {
+        padding: 0.5rem !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    /* Small devices */
+    .card {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .card-body {
+        padding: 0.6rem !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Medium devices - default sizes apply */
+}
+
+@media (min-width: 993px) {
+    /* Large devices */
+    .card {
+        margin-bottom: 1.25rem !important;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+}
+
+/* Adaptive icon sizing - Base size */
 .bi {
     font-size: 0.9rem !important;
     width: auto !important;
     height: auto !important;
     line-height: 1 !important;
     vertical-align: middle !important;
+    transition: font-size 0.2s ease-in-out !important; /* Smooth transition between sizes */
+}
+
+/* Adaptive icon sizing breakpoints */
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .bi {
+        font-size: 0.8rem !important;
+    }
+    
+    /* Special large icons that need to remain visible */
+    .vote-btn i.bi {
+        font-size: 1.3rem !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    /* Small devices */
+    .bi {
+        font-size: 0.85rem !important;
+    }
+    
+    .vote-btn i.bi {
+        font-size: 1.4rem !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Medium devices */
+    .bi {
+        font-size: 0.9rem !important;
+    }
+    
+    .vote-btn i.bi {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (min-width: 993px) {
+    /* Large devices */
+    .bi {
+        font-size: 1rem !important;
+    }
+    
+    .vote-btn i.bi {
+        font-size: 1.6rem !important;
+    }
 }
