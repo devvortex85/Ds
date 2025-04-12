@@ -1,0 +1,17 @@
+## Database Setup
+
+1. Access PostgreSQL:
+   ```
+   sudo -u postgres psql
+   ```
+
+2. In PostgreSQL prompt, execute:
+   ```
+   CREATE DATABASE discuss;
+   CREATE USER discussuser WITH PASSWORD 'your_secure_password';
+   ALTER ROLE discussuser SET client_encoding TO 'utf8';
+   ALTER ROLE discussuser SET default_transaction_isolation TO 'read committed';
+   ALTER ROLE discussuser SET timezone TO 'UTC';
+   GRANT ALL PRIVILEGES ON DATABASE discuss TO discussuser;
+   \q
+   ```

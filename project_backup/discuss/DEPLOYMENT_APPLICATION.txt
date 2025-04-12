@@ -1,0 +1,66 @@
+## Application Setup
+
+1. Clone the repository:
+   ```
+   su - discuss
+   git clone https://codeberg.org/Adamcatholic/Ds.git discuss
+   cd discuss
+   ```
+
+2. Create and activate a Python virtual environment:
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. Install required packages (refer to requirements.txt for the complete list)
+
+4. Create a .env file with the following content:
+   ```
+   DEBUG=False
+   SECRET_KEY=your_secure_secret_key
+   DATABASE_URL=postgres://discussuser:your_secure_password@localhost:5432/discuss
+   ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com,your_server_ip
+   ```
+
+5. Update settings.py to use environment variables (add/modify these sections):
+   ```python
+   import os
+   import dj_database_url
+   from pathlib import Path
+   
+   # Load environment variables
+   from dotenv import load_dotenv
+   load_dotenv()
+   
+   # Update SECRET_KEY
+   SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-key')
+   
+   # Update DEBUG
+   DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+   
+   # Update ALLOWED_HOSTS
+   ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+   
+   # Update DATABASE configuration
+   DATABASES = {
+       'default': dj_database_url.config(
+           default=os.environ.get('DATABASE_URL'),
+           conn_max_age=600
+       )
+   }
+   
+   # Add static and media file configuration
+   STATIC_URL = '/static/'
+   STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+   MEDIA_URL = '/media/'
+   MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+   ```
+
+6. Initialize application:
+   ```
+   python manage.py migrate
+   python manage.py createsuperuser
+   python manage.py collectstatic
+   python manage.py rebuild_search_index
+   ```

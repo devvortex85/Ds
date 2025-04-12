@@ -1,0 +1,21 @@
+/* Reply styling */
+.reply-form {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.reply-form textarea {
+    min-height: 60px;
+    font-size: 0.9rem;
+}
+
+.reply-form .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+.reply-toggle:hover, .reply-toggle:focus {
+    text-decoration: none;
+}
