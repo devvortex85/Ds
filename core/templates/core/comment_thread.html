@@ -1,0 +1,336 @@
+{% extends 'core/base.html' %}
+{% load reputation_tags %}
+{% load dict_tags %}
+{% load mptt_tags %}
+
+{% block title %}
+  {{ comment.post.title }} - Thread - Discuss
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'community_detail' pk=comment.post.community.id %}">{{ comment.post.community.name }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'post_detail' pk=comment.post.id %}">{{ comment.post.title|truncatechars:30 }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Continue Thread</li>
+        </ol>
+      </nav>
+      
+      <div class="card mb-4">
+        <div class="card-header bg-secondary d-flex align-items-center">
+          <h1 class="h5 mb-0">
+            <a href="{% url 'post_detail' pk=comment.post.id %}" class="text-white">{{ comment.post.title }}</a>
+          </h1>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted mb-0">
+            You're viewing a single comment thread from the "{{ comment.post.title }}" post.
+            <a href="{% url 'post_detail' pk=comment.post.id %}">View all comments</a>
+          </p>
+        </div>
+      </div>
+      
+      <!-- Parent comment context -->
+      {% if comment.parent %}
+      <div class="card mb-3">
+        <div class="card-header">
+          <h2 class="h6 mb-0">Parent Comment</h2>
+        </div>
+        <div class="card-body">
+          <article class="comment-item parent-comment-context">
+            <div class="comment-meta small text-muted mb-1">
+              {% if comment.parent.author.profile.avatar %}
+                <img src="{{ comment.parent.author.profile.avatar.url }}" alt="{{ comment.parent.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
+              {% else %}
+                <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+              {% endif %}
+              <a href="{% url 'profile' comment.parent.author.username %}" class="comment-author me-1">{{ comment.parent.author.username }}</a>
+              
+              {% if comment.parent.author.profile.country %}
+              <img src="{{ comment.parent.author.profile.country.flag }}" alt="{{ comment.parent.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
+              {% endif %}
+              
+              {{ comment.parent.author.profile.karma|reputation_badge }}
+              <span class="mx-1">•</span>
+              <span>{{ comment.parent.created_at|timesince }} ago</span>
+            </div>
+            
+            <div class="comment-body">
+              {{ comment.parent.content|linebreaks }}
+            </div>
+          </article>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Main comment thread -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h2 class="h5 mb-0">Comment Thread</h2>
+        </div>
+        <div class="card-body p-0">
+          <div class="comments-container" aria-label="Comments section">
+            <!-- Root comment (the continued thread starting point) -->
+            <div class="comment-thread" id="thread-{{ comment.id }}" data-comment-id="{{ comment.id }}">
+              <article id="comment-{{ comment.id }}" class="comment-item">
+                <div class="comment-wrapper">
+                  <!-- Vote controls -->
+                  <div class="vote-column">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'vote_comment' comment.id 'upvote' %}?next={{ request.path }}#comment-{{ comment.id }}" 
+                       class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == 1 %}active voted{% endif %}"
+                       data-comment-id="{{ comment.id }}" 
+                       data-vote-type="upvote"
+                       aria-label="Upvote"
+                       role="button"
+                       tabindex="0">
+                        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                        <span class="sr-only">Upvote</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
+                        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                        <span class="sr-only">Login to upvote</span>
+                    </a>
+                    {% endif %}
+                    
+                    <div class="vote-count" id="comment-{{ comment.id }}-votes" aria-live="polite" aria-label="Comment score: {{ comment.vote_count }}">{{ comment.vote_count }}</div>
+                    
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'vote_comment' comment.id 'downvote' %}?next={{ request.path }}#comment-{{ comment.id }}" 
+                       class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == -1 %}active voted{% endif %}"
+                       data-comment-id="{{ comment.id }}" 
+                       data-vote-type="downvote"
+                       aria-label="Downvote"
+                       role="button"
+                       tabindex="0">
+                        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                        <span class="sr-only">Downvote</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
+                        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                        <span class="sr-only">Login to downvote</span>
+                    </a>
+                    {% endif %}
+                  </div>
+                  
+                  <!-- Comment content -->
+                  <div class="comment-content-column">
+                    <div class="comment-meta">
+                      <span class="collapse-indicator">▼</span>
+                      {% if comment.author.profile.avatar %}
+                        <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
+                      {% else %}
+                        <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+                      {% endif %}
+                      <a href="{% url 'profile' comment.author.username %}" class="comment-author me-1">{{ comment.author.username }}</a>
+                      
+                      {% if comment.author.profile.country %}
+                      <img src="{{ comment.author.profile.country.flag }}" alt="{{ comment.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
+                      {% endif %}
+                       
+                      {{ comment.author.profile.karma|reputation_badge }}
+                      <span class="mx-1">•</span>
+                      <span>{{ comment.created_at|timesince }} ago</span>
+                    </div>
+                    
+                    <div class="comment-body">
+                      {{ comment.content|linebreaks }}
+                    </div>
+                    
+                    <div class="comment-actions">
+                      {% if user.is_authenticated %}
+                      <button type="button" class="comment-action-btn reply-toggle" 
+                              data-comment-id="{{ comment.id }}"
+                              aria-controls="reply-form-{{ comment.id }}"
+                              aria-expanded="false">
+                          <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
+                      </button>
+                      {% endif %}
+                    </div>
+                    
+                    <!-- Reply form (hidden by default) -->
+                    {% if user.is_authenticated %}
+                    <div id="reply-form-{{ comment.id }}" class="reply-form" aria-hidden="true">
+                      <form action="{% url 'add_comment' comment.post.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <div class="form-group">
+                          <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+                        </div>
+                        <div class="reply-form-actions">
+                          <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+                                  data-comment-id="{{ comment.id }}"
+                                  aria-controls="reply-form-{{ comment.id }}">
+                              Cancel
+                          </button>
+                          <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+                        </div>
+                      </form>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+              
+              <!-- Child comments -->
+              {% if not comment.is_leaf_node %}
+                <!-- Thread collapse line -->
+                <div class="thread-collapse-line" data-thread-id="{{ comment.id }}" role="button" tabindex="0" aria-label="Collapse or expand comment thread"></div>
+                
+                <div class="nested-comments" aria-label="Replies to this comment">
+                  {% for node in descendants %}
+                    <article id="comment-{{ node.id }}" class="comment-item">
+                      <!-- Comment indentation markers - one for each level -->
+                      {% with level=node.level|add:"-1"|add:"-1" %}
+                        {% for i in "12345"|make_list %}
+                          {% if forloop.counter <= level %}
+                            <div class="comment-indent indent-level-{{ forloop.counter }}"></div>
+                          {% endif %}
+                        {% endfor %}
+                      {% endwith %}
+                      
+                      <div class="comment-wrapper">
+                        <!-- Vote controls -->
+                        <div class="vote-column">
+                          {% if user.is_authenticated %}
+                          <a href="{% url 'vote_comment' node.id 'upvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
+                             class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == 1 %}active voted{% endif %}"
+                             data-comment-id="{{ node.id }}" 
+                             data-vote-type="upvote"
+                             aria-label="Upvote"
+                             role="button"
+                             tabindex="0">
+                              <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                              <span class="sr-only">Upvote</span>
+                          </a>
+                          {% else %}
+                          <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
+                              <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+                              <span class="sr-only">Login to upvote</span>
+                          </a>
+                          {% endif %}
+                          
+                          <div class="vote-count" id="comment-{{ node.id }}-votes" aria-live="polite" aria-label="Comment score: {{ node.vote_count }}">{{ node.vote_count }}</div>
+                          
+                          {% if user.is_authenticated %}
+                          <a href="{% url 'vote_comment' node.id 'downvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
+                             class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == -1 %}active voted{% endif %}"
+                             data-comment-id="{{ node.id }}" 
+                             data-vote-type="downvote"
+                             aria-label="Downvote"
+                             role="button"
+                             tabindex="0">
+                              <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                              <span class="sr-only">Downvote</span>
+                          </a>
+                          {% else %}
+                          <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
+                              <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+                              <span class="sr-only">Login to downvote</span>
+                          </a>
+                          {% endif %}
+                        </div>
+                        
+                        <!-- Comment content -->
+                        <div class="comment-content-column">
+                          <div class="comment-meta">
+                            {% if node.author.profile.avatar %}
+                              <img src="{{ node.author.profile.avatar.url }}" alt="{{ node.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
+                            {% else %}
+                              <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+                            {% endif %}
+                            <a href="{% url 'profile' node.author.username %}" class="comment-author me-1">{{ node.author.username }}</a>
+                            
+                            {% if node.author.profile.country %}
+                            <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
+                            {% endif %}
+                             
+                            {{ node.author.profile.karma|reputation_badge }}
+                            <span class="mx-1">•</span>
+                            <span>{{ node.created_at|timesince }} ago</span>
+                          </div>
+                          
+                          <div class="comment-body">
+                            {{ node.content|linebreaks }}
+                          </div>
+                          
+                          <div class="comment-actions">
+                            {% if user.is_authenticated %}
+                            <button type="button" class="comment-action-btn reply-toggle" 
+                                    data-comment-id="{{ node.id }}"
+                                    aria-controls="reply-form-{{ node.id }}"
+                                    aria-expanded="false">
+                                <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
+                            </button>
+                            {% endif %}
+                          </div>
+                          
+                          <!-- Reply form (hidden by default) -->
+                          {% if user.is_authenticated %}
+                          <div id="reply-form-{{ node.id }}" class="reply-form" aria-hidden="true">
+                            <form action="{% url 'add_comment' comment.post.id %}" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="parent_id" value="{{ node.id }}">
+                              <div class="form-group">
+                                <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+                              </div>
+                              <div class="reply-form-actions">
+                                <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+                                        data-comment-id="{{ node.id }}"
+                                        aria-controls="reply-form-{{ node.id }}">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+                              </div>
+                            </form>
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </article>
+                    
+                    <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
+                    {% with adjusted_level=node.level|add:"-1" %}
+                      {% if adjusted_level >= 5 and not node.is_leaf_node %}
+                        <div class="deep-nesting-indicator">
+                          <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
+                            <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
+                            Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
+                          </a>
+                        </div>
+                        {% break %}
+                      {% endif %}
+                    {% endwith %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Return to post link -->
+      <div class="text-center mb-4">
+        <a href="{% url 'post_detail' pk=comment.post.id %}#comment-{{ comment.id }}" class="btn btn-outline-primary">
+          <i class="bi bi-arrow-left-circle-fill me-1" aria-hidden="true"></i>
+          Back to full discussion
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/reddit-comments.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/reddit-comments.js' %}"></script>
+{% endblock %}

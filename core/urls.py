@@ -29,6 +29,7 @@ urlpatterns = [
     # Comments
     path('posts/<int:post_id>/comment/', views.add_comment, name='add_comment'),
     path('comments/<int:pk>/delete/', views.delete_comment, name='delete_comment'),
+    path('comments/<int:pk>/thread/', views.comment_thread, name='comment_thread'),
     
     # Voting
     path('posts/<int:pk>/vote/<str:vote_type>/', views.vote_post, name='vote_post'),

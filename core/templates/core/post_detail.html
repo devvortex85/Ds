@@ -1,8 +1,13 @@
 {% extends 'core/base.html' %}
 {% load reputation_tags %}
 {% load mptt_tags %}
+{% load static %}
 
 {% block title %}{{ post.title }} | Discuss{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/reddit-comments.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -250,7 +255,7 @@
         </div>
         <div class="card-body p-0">
             {% if comments %}
-                {% include 'core/mptt_comments_new.html' %}
+                {% include 'core/reddit_comments.html' %}
             {% else %}
                 <div class="list-group-item p-4 text-center" aria-live="polite">
                     <p class="mb-0 text-muted">No comments yet. Be the first to comment!</p>

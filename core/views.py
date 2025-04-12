@@ -464,12 +464,12 @@ def create_link_post(request, community_id):
 
 def post_detail(request, pk):
     """
-    View a post and its comments
+    View a post and its comments with Reddit-style nested comments
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Get all root comments (no parent) and prefetch all descendants for the nested structure
-    comments = Comment.objects.filter(post=post, parent=None).order_by('created_at')
+    # Get all root comments (no parent) ordered by newest first (can be changed to score later)
+    comments = Comment.objects.filter(post=post, parent=None).order_by('-created_at')
     
     # Calculate total comments including replies
     total_comments_count = Comment.objects.filter(post=post).count()
@@ -512,6 +512,10 @@ def post_detail(request, pk):
             
             new_comment.save()
             messages.success(request, 'Your comment has been added!')
+            
+            # Redirect to the specific comment if it was a reply
+            if parent_id:
+                return redirect(f"{reverse('post_detail', kwargs={'pk': post.pk})}#comment-{new_comment.id}")
             return redirect('post_detail', pk=post.pk)
     else:
         comment_form = CommentForm()
@@ -533,6 +537,41 @@ def post_detail(request, pk):
     }
     
     return render(request, 'core/post_detail.html', context)
+
+
+def comment_thread(request, pk):
+    """
+    View for displaying a continued thread of comments
+    This handles deeply nested comments beyond the display limit
+    """
+    # Get the comment that serves as the root of this continued thread
+    comment = get_object_or_404(Comment, pk=pk)
+    
+    # Get all descendants of this comment
+    descendants = comment.get_descendants()
+    
+    # Get user comment votes if authenticated
+    user_comment_votes = {}
+    if request.user.is_authenticated:
+        # Get all comment votes for this user and the current comment thread
+        comment_ids = [comment.id] + [desc.id for desc in descendants]
+        comment_votes = Vote.objects.filter(
+            user=request.user,
+            comment_id__in=comment_ids
+        ).select_related('comment')
+        
+        # Create a dictionary of comment_id -> vote_value for easy lookup in template
+        for vote in comment_votes:
+            user_comment_votes[vote.comment.id] = vote.value
+    
+    context = {
+        'comment': comment,
+        'descendants': descendants,
+        'user_comment_votes': user_comment_votes,
+        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+    }
+    
+    return render(request, 'core/comment_thread.html', context)
 
 @login_required
 def delete_post(request, pk):
