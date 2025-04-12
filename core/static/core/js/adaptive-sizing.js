@@ -895,6 +895,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.classList.add('adaptive-spacing');
             }
         });
+        
+        // Add form element adaptive classes
+        document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), textarea, select, .form-control, .form-select').forEach(el => {
+            if (!el.classList.contains('adaptive-form-control')) {
+                el.classList.add('adaptive-form-control');
+                
+                // Apply specific styles based on CSS variables
+                if (el.tagName === 'TEXTAREA') {
+                    el.style.minHeight = 'var(--textarea-height)';
+                } else {
+                    el.style.minHeight = 'var(--input-height)';
+                }
+                el.style.fontSize = 'var(--input-font-size)';
+                el.style.padding = 'var(--input-padding)';
+            }
+        });
+        
+        // Add form label adaptive classes
+        document.querySelectorAll('label, .form-label').forEach(el => {
+            if (!el.classList.contains('adaptive-form-label')) {
+                el.classList.add('adaptive-form-label');
+                el.style.fontSize = 'var(--label-font-size)';
+            }
+        });
+        
+        // Add content adaptive classes
+        document.querySelectorAll('.post-title, h1.article-title').forEach(el => {
+            if (!el.classList.contains('adaptive-post-title')) {
+                el.classList.add('adaptive-post-title');
+                el.style.fontSize = 'var(--post-title-size)';
+            }
+        });
+        
+        document.querySelectorAll('.post-meta, .post-info, .post-details').forEach(el => {
+            if (!el.classList.contains('adaptive-post-meta')) {
+                el.classList.add('adaptive-post-meta');
+                el.style.fontSize = 'var(--post-meta-size)';
+            }
+        });
+        
+        document.querySelectorAll('.post-content, .post-body, .post-text').forEach(el => {
+            if (!el.classList.contains('adaptive-post-content')) {
+                el.classList.add('adaptive-post-content');
+                el.style.fontSize = 'var(--post-content-size)';
+            }
+        });
+        
+        document.querySelectorAll('.comment-body, .comment-content, .reply-body, .reply-content').forEach(el => {
+            if (!el.classList.contains('adaptive-comment-content')) {
+                el.classList.add('adaptive-comment-content');
+                el.style.fontSize = 'var(--comment-content-size)';
+            }
+        });
+        
+        document.querySelectorAll('.comment-meta, .comment-info, .reply-meta, .reply-info').forEach(el => {
+            if (!el.classList.contains('adaptive-comment-meta')) {
+                el.classList.add('adaptive-comment-meta');
+                el.style.fontSize = 'var(--comment-meta-size)';
+            }
+        });
     }
     
     /**
