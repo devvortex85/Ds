@@ -59,6 +59,9 @@ urlpatterns = [
     
     # Error testing
     path('sentry-test/', views.sentry_test, name='sentry_test'),
+    
+    # Documentation and demos
+    path('bootstrap-icons-demo/', views.bootstrap_icons_demo, name='bootstrap_icons_demo'),
 ]
 
 # Serve media files in development

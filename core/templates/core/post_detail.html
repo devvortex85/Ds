@@ -20,14 +20,14 @@
                            aria-label="Upvote post"
                            role="button" 
                            tabindex="0">
-                            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                            <i class="bi bi-arrow-up" aria-hidden="true"></i>
                             <span class="sr-only">Upvote</span>
                         </a>
                     {% else %}
                         <a href="{% url 'account_login' %}" 
                            class="vote-btn upvote-btn post-vote-btn d-block text-decoration-none text-muted"
                            aria-label="Login to upvote">
-                            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                            <i class="bi bi-arrow-up" aria-hidden="true"></i>
                             <span class="sr-only">Login to upvote</span>
                         </a>
                     {% endif %}
@@ -44,14 +44,14 @@
                            aria-label="Downvote post"
                            role="button" 
                            tabindex="0">
-                            <i class="fas fa-arrow-down" aria-hidden="true"></i>
+                            <i class="bi bi-arrow-down" aria-hidden="true"></i>
                             <span class="sr-only">Downvote</span>
                         </a>
                     {% else %}
                         <a href="{% url 'account_login' %}" 
                            class="vote-btn downvote-btn post-vote-btn d-block text-decoration-none text-muted"
                            aria-label="Login to downvote">
-                            <i class="fas fa-arrow-down" aria-hidden="true"></i>
+                            <i class="bi bi-arrow-down" aria-hidden="true"></i>
                             <span class="sr-only">Login to downvote</span>
                         </a>
                     {% endif %}
@@ -84,7 +84,7 @@
                         
                         <h1 class="h3 mb-3">
                             {% if post.post_type == 'link' %}
-                                <i class="fas fa-link me-1 text-secondary" aria-hidden="true"></i>
+                                <i class="bi bi-link-45deg me-1 text-secondary" aria-hidden="true"></i>
                             {% endif %}
                             {{ post.title }}
                         </h1>
@@ -93,7 +93,7 @@
                     {% if post.post_type == 'link' %}
                         <div class="post-url mb-3">
                             <a href="{{ post.url }}" class="btn btn-outline-primary" target="_blank" rel="noopener">
-                                <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i>
+                                <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>
                                 Visit Link
                                 <span class="sr-only">(opens in a new tab)</span>
                             </a>
