@@ -24,6 +24,20 @@
     flex-direction: row !important;
 }
 
+/* Mobile-stack elements vertically, but with exceptions for voting controls */
+.mobile-stack:not(.vote-controls):not(.vote-column) {
+    flex-direction: column !important;
+}
+
+/* Post specific layout */
+.mobile-stack.vote-controls,
+.mobile-stack.vote-column {
+    flex-direction: column !important;
+    min-width: 30px !important;
+    align-items: center !important;
+    margin-right: 0.5rem !important;
+}
+
 .post-item .vote-column {
     display: flex !important;
     flex-direction: column !important;
@@ -248,13 +262,25 @@ img.avatar,
     h5 { font-size: 1rem !important; }
     
     /* Force all post items to have correct layout */
-    .post-item {
+    .post-item, 
+    .mobile-stack,
+    .d-flex {
         display: flex !important;
         flex-direction: row !important;
     }
     
-    .post-item .vote-column {
+    .post-item .vote-column,
+    .post-item .vote-controls,
+    .vote-controls {
+        display: flex !important;
         flex-direction: column !important;
         margin-right: 0.5rem !important;
+        min-width: 30px !important;
+        align-items: center !important;
+    }
+    
+    /* Override the mobile-stack class for posts */
+    .mobile-stack.vote-controls {
+        flex-direction: column !important;
     }
 }
