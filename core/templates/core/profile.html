@@ -29,8 +29,7 @@
                     {% endif %}
                 </h3>
                 <div class="d-flex align-items-center mb-2">
-                    <span class="me-2">{{ profile_user.profile.karma|reputation_badge }} karma</span>
-                    <span>{{ reputation_level|reputation_level_badge }}</span>
+                    <span class="me-2">{{ profile_user.profile.karma|reputation_badge }} reputation</span>
                 </div>
                 
                 <div class="user-details mb-3">
@@ -61,8 +60,8 @@
                         <div class="interests-section">
                             <small class="text-muted d-block mb-1">Interests:</small>
                             {% for interest in profile_user.profile.interests.all %}
-                                <a href="/?tag={{ interest.slug }}" class="text-decoration-none">
-                                    <span class="badge bg-secondary me-1 mb-1">{{ interest.name }}</span>
+                                <a href="/?tag={{ interest.slug }}" class="badge bg-light text-dark text-decoration-none me-1 mb-1">
+                                    <i class="bi bi-tag-fill me-1" aria-hidden="true"></i>{{ interest.name }}
                                 </a>
                             {% endfor %}
                         </div>
