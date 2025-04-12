@@ -226,13 +226,13 @@
             <div class="d-lg-none mobile-header d-md-none d-sm-flex">
                 <!-- Left section: Logo only -->
                 <div class="mobile-header-left">
-                    <a class="navbar-brand p-0" href="{% url 'home' %}" aria-label="Discuss Home">
-                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                        <span class="mobile-hide">Discuss</span>
+                    <a class="navbar-brand p-0 d-flex align-items-center" href="{% url 'home' %}" aria-label="Discuss Home">
+                        <i class="bi bi-chat-dots" style="font-size: 1rem;" aria-hidden="true"></i>
+                        <span class="mobile-hide ms-1" style="font-size: 0.9rem;">Discuss</span>
                     </a>
                     
                     <!-- Donate button for mobile -->
-                    <a class="btn btn-sm btn-outline-light ms-2" href="{% url 'donate' %}">
+                    <a class="btn btn-sm btn-outline-light ms-2" style="height: 22px; width: 22px; padding: 0; display: flex; align-items: center; justify-content: center;" href="{% url 'donate' %}">
                         <i class="bi bi-currency-euro" aria-hidden="true"></i>
                         <span class="sr-only">Support Us</span>
                     </a>
@@ -337,9 +337,9 @@
             </div>
             
             <!-- Desktop Navbar - Hidden on mobile -->
-            <a class="navbar-brand d-none d-lg-block" href="{% url 'home' %}">
-                <i class="bi bi-chat-dots me-2" aria-hidden="true"></i>
-                Discuss
+            <a class="navbar-brand d-none d-lg-block d-flex align-items-center" href="{% url 'home' %}">
+                <i class="bi bi-chat-dots me-2" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                <span style="font-size: 1rem;">Discuss</span>
             </a>
             
             <div class="collapse navbar-collapse" id="navbarContent">

@@ -1,6 +1,7 @@
 /* 
  * Slate Theme Customizations
  * Additional CSS to enhance the Bootswatch Slate theme for our application
+ * !important is used to override any conflicting styles from other themes
  */
 
 /* Primary interface colors from Slate theme */
@@ -188,6 +189,65 @@ a:hover {
 footer {
     background-color: var(--slate-darkbg) !important;
     border-top: 1px solid var(--slate-border) !important;
+}
+
+/* Ensure consistent styling throughout the site */
+.bg-white, .bg-light {
+    background-color: var(--slate-darkbg) !important;
+}
+
+.text-dark {
+    color: var(--slate-text) !important;
+}
+
+/* Post detail page */
+.post-detail {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.post-detail .card-body {
+    background-color: var(--slate-darkbg) !important;
+}
+
+.post-content, .comment-content {
+    color: var(--slate-text) !important;
+}
+
+.comment-item {
+    border-color: var(--slate-border) !important;
+}
+
+/* Profile page */
+.profile-header, .profile-details {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.profile-stats {
+    background-color: var(--slate-accent) !important;
+}
+
+/* Community pages */
+.community-card, .community-list-item {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* Homepage */
+.sidebar-card {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* Modal dialogs */
+.modal-content {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--slate-border) !important;
 }
 
 /* Mobile fixes */
