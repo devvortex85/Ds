@@ -1,0 +1,30 @@
+{% extends "allauth/account/base.html" %}
+{% load i18n %}
+{% load bootstrap5 %}
+{% load account %}
+
+{% block head_title %}{% trans "Sign Up" %}{% endblock %}
+
+{% block inner_title %}{% trans "Sign Up" %}{% endblock %}
+
+{% block inner_content %}
+<div class="text-center mb-3">
+  <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+</div>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  
+  <div class="d-grid gap-2 mt-4">
+    <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
+  </div>
+</form>
+
+<div class="mt-3 text-center small">
+  <p>By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+</div>
+{% endblock %}
