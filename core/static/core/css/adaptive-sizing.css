@@ -1,0 +1,395 @@
+/**
+ * Adaptive Sizing CSS
+ * Provides CSS-based foundation for adaptive sizing across all devices
+ * Used in conjunction with adaptive-sizing.js for comprehensive adaptability
+ */
+
+/* Base adaptive variables - also set in JS for dynamic updates */
+:root {
+    --adaptive-scale: 1;
+    --mobile-scale: 0.85;
+    --tablet-scale: 0.92;
+    --desktop-scale: 1;
+    --large-desktop-scale: 1.1;
+    
+    /* Spacing variables */
+    --base-spacing: calc(0.5rem * var(--adaptive-scale));
+    --spacing-xs: calc(0.25rem * var(--adaptive-scale));
+    --spacing-sm: calc(0.5rem * var(--adaptive-scale));
+    --spacing-md: calc(1rem * var(--adaptive-scale));
+    --spacing-lg: calc(1.5rem * var(--adaptive-scale));
+    --spacing-xl: calc(2rem * var(--adaptive-scale));
+    
+    /* Typography variables */
+    --font-size-xs: calc(0.7rem * var(--adaptive-scale));
+    --font-size-sm: calc(0.85rem * var(--adaptive-scale));
+    --font-size-md: calc(1rem * var(--adaptive-scale));
+    --font-size-lg: calc(1.25rem * var(--adaptive-scale));
+    --font-size-xl: calc(1.5rem * var(--adaptive-scale));
+    
+    /* Components sizes */
+    --icon-size-xs: calc(0.7rem * var(--adaptive-scale));
+    --icon-size-sm: calc(0.9rem * var(--adaptive-scale));
+    --icon-size-md: calc(1.1rem * var(--adaptive-scale));
+    --icon-size-lg: calc(1.3rem * var(--adaptive-scale));
+    
+    /* Touch targets */
+    --touch-target-size: calc(44px * var(--adaptive-scale));
+    --min-touch-target: calc(32px * var(--adaptive-scale));
+}
+
+/* Adaptive Typography Classes */
+.text-adaptive-xs {
+    font-size: var(--font-size-xs) !important;
+    line-height: 1.4 !important;
+}
+
+.text-adaptive-sm {
+    font-size: var(--font-size-sm) !important;
+    line-height: 1.5 !important;
+}
+
+.text-adaptive-md {
+    font-size: var(--font-size-md) !important;
+    line-height: 1.6 !important;
+}
+
+.text-adaptive-lg {
+    font-size: var(--font-size-lg) !important;
+    line-height: 1.5 !important;
+}
+
+.text-adaptive-xl {
+    font-size: var(--font-size-xl) !important;
+    line-height: 1.4 !important;
+}
+
+/* Adaptive Spacing Classes */
+.mt-adaptive {
+    margin-top: var(--spacing-md) !important;
+}
+
+.mb-adaptive {
+    margin-bottom: var(--spacing-md) !important;
+}
+
+.my-adaptive {
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-md) !important;
+}
+
+.mx-adaptive {
+    margin-left: var(--spacing-md) !important;
+    margin-right: var(--spacing-md) !important;
+}
+
+.p-adaptive {
+    padding: var(--spacing-md) !important;
+}
+
+.pt-adaptive {
+    padding-top: var(--spacing-md) !important;
+}
+
+.pb-adaptive {
+    padding-bottom: var(--spacing-md) !important;
+}
+
+.py-adaptive {
+    padding-top: var(--spacing-md) !important;
+    padding-bottom: var(--spacing-md) !important;
+}
+
+.px-adaptive {
+    padding-left: var(--spacing-md) !important;
+    padding-right: var(--spacing-md) !important;
+}
+
+/* Extra small spacing variants */
+.mt-adaptive-xs {
+    margin-top: var(--spacing-xs) !important;
+}
+
+.mb-adaptive-xs {
+    margin-bottom: var(--spacing-xs) !important;
+}
+
+.p-adaptive-xs {
+    padding: var(--spacing-xs) !important;
+}
+
+/* Small spacing variants */
+.mt-adaptive-sm {
+    margin-top: var(--spacing-sm) !important;
+}
+
+.mb-adaptive-sm {
+    margin-bottom: var(--spacing-sm) !important;
+}
+
+.p-adaptive-sm {
+    padding: var(--spacing-sm) !important;
+}
+
+/* Large spacing variants */
+.mt-adaptive-lg {
+    margin-top: var(--spacing-lg) !important;
+}
+
+.mb-adaptive-lg {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.p-adaptive-lg {
+    padding: var(--spacing-lg) !important;
+}
+
+/* Adaptive Icon Classes */
+.icon-adaptive-xs {
+    font-size: var(--icon-size-xs) !important;
+}
+
+.icon-adaptive-sm {
+    font-size: var(--icon-size-sm) !important;
+}
+
+.icon-adaptive-md {
+    font-size: var(--icon-size-md) !important;
+}
+
+.icon-adaptive-lg {
+    font-size: var(--icon-size-lg) !important;
+}
+
+/* Touch-optimized elements */
+.touch-optimized {
+    min-height: var(--min-touch-target) !important;
+    min-width: var(--min-touch-target) !important;
+}
+
+/* Adaptive width and height constraints */
+.w-adaptive-25 {
+    width: calc(25% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-50 {
+    width: calc(50% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-75 {
+    width: calc(75% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-100 {
+    width: calc(100% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-25 {
+    height: calc(25% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-50 {
+    height: calc(50% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-75 {
+    height: calc(75% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-100 {
+    height: calc(100% * var(--adaptive-scale)) !important;
+}
+
+/* Base Media Queries to set adaptive-scale for different device sizes */
+/* These provide initial values that can be dynamically updated by JS */
+
+/* Extra small devices (phones, up to 575.98px) */
+@media (max-width: 575.98px) {
+    :root {
+        --adaptive-scale: var(--mobile-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-sm) !important;
+        padding-right: var(--spacing-sm) !important;
+    }
+    
+    /* Adjust card and list styles for mobile */
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-sm) !important;
+    }
+    
+    /* Optimize touch targets on mobile */
+    button:not(.no-touch-optimize), 
+    .btn:not(.no-touch-optimize), 
+    a.nav-link:not(.no-touch-optimize), 
+    .dropdown-item:not(.no-touch-optimize) {
+        min-height: var(--min-touch-target) !important;
+    }
+    
+    /* Mobile-specific text adjustments */
+    h1, .h1 {
+        font-size: calc(1.5rem * var(--adaptive-scale)) !important;
+    }
+    
+    h2, .h2 {
+        font-size: calc(1.25rem * var(--adaptive-scale)) !important;
+    }
+    
+    /* Mobile optimization for tables */
+    table.table-adaptive {
+        font-size: var(--font-size-sm) !important;
+    }
+    
+    table.table-adaptive th, 
+    table.table-adaptive td {
+        padding: 0.25rem 0.5rem !important;
+    }
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    :root {
+        --adaptive-scale: var(--tablet-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-md) !important;
+        padding-right: var(--spacing-md) !important;
+    }
+    
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-md) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-md) !important;
+    }
+    
+    /* Table adaptations for tablet */
+    table.table-adaptive {
+        font-size: var(--font-size-md) !important;
+    }
+    
+    table.table-adaptive th, 
+    table.table-adaptive td {
+        padding: 0.5rem 0.75rem !important;
+    }
+}
+
+/* Medium to large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    :root {
+        --adaptive-scale: var(--desktop-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-lg) !important;
+        padding-right: var(--spacing-lg) !important;
+    }
+    
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-lg) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-lg) !important;
+    }
+}
+
+/* Extra large devices (large desktops, 1400px and up) */
+@media (min-width: 1400px) {
+    :root {
+        --adaptive-scale: var(--large-desktop-scale);
+    }
+    
+    /* Increase spacing for very large screens */
+    .container, .container-fluid {
+        padding-left: var(--spacing-xl) !important;
+        padding-right: var(--spacing-xl) !important;
+    }
+}
+
+/* Special adaptive classes for navbar elements */
+/* These align with the JS-based adaptations */
+.navbar .adaptive-icon {
+    transition: font-size 0.2s ease-in-out !important;
+}
+
+.navbar .nav-link {
+    transition: padding 0.2s ease-in-out !important;
+}
+
+/* Adaptive container widths - more precise than Bootstrap defaults */
+@media (min-width: 576px) {
+    .container-adaptive {
+        max-width: 540px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .container-adaptive {
+        max-width: 720px !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .container-adaptive {
+        max-width: 960px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-adaptive {
+        max-width: 1140px !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container-adaptive {
+        max-width: 1320px !important;
+    }
+}
+
+/* Special handling for mobile-first image adaptations */
+img.img-adaptive {
+    max-width: 100% !important;
+    height: auto !important;
+    transition: max-height 0.3s ease-in-out !important;
+}
+
+@media (max-width: 575.98px) {
+    img.img-adaptive:not(.img-adaptive-lg):not(.img-adaptive-xl) {
+        max-height: 200px !important;
+    }
+    
+    img.img-adaptive-lg {
+        max-height: 250px !important;
+    }
+    
+    img.img-adaptive-xl {
+        max-height: 300px !important;
+    }
+}
+
+/* Adaptive grid behavior */
+.row-adaptive {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+@media (max-width: 575.98px) {
+    .row-adaptive > [class*="col-"] {
+        padding-left: var(--spacing-xs) !important;
+        padding-right: var(--spacing-xs) !important;
+    }
+    
+    .row-adaptive {
+        margin-left: calc(-1 * var(--spacing-xs)) !important;
+        margin-right: calc(-1 * var(--spacing-xs)) !important;
+    }
+}
