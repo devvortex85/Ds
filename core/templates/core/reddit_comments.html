@@ -270,7 +270,7 @@
                                         Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
                                     </a>
                                 </div>
-                                {% break %}
+                                {% comment %} We stop displaying more replies after this (handled in the view) {% endcomment %}
                             {% endif %}
                         {% endfor %}
                     </div>
