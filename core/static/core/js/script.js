@@ -461,8 +461,26 @@ function setupAjaxVoting() {
 
 // Function to get CSRF token
 function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
-           document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+    // First try to get it from the meta tag
+    const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (metaToken) {
+        return metaToken;
+    }
+    
+    // Then try to get it from the cookie
+    const cookieMatch = document.cookie.match(/csrftoken=([^;]+)/);
+    if (cookieMatch && cookieMatch[1]) {
+        return cookieMatch[1];
+    }
+    
+    // Finally try to get it from a form input
+    const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    if (csrfInput) {
+        return csrfInput.value;
+    }
+    
+    console.error('CSRF token not found!');
+    return '';
 }
 
 // Save vote to localStorage - this is similar to how Reddit persists vote state
