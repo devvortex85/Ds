@@ -71,9 +71,30 @@ body .navbar .donation-link {
     border: none !important; /* Ensure no borders */
 }
 
+/* Donate text styling */
+body .navbar .donate-text {
+    color: #FF8C00 !important; /* Orange color */
+    font-size: 0.7rem !important;
+    font-weight: bold !important;
+    margin-left: 0.15rem !important;
+    text-transform: lowercase !important;
+}
+
+/* Hide donate text on extra small screens */
+@media (max-width: 400px) {
+    body .navbar .donate-text {
+        display: none !important;
+    }
+}
+
 body .navbar .donation-link:hover,
 body .navbar .donation-link:focus {
     color: #fff !important;
+}
+
+body .navbar .donation-link:hover .donate-text,
+body .navbar .donation-link:focus .donate-text {
+    color: #FFA500 !important; /* Brighter orange on hover */
 }
 
 /* Common navbar elements */
