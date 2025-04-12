@@ -1,169 +1,249 @@
-/* Dark theme styling additions for Discuss platform */
+/* Dark theme CSS for Discuss platform */
 
-/* Update reply styling for dark theme */
-.reply-form {
-    background-color: var(--dark-card) !important;
-    border: 1px solid var(--dark-border) !important;
+body {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
 }
 
-.reply-form textarea {
-    background-color: var(--dark-surface) !important;
-    border-color: var(--dark-border) !important;
-    color: var(--dark-text-primary) !important;
+/* Navbar styling */
+.navbar {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid #333 !important;
 }
 
-.reply-toggle {
-    color: var(--primary-color) !important;
+.navbar-brand, .navbar-nav .nav-link {
+    color: #e0e0e0 !important;
 }
 
-.reply-toggle:hover, .reply-toggle:focus {
-    color: #3281ff !important;
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Additional dark theme styles for nested replies */
-.nested-reply {
-    border-bottom-color: var(--dark-border) !important;
+/* Container backgrounds */
+.container, .container-fluid {
+    background-color: transparent !important;
 }
 
-/* Navbar search styling for dark theme */
-.navbar .input-group .form-control {
-    background-color: var(--dark-surface) !important;
-    color: var(--dark-text-primary) !important;
+/* Card styling */
+.card {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
 }
 
-.navbar .input-group .btn {
-    background-color: var(--dark-card) !important;
-    color: var(--dark-text-secondary) !important;
-    border-color: var(--dark-border) !important;
+.card-header, .card-footer {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
 }
 
-/* Badge adjustments for dark theme */
-.badge {
-    border-radius: 0.25rem !important;
+/* Form elements */
+.form-control, .form-select {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
 }
 
-/* Button styling adjustments */
+.form-control:focus, .form-select:focus {
+    background-color: #1e1e1e !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+    color: #e0e0e0 !important;
+}
+
+.form-control::placeholder {
+    color: #888 !important;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: #333 !important;
+    border-color: #444 !important;
+}
+
 .btn-outline-light {
     border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-.btn-dark {
-    background-color: var(--dark-card) !important;
-    border-color: var(--dark-border) !important;
+/* Text colors */
+.text-muted {
+    color: #888 !important;
 }
 
-/* Post metadata in dark theme */
-.post-meta, .comment-meta, .reply-meta {
-    color: var(--dark-text-secondary) !important;
+h1, h2, h3, h4, h5, h6 {
+    color: #e0e0e0 !important;
 }
 
-/* Pagination in dark theme */
-.pagination .page-link {
-    background-color: var(--dark-card) !important;
-    border-color: var(--dark-border) !important;
-    color: var(--dark-text-primary) !important;
+/* Links */
+a {
+    color: #0d6efd !important;
 }
 
-.pagination .page-item.disabled .page-link {
-    background-color: var(--dark-surface) !important;
-    color: var(--dark-text-muted) !important;
+a:hover {
+    color: #3281ff !important;
 }
 
-/* Alerts in dark theme */
-.alert {
-    background-color: var(--dark-card) !important;
-    border-color: var(--dark-border) !important;
-    color: var(--dark-text-primary) !important;
-}
-
-.alert-info {
-    background-color: rgba(13, 202, 240, 0.1) !important;
-    border-color: rgba(13, 202, 240, 0.2) !important;
-}
-
-.alert-success {
-    background-color: rgba(25, 135, 84, 0.1) !important;
-    border-color: rgba(25, 135, 84, 0.2) !important;
-}
-
-.alert-danger {
-    background-color: rgba(220, 53, 69, 0.1) !important;
-    border-color: rgba(220, 53, 69, 0.2) !important;
-}
-
-.alert-warning {
-    background-color: rgba(255, 193, 7, 0.1) !important;
-    border-color: rgba(255, 193, 7, 0.2) !important;
-    color: #e0cd70 !important;
-}
-
-/* Tab styling for dark theme */
-.nav-tabs {
-    border-bottom-color: var(--dark-border) !important;
-}
-
-.nav-tabs .nav-link {
-    color: var(--dark-text-secondary) !important;
-}
-
-.nav-tabs .nav-link.active {
-    background-color: var(--dark-card) !important;
-    border-color: var(--dark-border) !important;
-    color: var(--primary-color) !important;
-}
-
-/* Fix empty state colors */
-.empty-state {
-    color: var(--dark-text-secondary) !important;
-}
-
-/* Enhance avatar border in dark mode */
-img.avatar {
-    border: 2px solid var(--dark-border) !important;
-}
-
-/* Dropdown menu refinements */
+/* Dropdown menus */
 .dropdown-menu {
-    padding: 0.25rem !important;
+    background-color: #242424 !important;
+    border-color: #333 !important;
 }
 
 .dropdown-item {
-    border-radius: 0.25rem !important;
-    margin-bottom: 0.125rem !important;
+    color: #e0e0e0 !important;
 }
 
-/* Mobile optimization enhancements */
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+}
+
+/* List groups */
+.list-group-item {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.list-group-item-action:hover {
+    background-color: #2c2c2c !important;
+}
+
+/* Mobile header */
+.mobile-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.mobile-header-left, .mobile-header-right {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.mobile-header-center {
+    flex: 1 !important;
+    max-width: 160px !important;
+    margin: 0 0.5rem !important;
+}
+
+/* Tables */
+.table {
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+.table td, .table th {
+    border-color: #333 !important;
+}
+
+/* Badge styling */
+.badge.bg-light {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Alerts */
+.alert {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: #fff !important;
+}
+
+/* Modal styling */
+.modal-content {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+}
+
+.modal-header, .modal-footer {
+    border-color: #333 !important;
+}
+
+.modal-header .close {
+    color: #e0e0e0 !important;
+}
+
+/* Reply form styling */
+.reply-form {
+    background-color: #242424 !important;
+    border: 1px solid #333 !important;
+}
+
+.reply-form textarea {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Reputation badges */
+.reputation-badge {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Comment styling */
+.nested-reply {
+    border-bottom-color: #333 !important;
+}
+
+/* Vote styling */
+.vote-btn {
+    color: #888 !important;
+}
+
+.vote-btn:hover {
+    color: #e0e0e0 !important;
+}
+
+.upvote-btn.voted {
+    color: #198754 !important;
+}
+
+.downvote-btn.voted {
+    color: #dc3545 !important;
+}
+
+/* Custom mobile adjustments */
 @media (max-width: 768px) {
-    .card-header {
+    .navbar {
+        padding: 0.3rem 0.5rem !important;
+    }
+    
+    .card {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .card-body {
         padding: 0.75rem !important;
     }
     
-    .btn {
-        padding: 0.3rem 0.6rem !important;
+    .navbar .input-group .form-control {
+        height: 32px !important;
     }
     
-    .post-title {
-        font-size: 1.1rem !important;
+    .navbar .input-group .btn {
+        height: 32px !important;
     }
-    
-    /* Tighter spacing */
-    .container, .container-fluid {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
-    
-    .row {
-        margin-left: -0.5rem !important;
-        margin-right: -0.5rem !important;
-    }
-    
-    .col, [class*="col-"] {
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-    
-    /* Fix mobile modal positioning */
-    .modal-dialog {
-        margin: 0.5rem !important;
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+    .btn, .card, .form-control, .nav-link {
+        border: 1px solid !important;
     }
 }
