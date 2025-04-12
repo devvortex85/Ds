@@ -8,7 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token }}">  <!-- For AJAX calls -->
     {% load static %}
     {% load django_bootstrap5 %}
-    {% bootstrap_css %}
+    <!-- Use Bootswatch Slate theme instead of default Bootstrap -->
+    <link rel="stylesheet" href="{% static 'core/css/bootswatch/slate.min.css' %}">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -36,6 +37,9 @@
     
     <!-- Mobile layout fixes -->
     <link href="{% static 'core/css/mobile-fixes.css' %}" rel="stylesheet">
+    
+    <!-- Slate theme customizations -->
+    <link href="{% static 'core/css/slate-customizations.css' %}" rel="stylesheet">
     
     <!-- Custom CSS -->
     <style>

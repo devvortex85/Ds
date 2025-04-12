@@ -1,0 +1,207 @@
+/* 
+ * Slate Theme Customizations
+ * Additional CSS to enhance the Bootswatch Slate theme for our application
+ */
+
+/* Primary interface colors from Slate theme */
+:root {
+    --slate-bg: #272B30;
+    --slate-darkbg: #1c1e22;
+    --slate-lightbg: #32383e;
+    --slate-text: #c8c8c8;
+    --slate-primary: #7a8288;
+    --slate-accent: #3a3f44;
+    --slate-highlight: #3e444c;
+    --slate-border: #3a3f44;
+    --slate-link: #fff;
+    --slate-success: #62c462;
+    --slate-warning: #f89406;
+    --slate-danger: #ee5f5b;
+    --slate-info: #5bc0de;
+}
+
+/* General Page Styling */
+body {
+    background-color: var(--slate-bg) !important;
+    color: var(--slate-text) !important;
+}
+
+/* Card styling */
+.card {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.card-header {
+    background-color: var(--slate-accent) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--slate-info) !important;
+    box-shadow: 0 0 0 0.25rem rgba(91, 192, 222, 0.25) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #3a3f44 !important;
+    border-color: #3a3f44 !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #272b30 !important;
+    border-color: #1c1e22 !important;
+}
+
+.btn-outline-light {
+    color: var(--slate-text) !important;
+    border-color: var(--slate-accent) !important;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--slate-accent) !important;
+    color: #fff !important;
+}
+
+/* Tables */
+.table {
+    color: var(--slate-text) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.dropdown-item {
+    color: var(--slate-text) !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--slate-accent) !important;
+    color: #fff !important;
+}
+
+/* Pagination */
+.page-link {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.page-link:hover {
+    background-color: var(--slate-accent) !important;
+    color: #fff !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--slate-accent) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* List groups */
+.list-group-item {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+/* Navbar customizations */
+.navbar {
+    background-color: var(--slate-darkbg) !important;
+    border-bottom: 1px solid var(--slate-border) !important;
+}
+
+/* Post styling */
+.post-title {
+    color: #fff !important;
+}
+
+.post-meta, .comment-meta {
+    color: var(--slate-primary) !important;
+}
+
+/* Avatar placeholders */
+.avatar-placeholder {
+    background-color: var(--slate-accent) !important;
+    color: var(--slate-text) !important;
+}
+
+/* Links */
+a {
+    color: var(--slate-info) !important;
+}
+
+a:hover {
+    color: #7dcde8 !important;
+}
+
+/* Badges */
+.badge.bg-primary {
+    background-color: var(--slate-primary) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--slate-accent) !important;
+}
+
+.badge.bg-success {
+    background-color: var(--slate-success) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--slate-danger) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--slate-warning) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--slate-info) !important;
+}
+
+/* Fix text contrast issues */
+.text-muted {
+    color: #9a9a9a !important;
+}
+
+/* Fix form labels */
+.form-label {
+    color: var(--slate-text) !important;
+}
+
+/* Footer styling */
+footer {
+    background-color: var(--slate-darkbg) !important;
+    border-top: 1px solid var(--slate-border) !important;
+}
+
+/* Mobile fixes */
+@media (max-width: 768px) {
+    .btn-sm {
+        background-color: var(--slate-accent) !important;
+        border-color: var(--slate-border) !important;
+    }
+    
+    .mobile-header-center .input-group .form-control {
+        background-color: var(--slate-darkbg) !important;
+    }
+    
+    .mobile-header-center .input-group .btn {
+        background-color: var(--slate-accent) !important;
+    }
+}
