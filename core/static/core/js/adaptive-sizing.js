@@ -343,20 +343,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Adjust form controls - all inputs and textareas
-        document.querySelectorAll('.form-control, .form-select, input:not([type="checkbox"]):not([type="radio"]), textarea, select').forEach(el => {
+        document.querySelectorAll('.form-control, .form-select, input:not([type="checkbox"]):not([type="radio"]), textarea, select, .comment-form textarea, .post-form textarea, .markdownx-editor, .markdownx-preview, .comment-textarea, .post-textarea, form textarea, form input[type="text"], form input[type="email"], form input[type="password"], form input[type="search"], form input[type="url"], form input[type="number"], form select').forEach(el => {
             if (isMobile) {
                 el.style.padding = '0.2rem 0.4rem';
                 el.style.fontSize = 'var(--font-size-sm)';
-                el.style.minHeight = '32px';
+                el.style.minHeight = el.tagName === 'TEXTAREA' ? '80px' : '32px';
+                el.style.width = '100%';
+                el.style.maxWidth = '100%';
+                el.style.borderRadius = '0.25rem';
+                el.style.border = '1px solid #444';
+                el.style.backgroundColor = '#2c2c2c';
+                el.style.color = '#f8f9fa';
             } else if (isTablet) {
                 el.style.padding = '0.25rem 0.5rem';
                 el.style.fontSize = 'var(--font-size-md)';
-                el.style.minHeight = '36px';
+                el.style.minHeight = el.tagName === 'TEXTAREA' ? '100px' : '36px';
+                el.style.width = '100%';
+                el.style.maxWidth = '100%';
+                el.style.borderRadius = '0.25rem';
+                el.style.border = '1px solid #444';
+                el.style.backgroundColor = '#2c2c2c';
+                el.style.color = '#f8f9fa';
             } else {
                 el.style.padding = '0.3rem 0.6rem';
                 el.style.fontSize = 'var(--font-size-md)';
-                el.style.minHeight = '38px';
+                el.style.minHeight = el.tagName === 'TEXTAREA' ? '120px' : '38px';
+                el.style.width = '100%';
+                el.style.maxWidth = '100%';
+                el.style.borderRadius = '0.25rem';
+                el.style.border = '1px solid #444';
+                el.style.backgroundColor = '#2c2c2c';
+                el.style.color = '#f8f9fa';
             }
+            
+            // Apply proper focus styles
+            el.addEventListener('focus', function() {
+                this.style.borderColor = '#4285f4';
+                this.style.boxShadow = '0 0 0 0.25rem rgba(66, 133, 244, 0.25)';
+            });
+            
+            el.addEventListener('blur', function() {
+                this.style.borderColor = '#444';
+                this.style.boxShadow = 'none';
+            });
         });
         
         // Image sizing - all content images
