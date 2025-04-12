@@ -1,128 +1,133 @@
 /* Mobile-specific fixes for Discuss platform */
 
-/* Fix icon/outline size issues */
+/* ---- ICON FIXES ---- */
+/* Fix icon size issues and remove outlines */
 .bi {
-    font-size: 1rem !important;
-    width: 1rem !important;
-    height: 1rem !important;
+    font-size: 0.95rem !important;
+    width: 0.95rem !important;
+    height: 0.95rem !important;
     line-height: 1 !important;
+    vertical-align: middle !important;
 }
 
-/* Restore standard voting layout - side positioning */
-.vote-column {
+/* ---- POST LAYOUT FIXES ---- */
+/* Proper side positioning for voting elements */
+.post-item {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.post-item .vote-column {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: flex-start !important;
     padding-right: 0.5rem !important;
-    min-width: 30px !important;
+    min-width: 36px !important;
+    padding-top: 0.25rem !important;
 }
 
+.post-item .post-content-column {
+    flex: 1 !important;
+}
+
+/* ---- NAVBAR FIXES ---- */
 /* Mobile header adjustments */
 .mobile-header {
-    padding: 0.25rem 0 !important;
+    padding: 0.2rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.mobile-header-left, .mobile-header-right {
+    display: flex !important;
+    align-items: center !important;
 }
 
 .mobile-header-center {
-    max-width: 120px !important;
+    flex: 1 !important;
+    max-width: 130px !important;
+    margin: 0 0.5rem !important;
 }
 
-/* Make search bar visible */
+/* Make search bar visible and match height */
 .navbar .input-group .form-control {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
-    height: 28px !important;
+    height: 26px !important;
+    font-size: 0.8rem !important;
+    padding: 0.2rem 0.4rem !important;
 }
 
 .navbar .input-group .btn {
     background-color: #2c2c2c !important;
     border: 1px solid #444 !important;
     border-left: none !important;
-    height: 28px !important;
+    height: 26px !important;
+    width: 28px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-/* Reduce post action button sizes */
+/* Navbar button sizing */
+.navbar .btn {
+    min-height: 26px !important;
+    min-width: 26px !important;
+    max-height: 26px !important;
+    max-width: 26px !important;
+    padding: 0 !important;
+    margin-left: 0.2rem !important;
+    margin-right: 0.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* ---- FORM AND BUTTON SIZE FIXES ---- */
+/* Reduce action button sizes */
 .post-actions .btn,
 .comment-actions .btn {
-    padding: 0.2rem 0.4rem !important;
-    font-size: 0.8rem !important;
-    line-height: 1.2 !important;
+    padding: 0.15rem 0.3rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.1 !important;
+    height: auto !important;
     margin-right: 0.25rem !important;
     margin-bottom: 0.25rem !important;
+    min-height: 24px !important;
 }
 
-/* Fix post layout */
+/* Post detail action buttons */
+.btn-outline-primary, 
+.btn-outline-danger, 
+.btn-outline-secondary {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.8rem !important;
+    height: auto !important;
+    line-height: 1.1 !important;
+    min-height: 26px !important;
+}
+
+/* Post content */
 .post-content, .comment-content {
     font-size: 0.95rem !important;
     line-height: 1.4 !important;
 }
 
+/* Card body padding */
 .card-body {
-    padding: 0.6rem !important;
+    padding: 0.5rem !important;
 }
 
-/* Comment/Delete/Share buttons on post detail */
-.btn-outline-primary, .btn-outline-danger, .btn-outline-secondary {
-    padding: 0.3rem 0.5rem !important;
-    font-size: 0.85rem !important;
-    height: auto !important;
-    line-height: 1.3 !important;
-}
-
-/* Fix card margins */
+/* Card margins */
 .card {
     margin-bottom: 0.5rem !important;
 }
 
-/* Fix navbar icon buttons */
-.navbar .btn {
-    min-height: 28px !important;
-    min-width: 28px !important;
-    padding: 0.15rem 0.35rem !important;
-    margin-left: 0.15rem !important;
-    margin-right: 0.15rem !important;
-}
-
-/* Mobile post list view */
-@media (max-width: 768px) {
-    /* Create proper layout for posts with vote controls on left */
-    .post-item {
-        display: flex !important;
-        flex-direction: row !important;
-    }
-    
-    .post-item .vote-column {
-        flex-direction: column !important;
-        margin-right: 0.5rem !important;
-        justify-content: flex-start !important;
-        align-items: center !important;
-        padding-top: 0.25rem !important;
-    }
-    
-    .post-item .post-content-column {
-        flex: 1 !important;
-    }
-    
-    /* Smaller buttons */
-    .btn {
-        padding: 0.25rem 0.5rem !important;
-        font-size: 0.85rem !important;
-    }
-    
-    .btn-sm {
-        padding: 0.15rem 0.35rem !important;
-        font-size: 0.8rem !important;
-    }
-    
-    /* Post detail action buttons */
-    .post-detail-actions .btn {
-        padding: 0.25rem 0.5rem !important;
-        font-size: 0.85rem !important;
-        margin-bottom: 0.5rem !important;
-        width: 100% !important;
-    }
-}
-
-/* Make avatars square instead of round */
+/* ---- AVATAR FIXES ---- */
+/* Make avatars square */
 .rounded-circle, 
 .avatar, 
 img.avatar, 
@@ -136,8 +141,95 @@ img.avatar,
 .nav-avatar {
     border-radius: 0.25rem !important;
     overflow: hidden !important;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
 }
 
-.avatar-placeholder {
-    border-radius: 0.25rem !important;
+/* ---- COMMENT LAYOUTS ---- */
+/* Fix comment layout */
+.comment-item {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.comment-item .vote-column {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    min-width: 30px !important;
+    margin-right: 0.5rem !important;
+}
+
+.comment-item .comment-content-column {
+    flex: 1 !important;
+}
+
+/* Fix nested comments */
+.nested-reply {
+    display: flex !important;
+    flex-direction: row !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+
+.nested-reply .vote-column {
+    min-width: 24px !important;
+    margin-right: 0.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.nested-reply .reply-content-column {
+    flex: 1 !important;
+}
+
+/* ---- GENERAL COMPACT UI ---- */
+/* Better button sizing */
+.btn {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.8rem !important;
+    min-height: 28px !important;
+}
+
+.btn-sm {
+    padding: 0.1rem 0.3rem !important;
+    font-size: 0.75rem !important;
+    min-height: 24px !important;
+}
+
+/* Tighter spacing for elements */
+.mt-3 {
+    margin-top: 0.75rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 0.75rem !important;
+}
+
+.p-3 {
+    padding: 0.75rem !important;
+}
+
+/* Reduce all HTML elements for mobile */
+@media (max-width: 768px) {
+    h1 { font-size: 1.4rem !important; }
+    h2 { font-size: 1.3rem !important; }
+    h3 { font-size: 1.2rem !important; }
+    h4 { font-size: 1.1rem !important; }
+    h5 { font-size: 1rem !important; }
+    
+    /* Force all post items to have correct layout */
+    .post-item {
+        display: flex !important;
+        flex-direction: row !important;
+    }
+    
+    .post-item .vote-column {
+        flex-direction: column !important;
+        margin-right: 0.5rem !important;
+    }
 }
