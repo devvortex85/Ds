@@ -791,7 +791,11 @@ img.img-adaptive {
     button[aria-label="Delete"],
     a.btn-outline-primary,
     a.btn-outline-secondary,
-    a.btn-outline-danger {
+    a.btn-outline-danger,
+    .action-btn,
+    .comment-btn,
+    .share-btn,
+    .delete-btn {
         font-size: var(--font-size-sm) !important;
         padding: var(--btn-padding-md) !important;
         min-height: 36px !important;
@@ -808,7 +812,11 @@ img.img-adaptive {
     a[title="Delete"] i,
     button[aria-label="Share"] i,
     button[aria-label="Delete"] i,
-    a.btn i {
+    a.btn i,
+    .action-btn i,
+    .comment-btn i,
+    .share-btn i,
+    .delete-btn i {
         font-size: calc(var(--font-size-sm) * 1.1) !important;
         margin-right: 0.3rem !important;
     }

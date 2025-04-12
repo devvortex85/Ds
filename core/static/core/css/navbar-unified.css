@@ -333,26 +333,52 @@ body .navbar .avatar-placeholder {
         position: absolute !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        max-width: 110px !important; /* Reduced slightly to give more room for donation text */
+        max-width: 110px !important; /* Reduced to give more room on small screens */
         z-index: 2 !important;
+        height: 22px !important;
     }
     
     /* Input group settings for mobile */
     body .navbar .search-container .input-group {
         height: 22px !important; /* Even smaller height */
+        min-height: 22px !important;
+        max-height: 22px !important;
     }
     
-    body .navbar .search-container .form-control {
+    /* Search input field specific styling */
+    body .navbar .search-container .form-control,
+    body .navbar .search-container .search-input {
         height: 22px !important;
         min-height: 22px !important;
-        font-size: 0.75rem !important;
-        padding: 0.1rem 0.25rem !important;
+        max-height: 22px !important;
+        font-size: 0.7rem !important; /* Further reduced font */
+        padding: 0 0.25rem !important; /* Minimal padding */
+        width: 60px !important; /* Explicit width */
     }
     
-    body .navbar .search-container .btn {
+    /* Search button specific styling */
+    body .navbar .search-container .btn,
+    body .navbar .search-container .search-btn,
+    body .navbar .search-container .search-filter-btn {
         height: 22px !important;
         min-height: 22px !important;
-        padding: 0 0.25rem !important;
+        max-height: 22px !important;
+        width: 22px !important;
+        min-width: 22px !important;
+        max-width: 22px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Search icons specific styling */
+    body .navbar .search-container .btn i.bi,
+    body .navbar .search-container .search-icon,
+    body .navbar .search-container .search-filter-icon {
+        font-size: 0.7rem !important; /* Smaller icon size */
+        line-height: 1 !important;
+        margin: 0 !important;
     }
     
     /* User menu takes minimal space and right-aligned */

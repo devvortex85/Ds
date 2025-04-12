@@ -226,12 +226,12 @@
                     <form action="{% url 'search' %}" method="GET" role="search">
                         <div class="input-group">
                             <label for="search-input" class="sr-only">Search</label>
-                            <input id="search-input" class="form-control" type="search" name="query" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-dark" type="submit" aria-label="Submit search">
-                                <i class="bi bi-search adaptive-icon" aria-hidden="true"></i>
+                            <input id="search-input" class="form-control search-input" type="search" name="query" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-dark search-btn" type="submit" aria-label="Submit search">
+                                <i class="bi bi-search search-icon" aria-hidden="true"></i>
                             </button>
-                            <a href="{% url 'advanced_search' %}" class="btn btn-info text-white" title="Advanced Search" aria-label="Advanced Search">
-                                <i class="bi bi-funnel adaptive-icon" aria-hidden="true"></i>
+                            <a href="{% url 'advanced_search' %}" class="btn btn-info text-white search-filter-btn" title="Advanced Search" aria-label="Advanced Search">
+                                <i class="bi bi-funnel search-filter-icon" aria-hidden="true"></i>
                             </a>
                         </div>
                     </form>
