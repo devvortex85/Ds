@@ -6,6 +6,7 @@ from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 from taggit.models import Tag
 from watson import search as watson
 from payments import get_payment_model, RedirectNeeded
@@ -663,9 +664,13 @@ def delete_comment(request, pk):
     return render(request, 'core/confirm_delete_comment.html', {'comment': comment})
 
 @login_required
+@require_http_methods(["GET", "POST"])  # Allow both GET and POST for flexibility
 def vote_post(request, pk, vote_type):
     """
     Vote on a post (upvote or downvote) using Reddit-style direct vote counting
+    
+    This view is protected by Django's CSRF middleware and requires login.
+    It accepts both GET and POST requests to work with multiple client methods.
     """
     post = get_object_or_404(Post, pk=pk)
     
@@ -738,9 +743,13 @@ def vote_post(request, pk, vote_type):
     return redirect(next_url + fragment)
 
 @login_required
+@require_http_methods(["GET", "POST"])  # Allow both GET and POST for flexibility
 def vote_comment(request, pk, vote_type):
     """
     Vote on a comment (upvote or downvote) using Reddit-style direct vote counting
+    
+    This view is protected by Django's CSRF middleware and requires login.
+    It accepts both GET and POST requests to work with multiple client methods.
     """
     comment = get_object_or_404(Comment, pk=pk)
     
