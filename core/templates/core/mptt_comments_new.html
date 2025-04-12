@@ -86,6 +86,51 @@
                             </button>
                         {% endif %}
                         
+                        <div class="btn-group me-2">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false"
+                                    aria-label="Share comment">
+                                <i class="bi bi-share" aria-hidden="true"></i> Share
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" 
+                                       href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}#comment-{{ root_comment.id }}" 
+                                       target="_blank" 
+                                       rel="noopener" 
+                                       aria-label="Share on Facebook">
+                                        <i class="fab fa-facebook me-2" aria-hidden="true"></i>Facebook
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" 
+                                       href="https://twitter.com/intent/tweet?text=Comment by {{ root_comment.author.username }}&url={{ request.build_absolute_uri }}#comment-{{ root_comment.id }}" 
+                                       target="_blank" 
+                                       rel="noopener" 
+                                       aria-label="Share on Twitter">
+                                        <i class="fab fa-twitter me-2" aria-hidden="true"></i>Twitter
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" 
+                                       href="mailto:?subject=Comment on {{ post.title }}&body={{ request.build_absolute_uri }}#comment-{{ root_comment.id }}" 
+                                       aria-label="Share via Email">
+                                        <i class="bi bi-envelope-fill me-2" aria-hidden="true"></i>Email
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <button class="dropdown-item" 
+                                            onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}#comment-{{ root_comment.id }}'); alert('Link copied to clipboard!'); return false;"
+                                            aria-label="Copy link to clipboard">
+                                        <i class="bi bi-clipboard me-2" aria-hidden="true"></i>Copy Link
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        
                         {% if user == root_comment.author %}
                             <a href="{% url 'delete_comment' root_comment.id %}" 
                                class="btn btn-sm btn-outline-danger" 
@@ -213,6 +258,51 @@
                                                 <i class="bi bi-reply" aria-hidden="true"></i> Reply
                                             </button>
                                         {% endif %}
+                                        
+                                        <div class="btn-group me-2">
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                    data-bs-toggle="dropdown" 
+                                                    aria-expanded="false"
+                                                    aria-label="Share reply">
+                                                <i class="bi bi-share" aria-hidden="true"></i> Share
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" 
+                                                       href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}#comment-{{ node.id }}" 
+                                                       target="_blank" 
+                                                       rel="noopener" 
+                                                       aria-label="Share on Facebook">
+                                                        <i class="fab fa-facebook me-2" aria-hidden="true"></i>Facebook
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" 
+                                                       href="https://twitter.com/intent/tweet?text=Reply by {{ node.author.username }}&url={{ request.build_absolute_uri }}#comment-{{ node.id }}" 
+                                                       target="_blank" 
+                                                       rel="noopener" 
+                                                       aria-label="Share on Twitter">
+                                                        <i class="fab fa-twitter me-2" aria-hidden="true"></i>Twitter
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" 
+                                                       href="mailto:?subject=Reply on {{ post.title }}&body={{ request.build_absolute_uri }}#comment-{{ node.id }}" 
+                                                       aria-label="Share via Email">
+                                                        <i class="bi bi-envelope-fill me-2" aria-hidden="true"></i>Email
+                                                    </a>
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <button class="dropdown-item" 
+                                                            onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}#comment-{{ node.id }}'); alert('Link copied to clipboard!'); return false;"
+                                                            aria-label="Copy link to clipboard">
+                                                        <i class="bi bi-clipboard me-2" aria-hidden="true"></i>Copy Link
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                         
                                         {% if user == node.author %}
                                             <a href="{% url 'delete_comment' node.id %}" 
