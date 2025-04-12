@@ -20,29 +20,20 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Styles -->
+    <!-- Core Styles -->
     <link href="{% static 'core/css/styles.css' %}" rel="stylesheet">
-    
-    <!-- Vote CSS -->
-    <link href="{% static 'core/css/vote.css' %}" rel="stylesheet">
-    
-    <!-- Comment fixes CSS -->
-    <link href="{% static 'core/css/comment_fixes.css' %}" rel="stylesheet">
-    
-    <!-- Responsive and accessibility CSS -->
-    <link href="{% static 'core/css/responsive.css' %}" rel="stylesheet">
-    
-    <!-- Dark theme CSS -->
     <link href="{% static 'core/css/dark-theme.css' %}" rel="stylesheet">
     
-    <!-- Unified navbar styling - cross-device consistency -->
+    <!-- Unified Navigation Bar - This file controls ALL navbar styling -->
     <link href="{% static 'core/css/navbar-unified.css' %}" rel="stylesheet">
     
-    <!-- Slate theme customizations -->
-    <link href="{% static 'core/css/slate-customizations.css' %}" rel="stylesheet">
-    
-    <!-- Flag and dropdown fixes -->
+    <!-- Component-specific styles -->
+    <link href="{% static 'core/css/vote.css' %}" rel="stylesheet">
+    <link href="{% static 'core/css/comment_fixes.css' %}" rel="stylesheet">
     <link href="{% static 'core/css/flag-fixes.css' %}" rel="stylesheet">
+    
+    <!-- Theme customizations - applied last -->
+    <link href="{% static 'core/css/slate-customizations.css' %}" rel="stylesheet">
     
     <!-- Custom CSS -->
     <style>
