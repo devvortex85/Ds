@@ -34,6 +34,7 @@ body .navbar .container {
     flex-direction: column !important;
     width: 100% !important;
     max-width: 1200px !important;
+    border-bottom: 1px solid #444 !important;
 }
 
 /* Header row with logo and user menu */
@@ -105,58 +106,7 @@ body .navbar .search-container .btn {
     padding: 0 0.75rem !important;
 }
 
-/* Main navigation - horizontal for ALL devices */
-body .navbar .main-nav {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-around !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0.5rem 0 !important;
-    border-top: 1px solid #444 !important;
-    border-bottom: 1px solid #444 !important;
-    list-style: none !important;
-}
-
-body .navbar .main-nav .nav-item {
-    flex: 1 !important;
-    text-align: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-body .navbar .main-nav .nav-link {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0.5rem !important;
-    color: #aaa !important;
-    transition: color 0.2s ease !important;
-    text-decoration: none !important;
-    border: none !important;
-    background: transparent !important;
-}
-
-body .navbar .main-nav .nav-link:hover,
-body .navbar .main-nav .nav-link:focus {
-    color: #fff !important;
-    text-decoration: none !important;
-    background-color: transparent !important;
-}
-
-body .navbar .main-nav .nav-link i {
-    font-size: 1.2rem !important;
-    margin-bottom: 0.25rem !important;
-    display: block !important;
-}
-
-body .navbar .main-nav .nav-link span {
-    font-size: 0.8rem !important;
-    display: block !important;
-    text-align: center !important;
-}
+/* Main navigation removed - No longer needed */
 
 /* User menu area */
 body .navbar .user-menu {
@@ -265,25 +215,12 @@ body .navbar .avatar-placeholder {
         margin: 0.5rem auto !important;
         width: 90% !important;
     }
-    
-    body .navbar .main-nav .nav-link i {
-        font-size: 1.5rem !important;
-    }
 }
 
 /* Tablet and larger */
 @media (min-width: 768px) {
     body .navbar .header-row {
         justify-content: space-between !important;
-    }
-    
-    body .navbar .main-nav {
-        max-width: 500px !important;
-        margin: 0.5rem auto !important;
-    }
-    
-    body .navbar .main-nav .nav-link span {
-        font-size: 0.85rem !important;
     }
 }
 
