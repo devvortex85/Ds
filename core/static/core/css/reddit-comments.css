@@ -3,6 +3,30 @@
  * Modern implementation of nested comments with collapsible threads
  */
 
+/* Define color variables for nesting colors */
+:root {
+    /* Nesting level colors */
+    --nesting-level-1: #5bc0de; /* Bootstrap info blue */
+    --nesting-level-2: #f0ad4e; /* Bootstrap warning orange */
+    --nesting-level-3: #5cb85c; /* Bootstrap success green */
+    --nesting-level-4: #d9534f; /* Bootstrap danger red */
+    --nesting-level-5: #a179f3; /* Purple */
+    
+    /* Nesting level glows */
+    --nesting-glow-1: rgba(91, 192, 222, 0.3);
+    --nesting-glow-2: rgba(240, 173, 78, 0.3);
+    --nesting-glow-3: rgba(92, 184, 92, 0.3);
+    --nesting-glow-4: rgba(217, 83, 79, 0.3);
+    --nesting-glow-5: rgba(161, 121, 243, 0.3);
+    
+    /* Mobile nesting glows (more opaque) */
+    --nesting-mobile-glow-1: rgba(91, 192, 222, 0.4);
+    --nesting-mobile-glow-2: rgba(240, 173, 78, 0.4);
+    --nesting-mobile-glow-3: rgba(92, 184, 92, 0.4);
+    --nesting-mobile-glow-4: rgba(217, 83, 79, 0.4);
+    --nesting-mobile-glow-5: rgba(161, 121, 243, 0.4);
+}
+
 /* Comment Container */
 .comments-container {
     margin-top: 1rem;
@@ -17,16 +41,44 @@
 /* Root Comment */
 .comment-item {
     position: relative;
-    padding: 0.5rem;
-    margin-bottom: 0.25rem;
+    padding: 0.6rem;
+    margin-bottom: 0.35rem;
     border-radius: 4px;
     background-color: var(--dark-card);
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent; /* For nesting color indicators */
+}
+
+/* Add visual nesting depth indicators for deeper comments */
+.comment-item[id^="comment-"] {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Apply different border colors based on nesting depth */
+.nested-comments .comment-item {
+    border-left-color: var(--nesting-level-1); /* Level 1: blue */
+}
+
+.nested-comments .nested-comments .comment-item {
+    border-left-color: var(--nesting-level-2); /* Level 2: orange */
+}
+
+.nested-comments .nested-comments .nested-comments .comment-item {
+    border-left-color: var(--nesting-level-3); /* Level 3: green */
+}
+
+.nested-comments .nested-comments .nested-comments .nested-comments .comment-item {
+    border-left-color: var(--nesting-level-4); /* Level 4: red */
+}
+
+.nested-comments .nested-comments .nested-comments .nested-comments .nested-comments .comment-item {
+    border-left-color: var(--nesting-level-5); /* Level 5: purple */
 }
 
 /* Comment styling when a user is replying to it */
 .comment-item.replying-to {
-    background-color: rgba(53, 126, 221, 0.1);
+    background-color: rgba(53, 126, 221, 0.12);
+    box-shadow: 0 0 4px rgba(53, 126, 221, 0.2);
 }
 
 /* Comment wrapper - contains voting and content */
@@ -139,23 +191,26 @@
 /* Nested comments container */
 .nested-comments {
     position: relative;
-    margin-left: 1.5rem;
+    margin-left: 2rem; /* Increased margin for better visual nesting */
+    transition: all 0.3s ease-in-out;
 }
 
 /* Thread collapse line - shows vertical line for collapsible threads */
 .thread-collapse-line {
     position: absolute;
-    left: -1rem;
+    left: -1.25rem; /* Adjusted position */
     top: 0;
     bottom: 0;
-    width: 2px;
+    width: 3px; /* Thicker line for better visibility */
     background-color: #444;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease, width 0.2s ease;
+    border-radius: 3px; /* Rounded edges */
 }
 
 .thread-collapse-line:hover {
     background-color: var(--primary-color);
+    width: 4px; /* Wider on hover for better UX */
 }
 
 /* Indentation markers for each nesting level */
@@ -164,29 +219,37 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: 2px;
+    width: 3px; /* Thicker for better visibility */
+    transition: all 0.2s ease;
+    border-radius: 3px; /* Rounded edges */
+    opacity: 0.8; /* Slightly transparent for visual depth */
 }
 
-/* Colors for different nesting levels */
+/* Enhanced colors for different nesting levels with distinct visualization */
 .indent-level-1 { 
-    background-color: var(--nesting-color-1);
+    background-color: var(--nesting-level-1); /* Bootstrap info blue */
     left: 0;
+    box-shadow: 0 0 4px var(--nesting-glow-1); /* Subtle glow */
 }
 .indent-level-2 { 
-    background-color: var(--nesting-color-2);
-    left: 0.3rem;
+    background-color: var(--nesting-level-2); /* Bootstrap warning orange */
+    left: 0.5rem; /* Increased spacing */
+    box-shadow: 0 0 4px var(--nesting-glow-2);
 }
 .indent-level-3 { 
-    background-color: var(--nesting-color-3);
-    left: 0.6rem;
+    background-color: var(--nesting-level-3); /* Bootstrap success green */
+    left: 1rem;
+    box-shadow: 0 0 4px var(--nesting-glow-3);
 }
 .indent-level-4 { 
-    background-color: var(--nesting-color-4); 
-    left: 0.9rem;
+    background-color: var(--nesting-level-4); /* Bootstrap danger red */
+    left: 1.5rem;
+    box-shadow: 0 0 4px var(--nesting-glow-4);
 }
 .indent-level-5 { 
-    background-color: var(--nesting-color-5);
-    left: 1.2rem;
+    background-color: var(--nesting-level-5); /* Purple */
+    left: 2rem;
+    box-shadow: 0 0 4px var(--nesting-glow-5);
 }
 
 /* Limit indicators for deeply nested comments */
@@ -203,21 +266,29 @@
 }
 
 .comment-thread.collapsed .comment-item {
-    opacity: 0.75;
+    opacity: 0.85; /* Increased from 0.75 for better visibility */
+    background-color: rgba(40, 40, 40, 0.5); /* Slightly darker when collapsed */
+    transition: all 0.3s ease;
 }
 
 .comment-thread.collapsed .thread-collapse-line {
     background-color: var(--primary-color);
+    width: 4px; /* Thicker to indicate collapsed state */
+    box-shadow: 0 0 5px var(--nesting-mobile-glow-1); /* Glow effect for collapsed state */
 }
 
 .collapse-indicator {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 0.25rem;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    color: var(--nesting-level-1); /* Blue color for better visibility */
 }
 
 .comment-thread.collapsed .collapse-indicator {
     transform: rotate(-90deg);
+    color: var(--primary-color); /* Change color when collapsed */
 }
 
 /* Comment count for collapsed threads */
@@ -226,10 +297,15 @@
     font-size: 0.75rem;
     color: var(--dark-text-secondary);
     margin-top: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(40, 40, 40, 0.3);
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 .comment-thread.collapsed .collapsed-count {
-    display: block;
+    display: inline-block;
+    border-left: 2px solid var(--primary-color);
 }
 
 /* Loading indicator for async loading of deep comments */
@@ -276,22 +352,46 @@
     }
     
     .nested-comments {
-        margin-left: 0.75rem;
+        margin-left: 0.85rem; /* Slightly increased from 0.75rem */
     }
     
     .thread-collapse-line {
-        left: -0.5rem;
+        left: -0.65rem; /* Adjusted for better visibility */
+        width: 2px; /* Thinner but still visible on mobile */
     }
     
     .comment-indent {
-        width: 1px;
+        width: 2px; /* Thinner but still visible */
+        opacity: 0.9; /* More opaque on mobile for visibility */
     }
     
-    .indent-level-1 { left: 0; }
-    .indent-level-2 { left: 0.15rem; }
-    .indent-level-3 { left: 0.3rem; }
-    .indent-level-4 { left: 0.45rem; }
-    .indent-level-5 { left: 0.6rem; }
+    /* Adjusted mobile spacing for better readability */
+    .indent-level-1 { 
+        left: 0; 
+        box-shadow: 0 0 2px var(--nesting-mobile-glow-1); /* Enhanced mobile visibility */
+    }
+    .indent-level-2 { 
+        left: 0.2rem; 
+        box-shadow: 0 0 2px var(--nesting-mobile-glow-2);
+    }
+    .indent-level-3 { 
+        left: 0.4rem;
+        box-shadow: 0 0 2px var(--nesting-mobile-glow-3);
+    }
+    .indent-level-4 { 
+        left: 0.6rem;
+        box-shadow: 0 0 2px var(--nesting-mobile-glow-4);
+    }
+    .indent-level-5 { 
+        left: 0.8rem;
+        box-shadow: 0 0 2px var(--nesting-mobile-glow-5);
+    }
+    
+    /* Enhancement for touch targets */
+    .thread-collapse-line:hover,
+    .thread-collapse-line:active {
+        width: 6px; /* Wider for easier targeting on touch screens */
+    }
 }
 
 /* Animation for collapsing/expanding */
