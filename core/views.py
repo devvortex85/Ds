@@ -468,8 +468,8 @@ def post_detail(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Get all root comments (no parent) ordered by newest first (can be changed to score later)
-    comments = Comment.objects.filter(post=post, parent=None).order_by('-created_at')
+    # Get all root comments (no parent) ordered by vote count (Reddit style)
+    comments = Comment.objects.filter(post=post, parent=None).order_by('-upvote_count', 'downvote_count', '-created_at')
     
     # Calculate total comments including replies
     total_comments_count = Comment.objects.filter(post=post).count()
