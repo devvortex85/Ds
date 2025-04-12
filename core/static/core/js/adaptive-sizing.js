@@ -138,55 +138,128 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function applyTypographyScaling(isMobile, isTablet, isDesktop, isLargeDesktop) {
         // Post titles with adaptive font sizing
-        document.querySelectorAll('.post-title, h1.article-title, .community-title, .profile-name').forEach(el => {
+        document.querySelectorAll('.post-title, h1.article-title, .community-title, .profile-name, .page-title, h1').forEach(el => {
             if (isMobile) {
                 el.style.fontSize = 'var(--font-size-lg)';
                 el.style.lineHeight = '1.3';
+                el.style.marginBottom = '0.5rem';
+                el.style.fontWeight = '600';
             } else if (isTablet) {
                 el.style.fontSize = 'calc(var(--font-size-lg) * 1.1)';
                 el.style.lineHeight = '1.4';
+                el.style.marginBottom = '0.75rem';
+                el.style.fontWeight = '600';
             } else if (isDesktop) {
                 el.style.fontSize = 'calc(var(--font-size-lg) * 1.2)';
                 el.style.lineHeight = '1.5';
+                el.style.marginBottom = '1rem';
+                el.style.fontWeight = '700';
             } else {
                 el.style.fontSize = 'calc(var(--font-size-lg) * 1.3)';
                 el.style.lineHeight = '1.5';
+                el.style.marginBottom = '1rem';
+                el.style.fontWeight = '700';
             }
         });
         
         // Secondary titles
-        document.querySelectorAll('h2, .section-title, .post-subtitle').forEach(el => {
+        document.querySelectorAll('h2, .section-title, .post-subtitle, .card-header, .modal-title').forEach(el => {
             if (isMobile) {
                 el.style.fontSize = 'var(--font-size-md)';
+                el.style.lineHeight = '1.3';
+                el.style.marginBottom = '0.5rem';
+                el.style.fontWeight = '600';
             } else if (isTablet) {
                 el.style.fontSize = 'calc(var(--font-size-md) * 1.1)';
+                el.style.lineHeight = '1.4';
+                el.style.marginBottom = '0.75rem';
+                el.style.fontWeight = '600';
             } else {
                 el.style.fontSize = 'calc(var(--font-size-md) * 1.2)';
+                el.style.lineHeight = '1.5';
+                el.style.marginBottom = '1rem';
+                el.style.fontWeight = '700';
+            }
+        });
+        
+        // Tertiary titles
+        document.querySelectorAll('h3, h4, h5, h6, .panel-title').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'calc(var(--font-size-md) * 0.9)';
+                el.style.lineHeight = '1.3';
+                el.style.marginBottom = '0.5rem';
+                el.style.fontWeight = '600';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.lineHeight = '1.4';
+                el.style.marginBottom = '0.75rem';
+                el.style.fontWeight = '600';
+            } else {
+                el.style.fontSize = 'calc(var(--font-size-md) * 1.1)';
+                el.style.lineHeight = '1.5';
+                el.style.marginBottom = '0.75rem';
+                el.style.fontWeight = '600';
             }
         });
         
         // Meta information and small text
-        document.querySelectorAll('.meta-info, .post-meta, .card-subtitle, .text-muted, small').forEach(el => {
+        document.querySelectorAll('.meta-info, .post-meta, .card-subtitle, .text-muted, small, .text-sm, .comment-meta, .submission-info, .vote-count, .timestamp, .author, .community-name, .meta-text, .badge').forEach(el => {
             if (isMobile) {
                 el.style.fontSize = 'var(--font-size-xs)';
+                el.style.lineHeight = '1.2';
+                el.style.marginBottom = '0.25rem';
             } else if (isTablet) {
                 el.style.fontSize = 'var(--font-size-sm)';
+                el.style.lineHeight = '1.3';
+                el.style.marginBottom = '0.5rem';
             } else {
                 el.style.fontSize = 'calc(var(--font-size-sm) * 1.05)';
+                el.style.lineHeight = '1.4';
+                el.style.marginBottom = '0.5rem';
             }
         });
         
         // Body text and general content
-        document.querySelectorAll('.post-content, .comment-content, .card-text, p:not(.meta-info):not(.card-subtitle)').forEach(el => {
+        document.querySelectorAll('.post-content, .comment-content, .card-text, .card-body, p:not(.meta-info):not(.card-subtitle), .list-group-item, .markdown-content, article, .post-text, div.text, .form-text, blockquote, .alert, .notification-text').forEach(el => {
             if (isMobile) {
                 el.style.fontSize = 'var(--font-size-sm)';
                 el.style.lineHeight = '1.4';
+                el.style.marginBottom = '0.5rem';
             } else if (isTablet) {
                 el.style.fontSize = 'var(--font-size-md)';
                 el.style.lineHeight = '1.5';
+                el.style.marginBottom = '0.75rem';
             } else {
                 el.style.fontSize = 'calc(var(--font-size-md) * 1.05)';
                 el.style.lineHeight = '1.6';
+                el.style.marginBottom = '1rem';
+            }
+        });
+        
+        // Navigation and menu items
+        document.querySelectorAll('.nav-link, .dropdown-item, .menu-item, .list-group-item, .sidebar-link').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.padding = '0.25rem 0.5rem';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.padding = '0.375rem 0.75rem';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.padding = '0.5rem 1rem';
+            }
+        });
+        
+        // Form labels and form elements
+        document.querySelectorAll('label, .form-label, legend').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.marginBottom = '0.25rem';
+                el.style.fontWeight = '600';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.marginBottom = '0.5rem';
+                el.style.fontWeight = '600';
             }
         });
     }
@@ -213,33 +286,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Buttons scaling
-        document.querySelectorAll('.btn:not(.btn-sm):not(.btn-lg)').forEach(el => {
+        // Buttons scaling - all types of buttons
+        document.querySelectorAll('.btn:not(.btn-sm):not(.btn-lg), button:not(.btn-sm):not(.btn-lg):not(.btn-close)').forEach(el => {
             if (isMobile) {
                 el.style.padding = '0.2rem 0.5rem';
                 el.style.fontSize = 'var(--font-size-sm)';
+                el.style.minHeight = '32px';
             } else if (isTablet) {
                 el.style.padding = '0.3rem 0.6rem';
                 el.style.fontSize = 'var(--font-size-sm)';
+                el.style.minHeight = '36px';
             } else {
                 el.style.padding = '0.375rem 0.75rem';
                 el.style.fontSize = 'var(--font-size-md)';
+                el.style.minHeight = '38px';
             }
         });
         
         // Small buttons
-        document.querySelectorAll('.btn-sm').forEach(el => {
+        document.querySelectorAll('.btn-sm, button.btn-sm').forEach(el => {
             if (isMobile) {
                 el.style.padding = '0.1rem 0.3rem';
                 el.style.fontSize = 'var(--font-size-xs)';
+                el.style.minHeight = '28px';
             } else {
                 el.style.padding = '0.2rem 0.4rem';
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.minHeight = '30px';
+            }
+        });
+        
+        // Badges
+        document.querySelectorAll('.badge').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-xs)';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-sm)';
+            } else {
                 el.style.fontSize = 'var(--font-size-sm)';
             }
         });
         
-        // Adjust form controls
-        document.querySelectorAll('.form-control, .form-select').forEach(el => {
+        // Adjust form controls - all inputs and textareas
+        document.querySelectorAll('.form-control, .form-select, input:not([type="checkbox"]):not([type="radio"]), textarea, select').forEach(el => {
             if (isMobile) {
                 el.style.padding = '0.2rem 0.4rem';
                 el.style.fontSize = 'var(--font-size-sm)';
@@ -255,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Image sizing
+        // Image sizing - all content images
         document.querySelectorAll('img:not(.avatar):not(.nav-avatar):not(.fixed-size)').forEach(el => {
             if (isMobile) {
                 el.style.maxHeight = '200px';
@@ -265,6 +354,102 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.maxHeight = '400px';
             } else {
                 el.style.maxHeight = '500px';
+            }
+        });
+        
+        // Voting buttons and score
+        document.querySelectorAll('.vote-btn, .vote-arrow').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = '1.3rem';
+                el.style.minWidth = '32px';
+                el.style.minHeight = '32px';
+                // Target the icon inside
+                const icon = el.querySelector('i');
+                if (icon) {
+                    icon.style.fontSize = '1.3rem';
+                }
+            } else if (isTablet) {
+                el.style.fontSize = '1.4rem';
+                el.style.minWidth = '36px';
+                el.style.minHeight = '36px';
+                // Target the icon inside
+                const icon = el.querySelector('i');
+                if (icon) {
+                    icon.style.fontSize = '1.4rem';
+                }
+            } else {
+                el.style.fontSize = '1.5rem';
+                el.style.minWidth = '40px';
+                el.style.minHeight = '40px';
+                // Target the icon inside
+                const icon = el.querySelector('i');
+                if (icon) {
+                    icon.style.fontSize = '1.5rem';
+                }
+            }
+        });
+        
+        // Vote count
+        document.querySelectorAll('.vote-count').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.fontWeight = '600';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.fontWeight = '600';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.fontWeight = '700';
+            }
+        });
+        
+        // Post fields and text content
+        document.querySelectorAll('.post-content, .comment-content, .markdown-content, article, .post-text').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.lineHeight = '1.4';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.lineHeight = '1.5';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.lineHeight = '1.6';
+            }
+        });
+        
+        // Tables
+        document.querySelectorAll('table, .table').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-xs)';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-sm)';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+            }
+            
+            // Adjust table cells
+            el.querySelectorAll('th, td').forEach(cell => {
+                if (isMobile) {
+                    cell.style.padding = '0.25rem 0.5rem';
+                } else if (isTablet) {
+                    cell.style.padding = '0.5rem 0.75rem';
+                } else {
+                    cell.style.padding = '0.75rem 1rem';
+                }
+            });
+        });
+        
+        // Lists
+        document.querySelectorAll('ul:not(.nav):not(.navbar-nav), ol').forEach(el => {
+            if (isMobile) {
+                el.style.fontSize = 'var(--font-size-sm)';
+                el.style.padding = '0 0 0 1rem';
+            } else if (isTablet) {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.padding = '0 0 0 1.5rem';
+            } else {
+                el.style.fontSize = 'var(--font-size-md)';
+                el.style.padding = '0 0 0 2rem';
             }
         });
     }
@@ -287,14 +472,73 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Card spacing and padding
+        document.querySelectorAll('.card, .card-body, .list-group-item, .alert, .modal-body').forEach(el => {
+            if (isMobile) {
+                el.style.padding = 'var(--spacing-sm)';
+                el.style.marginBottom = 'var(--spacing-sm)';
+            } else if (isTablet) {
+                el.style.padding = 'var(--spacing-md)';
+                el.style.marginBottom = 'var(--spacing-md)';
+            } else {
+                el.style.padding = 'var(--spacing-md)';
+                el.style.marginBottom = 'var(--spacing-md)';
+            }
+        });
+        
         // Lists and content spacing
-        document.querySelectorAll('.list-group, .post-item, .comment-item').forEach(el => {
+        document.querySelectorAll('.list-group, .post-item, .comment-item, .notification-item').forEach(el => {
             if (isMobile) {
                 el.style.marginBottom = 'var(--spacing-xs)';
             } else if (isTablet) {
                 el.style.marginBottom = 'var(--spacing-sm)';
             } else {
                 el.style.marginBottom = 'var(--spacing-md)';
+            }
+        });
+        
+        // Form groups and input spacing
+        document.querySelectorAll('.form-group, .mb-3, .form-control, .form-select, textarea').forEach(el => {
+            if (isMobile) {
+                el.style.marginBottom = 'var(--spacing-sm)';
+            } else {
+                el.style.marginBottom = 'var(--spacing-md)';
+            }
+        });
+        
+        // Buttons and interactive elements spacing
+        document.querySelectorAll('.btn, button, .nav-item, .dropdown-item').forEach(el => {
+            if (isMobile) {
+                el.style.margin = '0.15rem';
+            } else if (isTablet) {
+                el.style.margin = '0.25rem';
+            } else {
+                el.style.margin = '0.3rem';
+            }
+        });
+        
+        // Post contents and comment spacing
+        document.querySelectorAll('.post-content, .comment-content, .markdown-content').forEach(el => {
+            if (isMobile) {
+                el.style.padding = 'var(--spacing-sm)';
+                el.style.margin = 'var(--spacing-sm) 0';
+            } else if (isTablet) {
+                el.style.padding = 'var(--spacing-md)';
+                el.style.margin = 'var(--spacing-md) 0';
+            } else {
+                el.style.padding = 'var(--spacing-md)';
+                el.style.margin = 'var(--spacing-md) 0';
+            }
+        });
+        
+        // Vote button spacing
+        document.querySelectorAll('.vote-container, .vote-wrapper').forEach(el => {
+            if (isMobile) {
+                el.style.gap = '0.25rem';
+                el.style.margin = '0 0.5rem 0 0';
+            } else {
+                el.style.gap = '0.5rem';
+                el.style.margin = '0 0.75rem 0 0';
             }
         });
     }
@@ -309,9 +553,43 @@ document.addEventListener('DOMContentLoaded', function() {
             if (windowWidth < 576) {
                 profileHeader.style.flexDirection = 'column';
                 profileHeader.style.alignItems = 'center';
+                profileHeader.style.padding = 'var(--spacing-sm)';
+                
+                // Adjust profile elements for mobile
+                const profileAvatar = document.querySelector('.profile-avatar');
+                if (profileAvatar) {
+                    profileAvatar.style.width = '80px';
+                    profileAvatar.style.height = '80px';
+                    profileAvatar.style.margin = '0 0 1rem 0';
+                }
+                
+                const profileStats = document.querySelector('.profile-stats');
+                if (profileStats) {
+                    profileStats.style.flexDirection = 'row';
+                    profileStats.style.justifyContent = 'center';
+                    profileStats.style.width = '100%';
+                    profileStats.style.marginTop = '0.5rem';
+                }
             } else {
                 profileHeader.style.flexDirection = 'row';
                 profileHeader.style.alignItems = 'flex-start';
+                profileHeader.style.padding = 'var(--spacing-lg)';
+                
+                // Adjust profile elements for desktop
+                const profileAvatar = document.querySelector('.profile-avatar');
+                if (profileAvatar) {
+                    profileAvatar.style.width = '120px';
+                    profileAvatar.style.height = '120px';
+                    profileAvatar.style.margin = '0 1.5rem 0 0';
+                }
+                
+                const profileStats = document.querySelector('.profile-stats');
+                if (profileStats) {
+                    profileStats.style.flexDirection = 'row';
+                    profileStats.style.justifyContent = 'flex-start';
+                    profileStats.style.width = 'auto';
+                    profileStats.style.marginTop = '1rem';
+                }
             }
         }
         
@@ -320,24 +598,183 @@ document.addEventListener('DOMContentLoaded', function() {
             const communityHeader = document.querySelector('.community-header');
             if (windowWidth < 576) {
                 communityHeader.style.padding = 'var(--spacing-sm)';
+                
+                // Adjust community elements for mobile
+                const communityTitle = document.querySelector('.community-title');
+                if (communityTitle) {
+                    communityTitle.style.fontSize = 'var(--font-size-lg)';
+                    communityTitle.style.textAlign = 'center';
+                    communityTitle.style.marginBottom = '0.5rem';
+                }
+                
+                const communityDescription = document.querySelector('.community-description');
+                if (communityDescription) {
+                    communityDescription.style.fontSize = 'var(--font-size-sm)';
+                    communityDescription.style.textAlign = 'center';
+                }
             } else {
                 communityHeader.style.padding = 'var(--spacing-lg)';
+                
+                // Adjust community elements for desktop
+                const communityTitle = document.querySelector('.community-title');
+                if (communityTitle) {
+                    communityTitle.style.fontSize = 'calc(var(--font-size-lg) * 1.2)';
+                    communityTitle.style.textAlign = 'left';
+                    communityTitle.style.marginBottom = '1rem';
+                }
+                
+                const communityDescription = document.querySelector('.community-description');
+                if (communityDescription) {
+                    communityDescription.style.fontSize = 'var(--font-size-md)';
+                    communityDescription.style.textAlign = 'left';
+                }
             }
         }
         
         // Post detail layout
         if (document.querySelector('.post-detail')) {
+            const postDetail = document.querySelector('.post-detail');
+            const postContent = document.querySelector('.post-content');
+            const postTitle = document.querySelector('.post-title');
+            const postMeta = document.querySelector('.post-meta');
+            const commentSection = document.querySelector('.comment-section');
+            
             if (windowWidth < 576) {
                 // Simplify layout on mobile
                 document.querySelectorAll('.post-sidebar').forEach(el => {
                     el.style.display = 'none';
                 });
+                
+                if (postDetail) postDetail.style.padding = 'var(--spacing-sm)';
+                if (postContent) {
+                    postContent.style.fontSize = 'var(--font-size-sm)';
+                    postContent.style.lineHeight = '1.4';
+                    postContent.style.padding = 'var(--spacing-sm)';
+                }
+                if (postTitle) {
+                    postTitle.style.fontSize = 'var(--font-size-lg)';
+                    postTitle.style.marginBottom = '0.5rem';
+                }
+                if (postMeta) {
+                    postMeta.style.fontSize = 'var(--font-size-xs)';
+                    postMeta.style.marginBottom = '0.75rem';
+                }
+                if (commentSection) {
+                    commentSection.style.marginTop = '1rem';
+                    commentSection.style.padding = 'var(--spacing-sm)';
+                }
             } else {
                 document.querySelectorAll('.post-sidebar').forEach(el => {
                     el.style.display = 'block';
                 });
+                
+                if (postDetail) postDetail.style.padding = 'var(--spacing-lg)';
+                if (postContent) {
+                    postContent.style.fontSize = 'var(--font-size-md)';
+                    postContent.style.lineHeight = '1.6';
+                    postContent.style.padding = 'var(--spacing-md)';
+                }
+                if (postTitle) {
+                    postTitle.style.fontSize = 'calc(var(--font-size-lg) * 1.2)';
+                    postTitle.style.marginBottom = '1rem';
+                }
+                if (postMeta) {
+                    postMeta.style.fontSize = 'var(--font-size-sm)';
+                    postMeta.style.marginBottom = '1.5rem';
+                }
+                if (commentSection) {
+                    commentSection.style.marginTop = '2rem';
+                    commentSection.style.padding = 'var(--spacing-md)';
+                }
             }
         }
+        
+        // Notification page layout
+        if (document.querySelector('.notifications-page')) {
+            const notificationList = document.querySelector('.notification-list');
+            const notificationItems = document.querySelectorAll('.notification-item');
+            
+            if (windowWidth < 576) {
+                if (notificationList) {
+                    notificationList.style.padding = 'var(--spacing-sm)';
+                }
+                
+                notificationItems.forEach(item => {
+                    item.style.padding = 'var(--spacing-sm)';
+                    item.style.marginBottom = 'var(--spacing-xs)';
+                    item.style.fontSize = 'var(--font-size-sm)';
+                });
+            } else {
+                if (notificationList) {
+                    notificationList.style.padding = 'var(--spacing-md)';
+                }
+                
+                notificationItems.forEach(item => {
+                    item.style.padding = 'var(--spacing-md)';
+                    item.style.marginBottom = 'var(--spacing-sm)';
+                    item.style.fontSize = 'var(--font-size-md)';
+                });
+            }
+        }
+        
+        // Message page layout
+        if (document.querySelector('.messages-page, .postman')) {
+            const messageList = document.querySelector('.message-list, .pm_list');
+            const messageItems = document.querySelectorAll('.message-item, .pm_message');
+            
+            if (windowWidth < 576) {
+                if (messageList) {
+                    messageList.style.padding = 'var(--spacing-sm)';
+                }
+                
+                messageItems.forEach(item => {
+                    item.style.padding = 'var(--spacing-sm)';
+                    item.style.marginBottom = 'var(--spacing-xs)';
+                    item.style.fontSize = 'var(--font-size-sm)';
+                });
+            } else {
+                if (messageList) {
+                    messageList.style.padding = 'var(--spacing-md)';
+                }
+                
+                messageItems.forEach(item => {
+                    item.style.padding = 'var(--spacing-md)';
+                    item.style.marginBottom = 'var(--spacing-sm)';
+                    item.style.fontSize = 'var(--font-size-md)';
+                });
+            }
+        }
+        
+        // Form layouts
+        document.querySelectorAll('form').forEach(form => {
+            if (windowWidth < 576) {
+                form.style.padding = 'var(--spacing-sm)';
+                
+                const formGroups = form.querySelectorAll('.form-group, .mb-3');
+                formGroups.forEach(group => {
+                    group.style.marginBottom = 'var(--spacing-sm)';
+                });
+                
+                const labels = form.querySelectorAll('label');
+                labels.forEach(label => {
+                    label.style.fontSize = 'var(--font-size-sm)';
+                    label.style.marginBottom = '0.25rem';
+                });
+            } else {
+                form.style.padding = 'var(--spacing-md)';
+                
+                const formGroups = form.querySelectorAll('.form-group, .mb-3');
+                formGroups.forEach(group => {
+                    group.style.marginBottom = 'var(--spacing-md)';
+                });
+                
+                const labels = form.querySelectorAll('label');
+                labels.forEach(label => {
+                    label.style.fontSize = 'var(--font-size-md)';
+                    label.style.marginBottom = '0.5rem';
+                });
+            }
+        });
     }
     
     /**
