@@ -233,11 +233,11 @@
                 
                 <!-- Center section: Search bar -->
                 <div class="mobile-header-center">
-                    <form action="{% url 'search' %}" method="GET" role="search">
-                        <div class="input-group input-group-sm">
+                    <form action="{% url 'search' %}" method="GET" role="search" class="d-flex align-items-center search-form">
+                        <div class="input-group">
                             <label for="mobile-search-input" class="sr-only">Search</label>
-                            <input id="mobile-search-input" class="form-control form-control-sm" type="search" name="query" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-sm search-btn" type="submit" aria-label="Submit search">
+                            <input id="mobile-search-input" class="form-control form-control-sm search-input" type="search" name="query" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-sm btn-primary search-btn" type="submit" aria-label="Submit search">
                                 <i class="bi bi-search" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -334,9 +334,6 @@
                 <i class="bi bi-chat-dots me-2" aria-hidden="true"></i>
                 Discuss
             </a>
-            <button class="navbar-toggler d-none d-lg-block d-md-none d-sm-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             
             <div class="collapse navbar-collapse" id="navbarContent">
                 <!-- Main Navigation - Desktop Only -->
