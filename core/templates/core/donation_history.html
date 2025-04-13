@@ -4,16 +4,12 @@
 {% block title %}Donation History{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="card shadow">
-                {% include 'core/includes/payment_card_header.html' with title="Your Donation History" %}
-                <div class="card-body">
-                    {% include 'core/includes/donation_history_content.html' with payments=payments %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% with content_block %}
+    {% include 'core/includes/donation_history_content.html' with payments=payments %}
+{% endwith %}
+
+{% include 'core/includes/payment_layout.html' with 
+    title="Your Donation History" 
+    content=content_block 
+    container_class="py-5" %}
 {% endblock %}

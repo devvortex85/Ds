@@ -4,21 +4,22 @@
 {% block title %}Payment Success{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            {% include 'core/includes/payment_result.html' with 
-                success=True 
-                title="Thank You for Your Support!" 
-                message="Your donation has been received"
-                payment=payment
-                action_primary_link="home" 
-                action_primary_text="Return to Home" 
-                action_primary_icon="fas fa-home"
-                action_secondary_link="donation_history" 
-                action_secondary_text="View Donation History" 
-                action_secondary_icon="fas fa-history" %}
-        </div>
-    </div>
-</div>
+{% with content_block %}
+    {% include 'core/includes/payment_result.html' with 
+        success=True 
+        title="Thank You for Your Support!" 
+        message="Your donation has been received"
+        payment=payment
+        action_primary_link="home" 
+        action_primary_text="Return to Home" 
+        action_primary_icon="fas fa-home"
+        action_secondary_link="donation_history" 
+        action_secondary_text="View Donation History" 
+        action_secondary_icon="fas fa-history" %}
+{% endwith %}
+
+{% include 'core/includes/payment_layout.html' with 
+    title="Thank You for Your Support!" 
+    content=content_block 
+    container_class="py-5" %}
 {% endblock %}

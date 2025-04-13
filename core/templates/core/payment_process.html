@@ -4,17 +4,12 @@
 {% block title %}Process Payment{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                {% include 'core/includes/payment_card_header.html' with title="Complete Your Payment" %}
-                <div class="card-body">
-                    {% include 'core/includes/payment_form.html' with payment=payment form=form %}
-                </div>
-                {% include 'core/includes/payment_card_footer.html' with message="<i class='fas fa-lock'></i> Your payment information is secure and encrypted." %}
-            </div>
-        </div>
-    </div>
-</div>
+{% with content_block %}
+    {% include 'core/includes/payment_form.html' with payment=payment form=form %}
+{% endwith %}
+
+{% include 'core/includes/payment_layout.html' with 
+    title="Complete Your Payment" 
+    content=content_block 
+    footer_message="<i class='fas fa-lock'></i> Your payment information is secure and encrypted." %}
 {% endblock %}
