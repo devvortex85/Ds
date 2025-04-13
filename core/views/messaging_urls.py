@@ -18,8 +18,8 @@ urlpatterns = [
     re_path(r'^archives/(?:(?P<option>m)/)?$', ArchivesView.as_view(), name='archives'),
     re_path(r'^trash/(?:(?P<option>m)/)?$', TrashView.as_view(), name='trash'),
     re_path(r'^write/(?:(?P<recipients>[^/#]+)/)?$', WriteView.as_view(), name='write'),
-    path('reply/<int:message_id>/', ReplyView.as_view(), name='reply'),
-    path('view/<int:message_id>/', MessageView.as_view(), name='view'),
+    re_path(r'^reply/(?P<message_id>[\d]+)/$', ReplyView.as_view(), name='reply'),
+    re_path(r'^view/(?P<message_id>[\d]+)/$', MessageView.as_view(), name='view'),
     
     # Keep the original action views
     path('view/t/<int:thread_id>/', ConversationView.as_view(), name='view_conversation'),
