@@ -82,7 +82,7 @@ Edit Profile | Discuss
                         <div class="reputation-progress-bar" style="width: {{ reputation_progress }}%"></div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">{{ reputation_level|reputation_level_badge }}</small>
+                        <small class="text-muted">{{ reputation_level }}</small>
                         <small class="text-muted">
                             {% with next_level=False %}
                                 {% for level in profile_user.profile.REPUTATION_LEVELS %}
