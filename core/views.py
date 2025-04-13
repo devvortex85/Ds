@@ -561,7 +561,7 @@ def delete_post(request, pk):
         messages.success(request, 'Your post has been deleted.')
         return redirect('community_detail', pk=community_id)
     
-    return render(request, 'core/confirmation_page.html', {
+    return render(request, 'core/common/confirmation_page.html', {
         'object_display': post.title,
         'object_details': f'Posted by {post.author.username} in {post.community.name}',
         'object_icon': 'bi bi-file-text',
@@ -648,7 +648,7 @@ def delete_comment(request, pk):
         messages.success(request, 'Your comment has been deleted.')
         return redirect('post_detail', pk=post_id)
     
-    return render(request, 'core/confirmation_page.html', {
+    return render(request, 'core/common/confirmation_page.html', {
         'object_display': comment.content[:100] + ('...' if len(comment.content) > 100 else ''),
         'object_details': f'Comment by {comment.author.username} on "{comment.post.title}"',
         'object_icon': 'bi bi-chat-text',
@@ -980,7 +980,7 @@ def advanced_search(request):
         'using_fallback': False
     })
     
-    return render(request, 'core/search_page.html', context)
+    return render(request, 'core/search/search_page.html', context)
 
 def post_votes_api(request, pk):
     """API endpoint to get post vote count and user's vote"""
@@ -1066,7 +1066,7 @@ def donate(request):
     else:
         form = DonationForm()
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'form': form,
         'title': 'Support Discuss',
         'page_type': 'form'
@@ -1089,7 +1089,7 @@ def donation_confirmation(request):
         # User confirmed the donation, proceed to payment processing
         return redirect('process_payment', payment_id=payment.id)
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'payment': payment,
         'title': 'Confirm Your Donation',
         'page_type': 'confirmation',
@@ -1108,7 +1108,7 @@ def payment_success(request):
     except Payment.DoesNotExist:
         payment = None
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'payment': payment,
         'success': True,
         'title': 'Payment Successful',
@@ -1160,7 +1160,7 @@ def payment_failure(request):
     error_reason = request.session.get('payment_error', 'Unknown error')
     payment_details = request.session.get('payment_details', {})
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'success': False,
         'title': 'Payment Failed',
         'error_reason': error_reason,
@@ -1179,7 +1179,7 @@ def donation_history(request):
         total=Sum('total')
     )['total'] or 0
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'payments': payments,
         'total_donated': total_donated,
         'title': 'Your Donation History',
