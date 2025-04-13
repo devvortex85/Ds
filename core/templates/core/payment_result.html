@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if success %}Payment Success{% else %}Payment Failed{% endif %}
+{% endblock %}
+
+{% block content %}
+{% with content_block %}
+    {% include 'core/includes/payment_result.html' with 
+        success=success 
+        title=title|default:success|yesno:"Thank You for Your Support!,Payment Unsuccessful" 
+        message=message|default:success|yesno:"Your donation has been received,There was a problem processing your payment"
+        payment=payment
+        error_reason=error_reason
+        payment_details=payment_details
+        action_primary_link=action_primary_link|default:success|yesno:"home,donate"
+        action_primary_text=action_primary_text|default:success|yesno:"Return to Home,Try Again"
+        action_primary_icon=action_primary_icon|default:success|yesno:"bi bi-house,bi bi-arrow-repeat"
+        action_primary_class=action_primary_class|default:"btn-primary"
+        action_secondary_link=action_secondary_link|default:success|yesno:"donation_history,home"
+        action_secondary_text=action_secondary_text|default:success|yesno:"View Donation History,Return to Home"
+        action_secondary_icon=action_secondary_icon|default:success|yesno:"bi bi-clock-history,bi bi-house" %}
+{% endwith %}
+
+{% include 'core/includes/payment_layout.html' with 
+    title=title|default:success|yesno:"Thank You for Your Support!,Payment Unsuccessful" 
+    content=content_block 
+    container_class="py-5" %}
+{% endblock %}
