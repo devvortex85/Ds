@@ -8,8 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token }}">  <!-- For AJAX calls -->
     {% load static %}
     {% load django_bootstrap5 %}
-    <!-- Use Bootswatch Slate theme instead of default Bootstrap -->
-    <link rel="stylesheet" href="{% static 'core/css/bootswatch/slate.min.css' %}">
+    <!-- Standard Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/bootstrap/bootstrap-dark.min.css' %}">
     
     <!-- Bootstrap Icons - Essential for the UI -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -24,8 +24,8 @@
     <!-- Comment styling -->
     <link href="{% static 'core/css/reddit-comments.css' %}" rel="stylesheet">
     
-    <!-- Theme colors and customizations -->
-    <link href="{% static 'core/css/unified-theme.css' %}" rel="stylesheet">
+    <!-- Standard Bootstrap 5 Dark Theme Color Palette -->
+    <link href="{% static 'core/css/bootstrap-dark-palette.css' %}" rel="stylesheet">
     
     <!-- Custom CSS -->
     <style>
@@ -331,32 +331,32 @@
         {% block content %}{% endblock %}
     </main>
     
-    <!-- Footer - Dark Theme -->
-    <footer class="py-3 mt-4" style="background-color: var(--dark-surface); border-top: 1px solid var(--dark-border);">
+    <!-- Footer - Bootstrap 5 Dark Theme -->
+    <footer class="py-3 mt-4" style="background-color: var(--bs-body-tertiary-bg-dark); border-top: 1px solid var(--bs-border-color-dark);">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-6">
-                    <h5 class="mb-2" style="color: var(--dark-text-primary); font-size: 1.1rem;">Discuss</h5>
-                    <p class="small" style="color: var(--dark-text-secondary);">A community platform for discussions and sharing.</p>
+                    <h5 class="mb-2" style="color: var(--bs-body-emphasis-color-dark); font-size: 1.1rem;">Discuss</h5>
+                    <p class="small" style="color: var(--bs-body-secondary-color-dark);">A community platform for discussions and sharing.</p>
                 </div>
                 <div class="col-md-3">
-                    <h5 class="mb-2" style="color: var(--dark-text-primary); font-size: 0.9rem;">Links</h5>
+                    <h5 class="mb-2" style="color: var(--bs-body-emphasis-color-dark); font-size: 0.9rem;">Links</h5>
                     <ul class="list-unstyled small">
-                        <li class="mb-1"><a href="{% url 'home' %}" style="color: var(--dark-text-secondary); text-decoration: none;">Home</a></li>
-                        <li class="mb-1"><a href="{% url 'community_list' %}" style="color: var(--dark-text-secondary); text-decoration: none;">Communities</a></li>
+                        <li class="mb-1"><a href="{% url 'home' %}" style="color: var(--bs-body-secondary-color-dark); text-decoration: none;">Home</a></li>
+                        <li class="mb-1"><a href="{% url 'community_list' %}" style="color: var(--bs-body-secondary-color-dark); text-decoration: none;">Communities</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h5 class="mb-2" style="color: var(--dark-text-primary); font-size: 0.9rem;">Legal</h5>
+                    <h5 class="mb-2" style="color: var(--bs-body-emphasis-color-dark); font-size: 0.9rem;">Legal</h5>
                     <ul class="list-unstyled small">
-                        <li class="mb-1"><a href="#" style="color: var(--dark-text-secondary); text-decoration: none;">Privacy Policy</a></li>
-                        <li class="mb-1"><a href="#" style="color: var(--dark-text-secondary); text-decoration: none;">Terms of Service</a></li>
-                        <li class="mb-1"><a href="#" style="color: var(--dark-text-secondary); text-decoration: none;">Accessibility</a></li>
+                        <li class="mb-1"><a href="#" style="color: var(--bs-body-secondary-color-dark); text-decoration: none;">Privacy Policy</a></li>
+                        <li class="mb-1"><a href="#" style="color: var(--bs-body-secondary-color-dark); text-decoration: none;">Terms of Service</a></li>
+                        <li class="mb-1"><a href="#" style="color: var(--bs-body-secondary-color-dark); text-decoration: none;">Accessibility</a></li>
                     </ul>
                 </div>
             </div>
-            <hr class="my-3" style="border-color: var(--dark-border); opacity: 0.1;">
-            <p class="text-center small mb-0" style="color: var(--dark-text-secondary); font-size: 0.8rem;">&copy; 2025 Discuss. All rights reserved.</p>
+            <hr class="my-3" style="border-color: var(--bs-border-color-dark); opacity: 0.1;">
+            <p class="text-center small mb-0" style="color: var(--bs-body-secondary-color-dark); font-size: 0.8rem;">&copy; 2025 Discuss. All rights reserved.</p>
         </div>
     </footer>
     

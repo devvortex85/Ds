@@ -1,0 +1,229 @@
+/*
+ * Bootstrap 5 Standard Dark Theme Color Palette
+ * This file defines the standard Bootstrap 5 dark theme colors
+ */
+
+:root {
+  /* Primary Bootstrap 5 Dark Theme Colors */
+  --bs-dark-rgb: 33, 37, 41;
+  --bs-dark: #212529;
+  --bs-dark-text: #f8f9fa;
+
+  /* Gray Scale */
+  --bs-gray-100: #f8f9fa;
+  --bs-gray-200: #e9ecef;
+  --bs-gray-300: #dee2e6;
+  --bs-gray-400: #ced4da;
+  --bs-gray-500: #adb5bd;
+  --bs-gray-600: #6c757d;
+  --bs-gray-700: #495057;
+  --bs-gray-800: #343a40;
+  --bs-gray-900: #212529;
+  
+  /* Dark Theme Elements */
+  --bs-dark-bg: #212529;
+  --bs-dark-bg-subtle: #343a40;
+  --bs-dark-border-subtle: #495057;
+  --bs-dark-text-emphasis: #f8f9fa;
+  
+  /* Theme Colors */
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  
+  /* Dark Mode Specific */
+  --bs-body-color-dark: #dee2e6;
+  --bs-body-bg-dark: #212529;
+  --bs-body-secondary-color-dark: rgba(222, 226, 230, 0.75);
+  --bs-body-secondary-bg-dark: #343a40;
+  --bs-body-tertiary-color-dark: rgba(222, 226, 230, 0.5);
+  --bs-body-tertiary-bg-dark: #2b3035;
+  --bs-body-emphasis-color-dark: #fff;
+  --bs-border-color-dark: #495057;
+  --bs-border-color-translucent-dark: rgba(255, 255, 255, 0.15);
+  --bs-headings-color-dark: inherit;
+  --bs-link-color-dark: #6ea8fe;
+  --bs-link-hover-color-dark: #8bb9fe;
+  --bs-code-color-dark: #e685b5;
+}
+
+/* Dark Mode Styles */
+
+body {
+  background-color: var(--bs-body-bg-dark);
+  color: var(--bs-body-color-dark);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-color: var(--bs-border-color-dark);
+}
+
+.card-header, .card-footer {
+  background-color: rgba(33, 37, 41, 0.03);
+  border-color: var(--bs-border-color-dark);
+}
+
+/* Forms */
+.form-control, .form-select {
+  background-color: var(--bs-body-bg-dark);
+  border-color: var(--bs-border-color-dark);
+  color: var(--bs-body-color-dark);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--bs-body-bg-dark);
+  border-color: var(--bs-blue);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--bs-body-tertiary-color-dark);
+}
+
+/* Buttons */
+.btn-dark {
+  background-color: var(--bs-gray-800);
+  border-color: var(--bs-gray-800);
+}
+
+.btn-light {
+  background-color: var(--bs-gray-600);
+  border-color: var(--bs-gray-600);
+  color: var(--bs-dark-text);
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-color: var(--bs-border-color-dark);
+}
+
+.dropdown-item {
+  color: var(--bs-body-color-dark);
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: var(--bs-body-secondary-bg-dark);
+  color: var(--bs-body-emphasis-color-dark);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-bottom: 1px solid var(--bs-border-color-dark);
+}
+
+.navbar-dark .navbar-brand, .navbar-dark .navbar-nav .nav-link {
+  color: var(--bs-body-color-dark);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--bs-body-emphasis-color-dark);
+}
+
+/* List Groups */
+.list-group-item {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-color: var(--bs-border-color-dark);
+  color: var(--bs-body-color-dark);
+}
+
+.list-group-item-action:hover, .list-group-item-action:focus {
+  background-color: var(--bs-body-secondary-bg-dark);
+  color: var(--bs-body-emphasis-color-dark);
+}
+
+/* Tables */
+.table {
+  color: var(--bs-body-color-dark);
+  border-color: var(--bs-border-color-dark);
+}
+
+.table thead th, .table tbody td {
+  border-color: var(--bs-border-color-dark);
+}
+
+/* Alert customizations */
+.alert-primary {
+  background-color: rgba(13, 110, 253, 0.15);
+  border-color: rgba(13, 110, 253, 0.4);
+  color: #6ea8fe;
+}
+
+.alert-secondary {
+  background-color: rgba(108, 117, 125, 0.15);
+  border-color: rgba(108, 117, 125, 0.4);
+  color: #a7acb1;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.15);
+  border-color: rgba(25, 135, 84, 0.4);
+  color: #75b798;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.4);
+  color: #ea868f;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.4);
+  color: #ffda6a;
+}
+
+.alert-info {
+  background-color: rgba(13, 202, 240, 0.15);
+  border-color: rgba(13, 202, 240, 0.4);
+  color: #6edff6;
+}
+
+/* Links */
+a {
+  color: var(--bs-link-color-dark);
+}
+
+a:hover {
+  color: var(--bs-link-hover-color-dark);
+}
+
+/* Pagination */
+.pagination .page-link {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-color: var(--bs-border-color-dark);
+  color: var(--bs-body-color-dark);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--bs-blue);
+  border-color: var(--bs-blue);
+  color: #fff;
+}
+
+/* Modal styling */
+.modal-content {
+  background-color: var(--bs-body-tertiary-bg-dark);
+  border-color: var(--bs-border-color-dark);
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--bs-border-color-dark);
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+  .btn, .card, .form-control, .nav-link {
+    border: 1px solid;
+  }
+}
