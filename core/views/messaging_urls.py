@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import pgettext_lazy
 from core.views.messaging_views import (
     InboxView, SentView, ArchivesView, TrashView,
     WriteView, ReplyView, MessageView
@@ -11,16 +12,17 @@ from postman.views import (
 
 app_name = 'postman'
 urlpatterns = [
-    path('inbox/', InboxView.as_view(), name='inbox'),
-    path('sent/', SentView.as_view(), name='sent'),
-    path('archives/', ArchivesView.as_view(), name='archives'),
-    path('trash/', TrashView.as_view(), name='trash'),
-    path('write/', WriteView.as_view(), name='write'),
+    # Use re_path with optional 'm' parameter to maintain compatibility with original postman URLs
+    re_path(r'^inbox/(?:(?P<option>m)/)?$', InboxView.as_view(), name='inbox'),
+    re_path(r'^sent/(?:(?P<option>m)/)?$', SentView.as_view(), name='sent'),
+    re_path(r'^archives/(?:(?P<option>m)/)?$', ArchivesView.as_view(), name='archives'),
+    re_path(r'^trash/(?:(?P<option>m)/)?$', TrashView.as_view(), name='trash'),
+    re_path(r'^write/(?:(?P<recipients>[^/#]+)/)?$', WriteView.as_view(), name='write'),
     path('reply/<int:message_id>/', ReplyView.as_view(), name='reply'),
-    path('<int:message_id>/', MessageView.as_view(), name='view'),
+    path('view/<int:message_id>/', MessageView.as_view(), name='view'),
     
     # Keep the original action views
-    path('view/t/<int:thread_id>/', ConversationView.as_view(), name='conversation'),
+    path('view/t/<int:thread_id>/', ConversationView.as_view(), name='view_conversation'),
     path('archive/', csrf_exempt(ArchiveView.as_view()), name='archive'),
     path('delete/', csrf_exempt(DeleteView.as_view()), name='delete'),
     path('undelete/', csrf_exempt(UndeleteView.as_view()), name='undelete'),
