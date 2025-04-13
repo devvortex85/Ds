@@ -30,6 +30,63 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 - django-payments for donations
 - Sentry for error tracking
 
+## Project Structure
+
+The Discuss platform follows a modular architecture for maintainability and scalability:
+
+### Core Application Structure
+
+```
+discuss/                # Main project settings
+core/                   # Main application
+├── management/         # Custom management commands
+├── migrations/         # Database migrations
+├── static/core/        # Static assets
+│   ├── css/            # Stylesheets
+│   │   ├── universal-adaptive.css   # Responsive styling
+│   │   ├── reddit-comments.css      # Comment system styling
+│   │   └── unified-theme.css        # Theme styling
+│   └── js/             # JavaScript files
+│       └── script.js    # Consolidated JavaScript functionality
+├── templates/core/     # HTML templates organized by feature
+│   ├── base.html       # Base template with common elements
+│   ├── includes/       # Reusable template components
+│   ├── community/      # Community-related templates
+│   ├── posts/          # Post-related templates
+│   ├── profile/        # User profile templates
+│   └── messaging/      # Messaging system templates
+├── templatetags/       # Custom template tags and filters
+│   ├── core_tags.py    # Consolidated template tags and filters
+│   └── dict_tags.py    # Dictionary-related template tags
+├── views/              # Views organized by feature
+│   ├── auth_views.py   # Authentication views
+│   ├── auth_urls.py    # Authentication URLs
+│   ├── community_views.py      # Community-related views
+│   ├── messaging_views.py      # Messaging system views
+│   ├── messaging_urls.py       # Messaging system URLs
+│   ├── notification_views.py   # Notification system views
+│   ├── payment_views.py        # Payment/donation views
+│   ├── post_views.py           # Post-related views
+│   ├── profile_views.py        # User profile views
+│   ├── search_views.py         # Search functionality views
+│   └── utils_views.py          # Utility views
+├── admin.py            # Admin panel configuration
+├── apps.py             # App configuration
+├── context_processors.py # Template context processors
+├── filters.py          # Filter classes for Django-filter
+├── forms.py            # Form classes
+├── models.py           # Database models
+└── urls.py             # URL configuration
+```
+
+### Code Organization Principles
+
+1. **Template Organization**: All templates are located in `core/templates/core/` and organized by feature.
+2. **CSS Consolidation**: Styles are consolidated into purpose-specific files to prevent duplication.
+3. **JavaScript Consolidation**: Core functionality is in `script.js` with specialized functions as needed.
+4. **Template Tags**: Consolidated in `core_tags.py` for better maintainability.
+5. **View Organization**: Views are separated by feature in the `views/` directory.
+
 ## Development Environment Setup
 
 1. Clone the repository:
@@ -62,7 +119,7 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 
 6. Run the development server:
    ```
-   python manage.py runserver
+   python manage.py runserver 0.0.0.0:8000
    ```
 
 ## Deployment Guide
@@ -273,7 +330,40 @@ A dynamic Reddit-like social platform that enables community-driven content shar
 
 ## Contributing
 
-Contributions to Discuss are welcome! Please feel free to submit a Pull Request.
+Contributions to Discuss are welcome! Please follow these guidelines:
+
+### Development Conventions
+
+1. **Template Tags**: Add new template tags to `core_tags.py` rather than creating new tag files.
+
+2. **Templates**: Place all templates in the appropriate feature directory under `core/templates/core/`. 
+   Use includes for reusable components.
+
+3. **CSS/JS**: Consolidate CSS and JS files based on functionality. Don't create new files for small features;
+   instead, add to the appropriate existing file.
+
+4. **Views**: Organize views by feature in separate files within the `views/` directory.
+
+5. **Code Style**:
+   - Follow PEP 8 for Python code
+   - Use 4 spaces for indentation
+   - Use meaningful variable and function names
+   - Include docstrings for all functions, classes, and modules
+   - Add comments for complex logic
+
+### Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests if available
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## Known Issues
+
+1. There is an issue with URL reversing in the messaging system that needs to be fixed.
 
 ## License
 
