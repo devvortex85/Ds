@@ -8,7 +8,7 @@
     <div class="mt-2 mb-3">
         {% if result_counts.total > 0 %}
             <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i> Found <strong>{{ result_counts.total }}</strong> total results 
+                <i class="bi bi-info-circle me-2"></i> Found <strong>{{ result_counts.total }}</strong> total results 
                 ({{ result_counts.posts }} posts, {{ result_counts.communities }} communities, 
                 {{ result_counts.users }} users, {{ result_counts.tags }} tags)
             </div>
@@ -18,10 +18,10 @@
         <form action="{% url 'search' %}" method="GET" class="d-flex">
             <input type="text" name="query" value="{{ query }}" class="form-control me-2" placeholder="Search...">
             <button type="submit" class="btn btn-primary me-2">
-                <i class="fas fa-search me-1"></i> Search
+                <i class="bi bi-search me-1"></i> Search
             </button>
             <a href="{% url 'advanced_search' %}" class="btn btn-info text-white">
-                <i class="fas fa-filter me-1"></i> Advanced Search
+                <i class="bi bi-funnel-fill me-1"></i> Advanced Search
             </a>
         </form>
     </div>
@@ -34,7 +34,7 @@
             {% for community in communities %}
                 <div class="list-group-item p-3">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-users fa-2x text-primary me-3"></i>
+                        <i class="bi bi-people-fill fa-2x text-primary me-3"></i>
                         <div class="community-info flex-grow-1">
                             <h5 class="mb-1">
                                 <a href="{% url 'community_detail' community.id %}" class="text-decoration-none">d/{{ community.name }}</a>
@@ -68,7 +68,7 @@
                         {% if user_profile.profile.avatar %}
                         <img src="{{ user_profile.profile.avatar.url }}" alt="{{ user_profile.username }}" class="rounded-circle me-3" width="40" height="40">
                         {% else %}
-                        <i class="fas fa-user-circle fa-2x text-primary me-3"></i>
+                        <i class="bi bi-person-circle fa-2x text-primary me-3"></i>
                         {% endif %}
                         <div class="user-info flex-grow-1">
                             <h5 class="mb-1">
@@ -196,11 +196,11 @@
 {% block sidebar %}
 {% with search_tips_content %}
     <ul class="list-unstyled mb-0">
-        <li class="mb-2"><i class="fas fa-check me-2 text-success"></i> Use specific keywords</li>
-        <li class="mb-2"><i class="fas fa-check me-2 text-success"></i> Check spelling of search terms</li>
-        <li class="mb-2"><i class="fas fa-check me-2 text-success"></i> Try searching for community names</li>
-        <li class="mb-2"><i class="fas fa-check me-2 text-success"></i> Search for usernames or post titles</li>
-        <li><i class="fas fa-check me-2 text-success"></i> Try searching for tags to find related posts</li>
+        <li class="mb-2"><i class="bi bi-check-circle me-2 text-success"></i> Use specific keywords</li>
+        <li class="mb-2"><i class="bi bi-check-circle me-2 text-success"></i> Check spelling of search terms</li>
+        <li class="mb-2"><i class="bi bi-check-circle me-2 text-success"></i> Try searching for community names</li>
+        <li class="mb-2"><i class="bi bi-check-circle me-2 text-success"></i> Search for usernames or post titles</li>
+        <li><i class="bi bi-check-circle me-2 text-success"></i> Try searching for tags to find related posts</li>
     </ul>
 {% endwith %}
 
@@ -212,18 +212,18 @@
 {% with explore_links %}
     <div class="list-group list-group-flush">
         <a href="{% url 'home' %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-home me-2"></i> Home
+            <i class="bi bi-house me-2"></i> Home
         </a>
         <a href="{% url 'community_list' %}" class="list-group-item list-group-item-action">
-            <i class="fas fa-users me-2"></i> Browse Communities
+            <i class="bi bi-people me-2"></i> Browse Communities
         </a>
         {% if user.is_authenticated %}
             <a href="{% url 'create_community' %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-plus-circle me-2"></i> Create Community
+                <i class="bi bi-plus-circle me-2"></i> Create Community
             </a>
         {% else %}
             <a href="{% url 'account_login' %}" class="list-group-item list-group-item-action">
-                <i class="fas fa-sign-in-alt me-2"></i> Login
+                <i class="bi bi-box-arrow-in-right me-2"></i> Login
             </a>
         {% endif %}
     </div>
