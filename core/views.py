@@ -172,9 +172,10 @@ def community_list(request):
         post_count=Count('posts')
     ).order_by('-created_at')
     
-    return render(request, 'core/community_list.html', {
+    return render(request, 'core/community_page.html', {
         'communities': communities,
         'title': 'Communities',
+        'page_type': 'list'
     })
 
 @login_required
@@ -197,9 +198,10 @@ def create_community(request):
     else:
         form = CommunityForm()
     
-    return render(request, 'core/create_community.html', {
+    return render(request, 'core/community_page.html', {
         'form': form,
         'title': 'Create Community',
+        'page_type': 'create'
     })
 
 def community_detail(request, pk, template='core/community_detail.html', extra_context=None):
@@ -538,10 +540,17 @@ def delete_post(request, pk):
         messages.success(request, 'Your post has been deleted.')
         return redirect('community_detail', pk=community_id)
     
-    return render(request, 'core/delete_confirm.html', {
-        'object': post,
-        'object_type': 'post',
-        'title': 'Delete Post',
+    return render(request, 'core/confirmation_page.html', {
+        'object_display': post.title,
+        'object_details': f'Posted by {post.author.username} in {post.community.name}',
+        'object_icon': 'bi bi-file-text',
+        'confirmation_message': 'Are you sure you want to delete this post? This action cannot be undone.',
+        'warning_message': 'All comments on this post will also be deleted.',
+        'confirmation_type': 'danger',
+        'header_title': 'Delete Post',
+        'page_title': 'Delete Post',
+        'cancel_url': reverse('post_detail', kwargs={'pk': post.pk}),
+        'confirm_button_text': 'Delete Post Permanently'
     })
 
 @login_required
