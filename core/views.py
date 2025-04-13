@@ -402,8 +402,8 @@ def post_detail(request, pk):
         else:
             comment.user_vote = None
         
-        # Get child comments
-        comment.children = get_comment_children(comment, request.user, depth=0, max_depth=3)
+        # Get child comments - store as an attribute without trying to assign to the related manager
+        setattr(comment, 'child_comments', get_comment_children(comment, request.user, depth=0, max_depth=3))
     
     context = {
         'post': post,
@@ -446,8 +446,8 @@ def get_comment_children(comment, user, depth=0, max_depth=3):
         else:
             child.user_vote = None
         
-        # Get grandchildren
-        child.children = get_comment_children(child, user, depth, max_depth)
+        # Get grandchildren - store as an attribute without trying to assign to the related manager
+        setattr(child, 'child_comments', get_comment_children(child, user, depth, max_depth))
     
     return children
 
@@ -505,8 +505,8 @@ def comment_thread(request, pk):
     else:
         comment_form = None
     
-    # Get child comments
-    comment.children = get_comment_children(comment, request.user, depth=0, max_depth=10)
+    # Get child comments - store as an attribute without trying to assign to the related manager
+    setattr(comment, 'child_comments', get_comment_children(comment, request.user, depth=0, max_depth=10))
     
     context = {
         'post': post,

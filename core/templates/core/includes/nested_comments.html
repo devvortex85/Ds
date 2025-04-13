@@ -47,7 +47,7 @@
 </article>
 
 <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
-{% if max_depth and node.level >= max_depth and not node.is_leaf_node %}
+{% if max_depth and node.level >= max_depth and node.child_comments %}
     <div class="deep-nesting-indicator">
         <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
             <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>

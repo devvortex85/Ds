@@ -59,6 +59,12 @@
                         {% include 'core/includes/nested_comments.html' %}
                     {% endwith %}
                 {% endfor %}
+            {% elif comment.child_comments %}
+                {% for node in comment.child_comments %}
+                    {% with max_depth=max_depth|default:5 level_adjustment=level_adjustment|default:"0" %}
+                        {% include 'core/includes/nested_comments.html' %}
+                    {% endwith %}
+                {% endfor %}
             {% else %}
                 {% for node in comment.get_descendants %}
                     {% with max_depth=max_depth|default:5 level_adjustment=level_adjustment|default:"0" %}
