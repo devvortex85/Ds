@@ -5,9 +5,8 @@ from django.conf.urls.static import static
 from payments import urls as payment_urls
 
 urlpatterns = [
-    # Home and registration
+    # Home
     path('', views.home, name='home'),
-    path('register/', views.register, name='register'),
     
     # User profiles
     path('profile/edit/', views.edit_profile, name='edit_profile'),
