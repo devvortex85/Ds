@@ -988,3 +988,75 @@ function loadVotesFromLocalStorage() {
         console.error('Error loading votes from localStorage:', e);
     }
 }
+
+/**
+ * Donation Form Toggle Functionality
+ * Controls the visibility of the custom amount input field based on donation type selection
+ */
+function toggleCustomAmount() {
+    const donationTypeSelect = document.getElementById('id_donation_type');
+    const customAmountGroup = document.getElementById('custom-amount-group');
+    
+    if (!donationTypeSelect || !customAmountGroup) {
+        return; // Exit if we're not on the donation page
+    }
+    
+    if (donationTypeSelect.value === '0') {
+        customAmountGroup.style.display = 'block';
+    } else {
+        customAmountGroup.style.display = 'none';
+    }
+}
+
+// Initialize donation form functionality if on donation page
+document.addEventListener('DOMContentLoaded', function() {
+    const donationTypeSelect = document.getElementById('id_donation_type');
+    
+    if (donationTypeSelect) {
+        console.log("Initializing donation form");
+        toggleCustomAmount();
+        
+        // Add event listener for when the donation type changes
+        donationTypeSelect.addEventListener('change', toggleCustomAmount);
+    }
+});
+
+/**
+ * Accessibility Enhancements
+ * Improves application accessibility for screen readers and keyboard navigation
+ */
+function setupAccessibility() {
+    // Fix any missing aria attributes dynamically
+    const buttons = document.querySelectorAll('button:not([aria-label])');
+    buttons.forEach(button => {
+        const buttonText = button.textContent.trim();
+        if (buttonText) {
+            button.setAttribute('aria-label', buttonText);
+        }
+    });
+    
+    // Add keyboard support for custom components
+    const voteButtons = document.querySelectorAll('.vote-btn');
+    voteButtons.forEach(button => {
+        button.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                button.click();
+            }
+        });
+    });
+    
+    // Make dynamic content announcements for screen readers
+    const announcementDiv = document.createElement('div');
+    announcementDiv.setAttribute('aria-live', 'polite');
+    announcementDiv.classList.add('sr-only');
+    document.body.appendChild(announcementDiv);
+    
+    window.announceToScreenReader = function(message) {
+        announcementDiv.textContent = message;
+        setTimeout(() => { announcementDiv.textContent = ''; }, 3000);
+    };
+}
+
+// Initialize accessibility enhancements
+document.addEventListener('DOMContentLoaded', setupAccessibility);

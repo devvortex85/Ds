@@ -369,39 +369,5 @@
     <!-- Unified Core App Script -->
     <script src="{% static 'core/js/script.js' %}"></script>
     
-    <!-- Accessibility Scripts -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fix any missing aria attributes dynamically
-        const buttons = document.querySelectorAll('button:not([aria-label])');
-        buttons.forEach(button => {
-            const buttonText = button.textContent.trim();
-            if (buttonText) {
-                button.setAttribute('aria-label', buttonText);
-            }
-        });
-        
-        // Add keyboard support for custom components
-        const voteButtons = document.querySelectorAll('.vote-btn');
-        voteButtons.forEach(button => {
-            button.addEventListener('keydown', function(e) {
-                if (e.code === 'Space' || e.code === 'Enter') {
-                    e.preventDefault();
-                    button.click();
-                }
-            });
-        });
-        
-        // Make dynamic content announcements for screen readers
-        const announcementDiv = document.createElement('div');
-        announcementDiv.setAttribute('aria-live', 'polite');
-        announcementDiv.classList.add('sr-only');
-        document.body.appendChild(announcementDiv);
-        
-        window.announceToScreenReader = function(message) {
-            announcementDiv.textContent = message;
-            setTimeout(() => { announcementDiv.textContent = ''; }, 3000);
-        };
-    });
-    </script>
+    <!-- Accessibility Scripts moved to consolidated script.js -->
     
