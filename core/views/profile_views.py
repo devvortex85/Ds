@@ -70,7 +70,7 @@ def profile(request, username):
         'page_type': 'view'
     })
     
-    return render(request, 'core/profile_page.html', context)
+    return render(request, 'core/profiles/profile_page.html', context)
 
 
 @login_required
@@ -98,4 +98,4 @@ def edit_profile(request):
         'page_type': 'edit'
     }
     
-    return render(request, 'core/profile_page.html', context)
+    return render(request, 'core/profiles/profile_page.html', context)

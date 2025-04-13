@@ -18,7 +18,7 @@ def community_list(request):
         post_count=Count('posts')
     ).order_by('-created_at')
     
-    return render(request, 'core/community_page.html', {
+    return render(request, 'core/communities/community_page.html', {
         'communities': communities,
         'title': 'Communities',
         'page_type': 'list'
@@ -45,14 +45,14 @@ def create_community(request):
     else:
         form = CommunityForm()
     
-    return render(request, 'core/community_page.html', {
+    return render(request, 'core/communities/community_page.html', {
         'form': form,
         'title': 'Create Community',
         'page_type': 'create'
     })
 
 
-def community_detail(request, pk, template='core/community_detail.html', extra_context=None):
+def community_detail(request, pk, template='core/communities/community_detail.html', extra_context=None):
     """
     View a community and its posts
     """
