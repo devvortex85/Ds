@@ -1,6 +1,8 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+{% block title %}Donation History{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row">
@@ -8,20 +10,7 @@
             <div class="card shadow">
                 {% include 'core/includes/payment_card_header.html' with title="Your Donation History" %}
                 <div class="card-body">
-                    {% if payments %}
-                        {% include 'core/includes/payments_table.html' with payments=payments %}
-                    {% else %}
-                        {% url 'donate' as donate_url %}
-                        {% include 'core/includes/empty_donations.html' with donate_url=donate_url %}
-                    {% endif %}
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        {% include 'core/includes/action_buttons.html' with 
-                            primary_link="home" primary_text="Return to Home" primary_icon="fas fa-home" primary_class="btn-outline-primary" container_class="" %}
-                        {% include 'core/includes/action_buttons.html' with 
-                            primary_link="donate" primary_text="Make a New Donation" primary_icon="fas fa-donate" primary_class="btn-success" container_class="" %}
-                    </div>
+                    {% include 'core/includes/donation_history_content.html' with payments=payments %}
                 </div>
             </div>
         </div>

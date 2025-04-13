@@ -1,67 +1,25 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+{% block title %}Payment Failed{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <div class="card shadow">
-                {% include 'core/includes/payment_card_header.html' with title="Payment Unsuccessful" bg_class="bg-danger" %}
-                <div class="card-body text-center">
-                    <div class="py-4">
-                        <i class="fas fa-times-circle fa-5x text-danger mb-3"></i>
-                        <h3>There was a problem processing your payment</h3>
-                        
-                        <div class="alert alert-warning my-4">
-                            <p class="lead mb-0">
-                                Your donation could not be processed at this time.
-                            </p>
-                            {% if error_reason %}
-                            <p class="text-danger mt-2">
-                                <strong>Error reason:</strong> {{ error_reason }}
-                            </p>
-                            {% endif %}
-                        </div>
-                        
-                        <p>
-                            This could be due to one of the following reasons:
-                        </p>
-                        
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item">Insufficient funds in your account</li>
-                            <li class="list-group-item">Card information entered incorrectly</li>
-                            <li class="list-group-item">Your bank declined the transaction</li>
-                            <li class="list-group-item">Technical issues with our payment processor</li>
-                        </ul>
-                        
-                        {% if payment_details %}
-                        <div class="mt-4 text-start">
-                            <details>
-                                <summary class="text-primary">Show payment details (for debugging)</summary>
-                                <div class="card mt-2">
-                                    <div class="card-body">
-                                        <table class="table table-striped">
-                                            <tbody>
-                                                {% for key, value in payment_details.items %}
-                                                <tr>
-                                                    <th>{{ key }}</th>
-                                                    <td>{{ value }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </details>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    {% include 'core/includes/action_buttons.html' with 
-                        primary_link="donate" primary_text="Try Again" primary_icon="fas fa-sync" primary_class="btn-primary"
-                        secondary_link="home" secondary_text="Return to Home" secondary_icon="fas fa-home" %}
-                </div>
-            </div>
+            {% include 'core/includes/payment_result.html' with 
+                success=False 
+                title="Payment Unsuccessful" 
+                message="There was a problem processing your payment"
+                error_reason=error_reason
+                payment_details=payment_details
+                action_primary_link="donate" 
+                action_primary_text="Try Again" 
+                action_primary_icon="fas fa-sync" 
+                action_primary_class="btn-primary"
+                action_secondary_link="home" 
+                action_secondary_text="Return to Home" 
+                action_secondary_icon="fas fa-home" %}
         </div>
     </div>
 </div>

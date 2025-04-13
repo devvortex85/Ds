@@ -15,52 +15,10 @@
     </form>
 </div>
 
-{% if pm_messages %}
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>{% trans "Sender" %}</th>
-                <th>{% trans "Subject" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Action" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for message in pm_messages %}
-            <tr{% if message.is_new %} class="table-primary"{% endif %}>
-                <td>{{ message.sender|or_me:user }}</td>
-                <td>
-                    {% if message.is_new %}<span class="badge bg-success">{% trans "New" %}</span>{% endif %}
-                    <a href="{% url 'postman:view' message.pk %}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}">{{ message.subject }}</a>
-                </td>
-                <td>{{ message.sent_at|date:"SHORT_DATETIME_FORMAT" }}</td>
-                <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <form action="{% url 'postman:archive' %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="pks" value="{{ message.pk }}">
-                            <input type="hidden" name="next" value="{{ request.path }}">
-                            <button type="submit" class="btn btn-outline-secondary" title="{% trans 'Archive' %}">
-                                <i class="bi bi-archive"></i>
-                            </button>
-                        </form>
-                        <form action="{% url 'postman:delete' %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="pks" value="{{ message.pk }}">
-                            <input type="hidden" name="next" value="{{ request.path }}">
-                            <button type="submit" class="btn btn-outline-danger" title="{% trans 'Delete' %}">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% else %}
-<p>{% trans "No messages." %}</p>
-{% endif %}
+{% include 'postman/includes/message_list.html' with 
+    pm_messages=pm_messages 
+    action_url='postman:inbox' 
+    user=user 
+    enable_archive=True 
+    enable_delete=True %} 
 {% endblock %}
