@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from django.views.decorators.csrf import csrf_exempt
-from .messaging_views import (
+from core.views.messaging_views import (
     InboxView, SentView, ArchivesView, TrashView,
     WriteView, ReplyView, MessageView
 )

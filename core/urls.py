@@ -3,7 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from payments import urls as payment_urls
-from .messaging_urls import urlpatterns as postman_urls
+from .views.messaging_urls import urlpatterns as postman_urls
 
 urlpatterns = [
     # Home

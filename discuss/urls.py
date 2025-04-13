@@ -12,13 +12,13 @@ urlpatterns = [
     path('markdownx/', include('markdownx.urls')),
     path('api-auth/', include('rest_framework.urls')),
     # Override specific auth URLs with our consolidated templates
-    path('accounts/', include('core.auth_views.urls')),
+    path('accounts/', include('core.views.auth_urls')),
     # Include remaining allauth URLs
     path('accounts/', include('allauth.urls')),
     # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
     # path('user-guide/', include('user_guide.urls')),  # User guide removed from application
     # Override postman URLs with our consolidated views
-    path('messages/', include('core.messaging_urls', namespace='postman')),
+    path('messages/', include('core.views.messaging_urls', namespace='postman')),
     path('', include('core.urls')),
 ]
 
