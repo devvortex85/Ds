@@ -5,7 +5,7 @@
 {% block title %}{{ title|default:"Payment" }}{% endblock %}
 
 {% block content %}
-{% with content_block %}
+{% with content_block='' %}
     {% if page_type == 'form' %}
         <p class="lead">Your donations help us keep the lights on and improve the platform for everyone.</p>
         {% include 'core/includes/donation_form.html' with form=form messages=messages %}
