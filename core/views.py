@@ -310,11 +310,12 @@ def create_text_post(request, community_id):
     else:
         form = TextPostForm()
     
-    return render(request, 'core/create_post.html', {
+    return render(request, 'core/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'text',
         'title': 'Create Text Post',
+        'page_type': 'create'
     })
 
 @login_required
@@ -346,11 +347,12 @@ def create_link_post(request, community_id):
     else:
         form = LinkPostForm()
     
-    return render(request, 'core/create_post.html', {
+    return render(request, 'core/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'link',
         'title': 'Create Link Post',
+        'page_type': 'create'
     })
 
 def post_detail(request, pk):
