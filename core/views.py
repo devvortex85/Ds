@@ -1005,8 +1005,9 @@ def payment_success(request):
     except Payment.DoesNotExist:
         payment = None
     
-    return render(request, 'core/payment_success.html', {
+    return render(request, 'core/payment_result.html', {
         'payment': payment,
+        'success': True,
         'title': 'Payment Successful'
     })
 
@@ -1036,13 +1037,29 @@ def process_payment(request, payment_id):
         messages.error(request, f'Payment processing error: {str(e)}')
         payment.status = 'error'
         payment.save()
+        
+        # Store error information in session for the failure page
+        request.session['payment_error'] = str(e)
+        request.session['payment_details'] = {
+            'payment_id': payment.id,
+            'status': payment.status,
+            'amount': str(payment.total),
+            'created_at': str(payment.created_at),
+        }
+        
         return redirect('payment_failure')
 
 @login_required
 def payment_failure(request):
     """Payment failure page"""
-    return render(request, 'core/payment_failure.html', {
-        'title': 'Payment Failed'
+    error_reason = request.session.get('payment_error', 'Unknown error')
+    payment_details = request.session.get('payment_details', {})
+    
+    return render(request, 'core/payment_result.html', {
+        'success': False,
+        'title': 'Payment Failed',
+        'error_reason': error_reason,
+        'payment_details': payment_details
     })
 
 @login_required
