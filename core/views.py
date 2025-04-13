@@ -32,7 +32,7 @@ def get_unread_notification_count(user):
     """Helper function to get unread notification count for a user"""
     if not user.is_authenticated:
         return 0
-    return Notification.objects.filter(recipient=user, read=False).count()
+    return Notification.objects.filter(recipient=user, is_read=False).count()
 
 @login_required
 def notifications_list(request):

@@ -13,7 +13,14 @@ Parameters:
 <div class="card {{ card_class }}">
     {% if title %}
     <div class="card-header {{ header_class|default:'bg-primary text-white' }}">
-        <h5 class="card-title mb-0">{{ title }}</h5>
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">{{ title }}</h5>
+            {% if header_actions %}
+            <div class="header-actions">
+                {{ header_actions|safe }}
+            </div>
+            {% endif %}
+        </div>
     </div>
     {% endif %}
     
