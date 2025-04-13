@@ -79,7 +79,7 @@ Usage:
             
             <!-- Reply form -->
             {% if show_reply_form|default:True %}
-                {% include 'core/includes/comment_reply_form.html' with comment=comment post=comment.post %}
+                {% include 'core/includes/comment_form.html' with comment=comment post=comment.post is_reply=True inline=True %}
             {% endif %}
             
             <!-- Collapsed thread count -->
