@@ -109,7 +109,7 @@
                     
                     {% elif folder_type == 'sent' or folder_type == 'archives' or folder_type == 'trash' %}
                         {% if pm_messages %}
-                        <form action="{% url action_url %}" method="post">{% csrf_token %}
+                        <form action="{% if folder_type == 'sent' %}{% url 'postman:sent' %}{% elif folder_type == 'archives' %}{% url 'postman:archives' %}{% elif folder_type == 'trash' %}{% url 'postman:trash' %}{% endif %}" method="post">{% csrf_token %}
                             <div class="mb-3">
                                 {{ pm_messages.management_form }}
                                 <table class="table table-hover">
