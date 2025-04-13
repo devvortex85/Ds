@@ -16,7 +16,7 @@
                     
                     {% include 'core/includes/payment_summary.html' with payment=payment title="Donation Summary" show_date=True table_class="table" %}
                     
-                    {% include 'core/includes/payment_method_form.html' with cancel_url='donate' %}
+                    {% include 'core/includes/payment_method_form.html' with cancel_url='donate' use_enhanced_ui=True %}
                 </div>
                 <div class="card-footer text-muted">
                     <small>Your support means a lot to our community. Thank you!</small>
