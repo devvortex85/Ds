@@ -50,20 +50,9 @@
                         <div class="comment-content-column">
                             <div class="comment-meta">
                                 <span class="collapse-indicator">▼</span>
-                                {% if root_comment.author.profile.avatar %}
-                                    <img src="{{ root_comment.author.profile.avatar.url }}" alt="{{ root_comment.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
-                                {% else %}
-                                    <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
-                                {% endif %}
-                                <a href="{% url 'profile' root_comment.author.username %}" class="comment-author me-1">{{ root_comment.author.username }}</a>
-                                
-                                {% if root_comment.author.profile.country %}
-                                <img src="{{ root_comment.author.profile.country.flag }}" alt="{{ root_comment.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
-                                {% endif %}
-                                 
-                                {{ root_comment.author.profile.karma|reputation_badge }}
-                                <span class="mx-1">•</span>
-                                <span>{{ root_comment.created_at|timesince }} ago</span>
+                                {% with comment=root_comment %}
+                                    {% include 'core/includes/comment_author.html' %}
+                                {% endwith %}
                             </div>
                             
                             <div class="comment-body">
@@ -173,20 +162,9 @@
                                     <!-- Comment content -->
                                     <div class="comment-content-column">
                                         <div class="comment-meta">
-                                            {% if node.author.profile.avatar %}
-                                                <img src="{{ node.author.profile.avatar.url }}" alt="{{ node.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
-                                            {% else %}
-                                                <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
-                                            {% endif %}
-                                            <a href="{% url 'profile' node.author.username %}" class="comment-author me-1">{{ node.author.username }}</a>
-                                            
-                                            {% if node.author.profile.country %}
-                                            <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
-                                            {% endif %}
-                                             
-                                            {{ node.author.profile.karma|reputation_badge }}
-                                            <span class="mx-1">•</span>
-                                            <span>{{ node.created_at|timesince }} ago</span>
+                                            {% with comment=node %}
+                                                {% include 'core/includes/comment_author.html' %}
+                                            {% endwith %}
                                         </div>
                                         
                                         <div class="comment-body">

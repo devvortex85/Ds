@@ -80,63 +80,14 @@
                 <div class="comment-wrapper">
                   <!-- Vote controls -->
                   <div class="vote-column">
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'vote_comment' comment.id 'upvote' %}?next={{ request.path }}#comment-{{ comment.id }}" 
-                       class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == 1 %}active voted{% endif %}"
-                       data-comment-id="{{ comment.id }}" 
-                       data-vote-type="upvote"
-                       aria-label="Upvote"
-                       role="button"
-                       tabindex="0">
-                        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-                        <span class="sr-only">Upvote</span>
-                    </a>
-                    {% else %}
-                    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
-                        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-                        <span class="sr-only">Login to upvote</span>
-                    </a>
-                    {% endif %}
-                    
-                    <div class="vote-count" id="comment-{{ comment.id }}-votes" aria-live="polite" aria-label="Comment score: {{ comment.vote_count }}">{{ comment.vote_count }}</div>
-                    
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'vote_comment' comment.id 'downvote' %}?next={{ request.path }}#comment-{{ comment.id }}" 
-                       class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == -1 %}active voted{% endif %}"
-                       data-comment-id="{{ comment.id }}" 
-                       data-vote-type="downvote"
-                       aria-label="Downvote"
-                       role="button"
-                       tabindex="0">
-                        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-                        <span class="sr-only">Downvote</span>
-                    </a>
-                    {% else %}
-                    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
-                        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-                        <span class="sr-only">Login to downvote</span>
-                    </a>
-                    {% endif %}
+                    {% include 'core/includes/comment_rendering.html' %}
                   </div>
                   
                   <!-- Comment content -->
                   <div class="comment-content-column">
                     <div class="comment-meta">
                       <span class="collapse-indicator">▼</span>
-                      {% if comment.author.profile.avatar %}
-                        <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
-                      {% else %}
-                        <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
-                      {% endif %}
-                      <a href="{% url 'profile' comment.author.username %}" class="comment-author me-1">{{ comment.author.username }}</a>
-                      
-                      {% if comment.author.profile.country %}
-                      <img src="{{ comment.author.profile.country.flag }}" alt="{{ comment.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
-                      {% endif %}
-                       
-                      {{ comment.author.profile.karma|reputation_badge }}
-                      <span class="mx-1">•</span>
-                      <span>{{ comment.created_at|timesince }} ago</span>
+                      {% include 'core/includes/comment_author.html' %}
                     </div>
                     
                     <div class="comment-body">
@@ -198,62 +149,17 @@
                       <div class="comment-wrapper">
                         <!-- Vote controls -->
                         <div class="vote-column">
-                          {% if user.is_authenticated %}
-                          <a href="{% url 'vote_comment' node.id 'upvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
-                             class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == 1 %}active voted{% endif %}"
-                             data-comment-id="{{ node.id }}" 
-                             data-vote-type="upvote"
-                             aria-label="Upvote"
-                             role="button"
-                             tabindex="0">
-                              <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-                              <span class="sr-only">Upvote</span>
-                          </a>
-                          {% else %}
-                          <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
-                              <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-                              <span class="sr-only">Login to upvote</span>
-                          </a>
-                          {% endif %}
-                          
-                          <div class="vote-count" id="comment-{{ node.id }}-votes" aria-live="polite" aria-label="Comment score: {{ node.vote_count }}">{{ node.vote_count }}</div>
-                          
-                          {% if user.is_authenticated %}
-                          <a href="{% url 'vote_comment' node.id 'downvote' %}?next={{ request.path }}#comment-{{ node.id }}" 
-                             class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and node.id in user_comment_votes and user_comment_votes|get_item:node.id == -1 %}active voted{% endif %}"
-                             data-comment-id="{{ node.id }}" 
-                             data-vote-type="downvote"
-                             aria-label="Downvote"
-                             role="button"
-                             tabindex="0">
-                              <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-                              <span class="sr-only">Downvote</span>
-                          </a>
-                          {% else %}
-                          <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
-                              <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-                              <span class="sr-only">Login to downvote</span>
-                          </a>
-                          {% endif %}
+                          {% with comment=node %}
+                            {% include 'core/includes/comment_rendering.html' %}
+                          {% endwith %}
                         </div>
                         
                         <!-- Comment content -->
                         <div class="comment-content-column">
                           <div class="comment-meta">
-                            {% if node.author.profile.avatar %}
-                              <img src="{{ node.author.profile.avatar.url }}" alt="{{ node.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
-                            {% else %}
-                              <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
-                            {% endif %}
-                            <a href="{% url 'profile' node.author.username %}" class="comment-author me-1">{{ node.author.username }}</a>
-                            
-                            {% if node.author.profile.country %}
-                            <img src="{{ node.author.profile.country.flag }}" alt="{{ node.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
-                            {% endif %}
-                             
-                            {{ node.author.profile.karma|reputation_badge }}
-                            <span class="mx-1">•</span>
-                            <span>{{ node.created_at|timesince }} ago</span>
+                            {% with comment=node %}
+                              {% include 'core/includes/comment_author.html' %}
+                            {% endwith %}
                           </div>
                           
                           <div class="comment-body">
