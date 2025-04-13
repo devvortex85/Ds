@@ -6,20 +6,22 @@ Parameters:
 - footer_message: Message for the card footer (optional)
 - container_class: Additional CSS classes for container (optional, default: "my-4")
 - card_class: Additional CSS classes for card (optional)
+- header_class: Additional CSS classes for card header (optional, default: "bg-primary text-white")
+- body_class: Additional CSS classes for card body (optional)
 {% endcomment %}
 
 <div class="container {{ container_class|default:'my-4' }}">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card {{ card_class }}">
-                {% include 'core/includes/payment_card_header.html' with title=title %}
-                <div class="card-body" {% if content_block_id %}id="{{ content_block_id }}"{% endif %}>
-                    {{ content }}
-                </div>
-                {% if footer_message %}
-                {% include 'core/includes/payment_card_footer.html' with message=footer_message %}
-                {% endif %}
-            </div>
+            {% include 'core/includes/card_layout.html' with 
+                title=title 
+                content=content 
+                content_block_id=content_block_id 
+                footer_message=footer_message 
+                card_class=card_class 
+                header_class=header_class|default:"bg-primary text-white"
+                body_class=body_class
+                show_footer=footer_message %}
         </div>
     </div>
 </div>

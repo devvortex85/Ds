@@ -16,9 +16,8 @@ Parameters:
 - action_secondary_icon: Secondary action icon class
 {% endcomment %}
 
-<div class="card shadow">
-    {% include 'core/includes/payment_card_header.html' with title=title bg_class=success|yesno:"bg-success,bg-danger" %}
-    <div class="card-body text-center">
+{% with content_block %}
+    <div class="text-center">
         <div class="py-4">
             {% if success %}
                 <i class="fas fa-heart fa-5x text-danger mb-3"></i>
@@ -97,4 +96,10 @@ Parameters:
             primary_link=action_primary_link primary_text=action_primary_text primary_icon=action_primary_icon primary_class=action_primary_class|default:"btn-primary"
             secondary_link=action_secondary_link secondary_text=action_secondary_text secondary_icon=action_secondary_icon %}
     </div>
-</div>
+{% endwith %}
+
+{% include 'core/includes/card_layout.html' with 
+    title=title 
+    content=content_block 
+    header_class=success|yesno:"bg-success text-white,bg-danger text-white"
+    card_class="shadow" %}
