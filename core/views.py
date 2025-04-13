@@ -335,8 +335,12 @@ def post_detail(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Get vote count for post
-    post.vote_count = post.votes.filter(value=1).count() - post.votes.filter(value=-1).count()
+    # Update denormalized vote counts for post
+    upvotes = post.votes.filter(value=1).count()
+    downvotes = post.votes.filter(value=-1).count()
+    post.upvote_count = upvotes
+    post.downvote_count = downvotes
+    post.save(update_fields=['upvote_count', 'downvote_count'])
     
     # Get user's vote for this post if they're logged in
     if request.user.is_authenticated:
@@ -418,7 +422,13 @@ def get_comment_children(comment, user, depth=0, max_depth=3):
     children = Comment.objects.filter(parent=comment).order_by('created_at')
     
     for child in children:
-        child.vote_count = child.votes.filter(value=1).count() - child.votes.filter(value=-1).count()
+        # Update denormalized vote counts
+        upvotes = child.votes.filter(value=1).count()
+        downvotes = child.votes.filter(value=-1).count()
+        child.upvote_count = upvotes
+        child.downvote_count = downvotes
+        child.save(update_fields=['upvote_count', 'downvote_count'])
+        
         child.depth = depth
         
         # Get user's vote for this comment
@@ -444,8 +454,12 @@ def comment_thread(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     post = comment.post
     
-    # Get vote count for comment
-    comment.vote_count = comment.votes.filter(value=1).count() - comment.votes.filter(value=-1).count()
+    # Update denormalized vote counts for comment
+    upvotes = comment.votes.filter(value=1).count()
+    downvotes = comment.votes.filter(value=-1).count()
+    comment.upvote_count = upvotes
+    comment.downvote_count = downvotes
+    comment.save(update_fields=['upvote_count', 'downvote_count'])
     
     # Get user's vote for this comment if they're logged in
     if request.user.is_authenticated:
