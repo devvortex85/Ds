@@ -1315,14 +1315,9 @@ def sentry_test(request):
     """
     # Trigger a ZeroDivisionError for testing Sentry's error tracking
     division_by_zero = 1 / 0
-    
-    
-def bootstrap_icons_demo(request):
-    """
-    Demo page for Bootstrap Icons.
-    This view displays a documentation/showcase page for Bootstrap Icons implementation.
-    """
-    return render(request, 'core/bootstrap_icons_demo.html')
-    
+
+
+
+
     # This line will never be reached due to the exception above
     return render(request, 'core/home.html')
