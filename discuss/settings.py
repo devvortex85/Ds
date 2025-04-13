@@ -165,9 +165,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# All static files are in the core/static directory now
+STATICFILES_DIRS = []
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
