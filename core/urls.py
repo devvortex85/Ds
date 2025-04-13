@@ -39,13 +39,12 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('advanced-search/', views.advanced_search, name='advanced_search'),
     
-    # Notifications - Match the correct function name
+    # Notifications
     path('notifications/', views.notifications_list, name='notifications_list'),
     path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     
-    # Messaging - Handled in main urls.py, so we don't include it here to avoid conflicts
-    # Postman URLs are already included in the main urls.py file with namespace='postman'
+    # Messaging is handled in main urls.py with namespace='postman'
     
     # Donations
     path('donate/', views.donate, name='donate'),  # Function name is donate, not donation_view
