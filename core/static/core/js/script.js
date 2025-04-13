@@ -1,3 +1,8 @@
+/**
+ * Discuss - Unified JavaScript functionality
+ * Consolidated from multiple JS files to avoid redundancy and conflicts
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM loaded - initializing Discuss app features");
     
@@ -8,17 +13,37 @@ document.addEventListener('DOMContentLoaded', function() {
     loadVotesFromLocalStorage();
     setupAjaxVoting();
     
-    // Initialize any tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
+    // Initialize Bootstrap tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    if (tooltipTriggerList.length > 0 && typeof bootstrap !== 'undefined') {
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => 
+            new bootstrap.Tooltip(tooltipTriggerEl)
+        );
+    }
     
     // Add responsive layout adjustments
     applyResponsiveLayout();
     
     // Add keyboard navigation support
     setupKeyboardNavigation();
+    
+    // Set active nav item based on current URL
+    setActiveNavItem();
+    
+    // Initialize Reddit-style comment system if on a post detail page
+    if (document.querySelector('.comment-thread')) {
+        initRedditComments();
+    }
+    
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert-dismissible');
+        alerts.forEach(alert => {
+            alert.style.opacity = '0';
+            alert.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => alert.style.display = 'none', 500);
+        });
+    }, 5000);
     
     // Handle window resize events for responsive adjustments
     window.addEventListener('resize', debounce(applyResponsiveLayout, 250));
@@ -95,6 +120,191 @@ function debounce(func, wait) {
             func.apply(context, args);
         }, wait);
     };
+}
+
+/**
+ * Function to set active nav item based on current URL
+ */
+function setActiveNavItem() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || 
+            (href !== '/' && currentPath.startsWith(href))) {
+            link.classList.add('active');
+        }
+    });
+}
+
+/**
+ * Format numbers for display (e.g., 1000 -> 1k)
+ */
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'm';
+    }
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
+    }
+    return num;
+}
+
+/**
+ * Function to create confirmation dialogs
+ */
+function confirmAction(message, callback) {
+    if (confirm(message)) {
+        callback();
+    }
+}
+
+/**
+ * Initialize the Reddit-style comment system
+ */
+function initRedditComments() {
+    console.log("Initializing Reddit-style comments");
+    
+    // Set up collapsible threads
+    setupThreadCollapsing();
+    
+    // Set up comment voting
+    setupCommentVoting();
+    
+    // Initialize any collapsed threads from localStorage
+    loadCollapsedThreads();
+}
+
+/**
+ * Set up the collapsible thread functionality
+ */
+function setupThreadCollapsing() {
+    // Get all thread collapse lines
+    const collapseLines = document.querySelectorAll('.thread-collapse-line');
+    const rootComments = document.querySelectorAll('.comment-thread > .comment-item .collapse-indicator');
+    
+    // Add event listeners to thread collapse lines
+    collapseLines.forEach(line => {
+        line.addEventListener('click', toggleThreadCollapse);
+        line.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleThreadCollapse.call(this, e);
+            }
+        });
+    });
+    
+    // Add event listeners to root comment collapse indicators
+    rootComments.forEach(indicator => {
+        indicator.parentElement.addEventListener('click', function(e) {
+            // Only collapse if clicking on the meta area with the username/etc
+            if (e.target.closest('.comment-body') || e.target.closest('.comment-actions') || e.target.closest('.reply-form')) {
+                return;
+            }
+            
+            // Get the thread-id from the parent comment-thread
+            const threadItem = this.closest('.comment-thread');
+            if (threadItem) {
+                const threadId = threadItem.dataset.commentId;
+                toggleThreadCollapseById(threadId);
+            }
+        });
+    });
+}
+
+/**
+ * Toggle thread collapse/expand
+ */
+function toggleThreadCollapse(e) {
+    e.preventDefault();
+    const threadId = this.dataset.threadId;
+    toggleThreadCollapseById(threadId);
+}
+
+/**
+ * Toggle thread collapse/expand by comment ID
+ */
+function toggleThreadCollapseById(threadId) {
+    const thread = document.getElementById(`thread-${threadId}`);
+    
+    if (!thread) return;
+    
+    const isCollapsed = thread.classList.contains('collapsed');
+    const nestedComments = thread.querySelector('.nested-comments');
+    
+    if (isCollapsed) {
+        // Expand the thread
+        thread.classList.remove('collapsed');
+        if (nestedComments) {
+            nestedComments.classList.add('animate-in');
+            nestedComments.classList.remove('animate-out');
+        }
+        // Remove from localStorage
+        removeCollapsedThread(threadId);
+    } else {
+        // Collapse the thread
+        thread.classList.add('collapsed');
+        if (nestedComments) {
+            nestedComments.classList.remove('animate-in');
+            nestedComments.classList.add('animate-out');
+        }
+        // Save to localStorage
+        saveCollapsedThread(threadId);
+    }
+}
+
+/**
+ * Save collapsed thread state to localStorage
+ */
+function saveCollapsedThread(threadId) {
+    // Get current collapsed threads
+    let collapsedThreads = JSON.parse(localStorage.getItem('collapsedThreads') || '[]');
+    
+    // Add this thread if not already included
+    if (!collapsedThreads.includes(threadId)) {
+        collapsedThreads.push(threadId);
+        localStorage.setItem('collapsedThreads', JSON.stringify(collapsedThreads));
+    }
+}
+
+/**
+ * Remove thread from collapsed state in localStorage
+ */
+function removeCollapsedThread(threadId) {
+    // Get current collapsed threads
+    let collapsedThreads = JSON.parse(localStorage.getItem('collapsedThreads') || '[]');
+    
+    // Remove this thread if included
+    const index = collapsedThreads.indexOf(threadId);
+    if (index !== -1) {
+        collapsedThreads.splice(index, 1);
+        localStorage.setItem('collapsedThreads', JSON.stringify(collapsedThreads));
+    }
+}
+
+/**
+ * Load collapsed threads from localStorage
+ */
+function loadCollapsedThreads() {
+    // Get collapsed threads from localStorage
+    const collapsedThreads = JSON.parse(localStorage.getItem('collapsedThreads') || '[]');
+    
+    // Collapse each thread
+    collapsedThreads.forEach(threadId => {
+        const thread = document.getElementById(`thread-${threadId}`);
+        if (thread) {
+            thread.classList.add('collapsed');
+        }
+    });
+}
+
+/**
+ * Set up comment voting with AJAX
+ */
+function setupCommentVoting() {
+    // This will use the global setupAjaxVoting function
+    // We don't need a separate implementation
 }
 
 /**
