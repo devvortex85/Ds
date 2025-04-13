@@ -16,7 +16,7 @@ Usage:
 {% endcomment %}
 
 {% load dict_tags %}
-{% load reputation_tags %}
+{% load core_tags %}
 
 <div class="comment-component {% if is_compact %}compact{% endif %}" id="comment-{{ comment.id }}">
     {% if show_indentation|default:False %}

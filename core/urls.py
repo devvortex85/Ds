@@ -3,7 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from payments import urls as payment_urls
-from .views.messaging_urls import urlpatterns as postman_urls
+from .views.notification_views import notification_list, mark_notification_read, mark_all_notifications_read
 
 urlpatterns = [
     # Home
@@ -40,9 +40,9 @@ urlpatterns = [
     path('advanced-search/', views.advanced_search, name='advanced_search'),
     
     # Notifications
-    path('notifications/', views.notification_list, name='notification_list'),
-    path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
-    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path('notifications/', notification_list, name='notification_list'),
+    path('notifications/mark-read/<int:pk>/', mark_notification_read, name='mark_notification_read'),
+    path('notifications/mark-all-read/', mark_all_notifications_read, name='mark_all_notifications_read'),
     
     # Messaging is handled in main urls.py with namespace='postman'
     # See core.messaging_urls and discuss.urls.py for implementation

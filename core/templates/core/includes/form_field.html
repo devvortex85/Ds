@@ -9,7 +9,7 @@ Parameters:
 - input_class: Additional CSS classes for the input (optional)
 - input_attrs: Additional HTML attributes for the input (optional)
 {% endcomment %}
-{% load form_tags %}
+{% load core_tags %}
 
 <div class="mb-3 {% if field.errors %}has-error{% endif %}">
     {% if show_label|default:True %}
