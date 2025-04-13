@@ -83,4 +83,8 @@ class MessageView(BaseMessageView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['folder_type'] = 'view'
+        # Ensure message object has a valid pk when used in reply link
+        if context.get('message') and not context['message'].pk:
+            # If for some reason pk is empty, get it from kwargs
+            context['message'].pk = self.kwargs.get('message_id')
         return context

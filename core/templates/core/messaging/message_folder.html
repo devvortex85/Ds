@@ -251,11 +251,18 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ message.subject }}</h5>
                                 <div class="card-text mb-3">{{ message.body|linebreaksbr }}</div>
+                                <!-- Debug info: Message ID: {{ message.pk|default:'None' }}, Message ID in URL: {{ view.kwargs.message_id }} -->
                                 
                                 <div class="d-flex">
+                                    {% if message.pk %}
                                     <a href="{% url 'postman:reply' message.pk %}" class="btn btn-primary">
                                         <i class="bi bi-reply-fill me-1"></i> {% trans "Reply" %}
                                     </a>
+                                    {% else %}
+                                    <a href="{% url 'postman:reply' view.kwargs.message_id %}" class="btn btn-primary">
+                                        <i class="bi bi-reply-fill me-1"></i> {% trans "Reply" %}
+                                    </a>
+                                    {% endif %}
                                     <a href="{{ next_url }}" class="btn btn-outline-secondary ms-2">
                                         <i class="bi bi-arrow-left me-1"></i> {% trans "Back" %}
                                     </a>
