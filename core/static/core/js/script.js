@@ -439,6 +439,173 @@ function setupCommentReplies() {
     });
 }
 
+/**
+ * Initialize the adaptive sizing system
+ */
+function initAdaptiveSystem() {
+    // Add our custom CSS variables for unified adaptive sizing
+    const style = document.createElement('style');
+    style.innerHTML = `
+        :root {
+            --adaptive-scale: 1;
+            --mobile-scale: 0.85;
+            --tablet-scale: 0.92;
+            --desktop-scale: 1;
+            --large-desktop-scale: 1.1;
+            
+            /* Spacing variables */
+            --base-spacing: calc(0.5rem * var(--adaptive-scale));
+            --spacing-xs: calc(0.25rem * var(--adaptive-scale));
+            --spacing-sm: calc(0.5rem * var(--adaptive-scale));
+            --spacing-md: calc(1rem * var(--adaptive-scale));
+            --spacing-lg: calc(1.5rem * var(--adaptive-scale));
+            --spacing-xl: calc(2rem * var(--adaptive-scale));
+            
+            /* Font size variables */
+            --font-size-xs: calc(0.75rem * var(--adaptive-scale));
+            --font-size-sm: calc(0.875rem * var(--adaptive-scale));
+            --font-size-md: calc(1rem * var(--adaptive-scale));
+            --font-size-lg: calc(1.25rem * var(--adaptive-scale));
+            --font-size-xl: calc(1.5rem * var(--adaptive-scale));
+            --font-size-xxl: calc(2rem * var(--adaptive-scale));
+            
+            /* Border radius */
+            --border-radius-sm: calc(0.25rem * var(--adaptive-scale));
+            --border-radius-md: calc(0.5rem * var(--adaptive-scale));
+            --border-radius-lg: calc(0.75rem * var(--adaptive-scale));
+            
+            /* Icon sizes */
+            --icon-size-sm: calc(1rem * var(--adaptive-scale));
+            --icon-size-md: calc(1.5rem * var(--adaptive-scale));
+            --icon-size-lg: calc(2rem * var(--adaptive-scale));
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Set up adaptive scale based on screen size
+    setAdaptiveScale();
+    
+    // Listen for window resize events to update adaptive scale
+    window.addEventListener('resize', debounce(setAdaptiveScale, 100));
+}
+
+/**
+ * Apply adaptive sizing to all elements
+ */
+function applyAdaptiveSizing() {
+    // Apply font sizes
+    document.querySelectorAll('.adaptive-text-xs').forEach(el => {
+        el.style.fontSize = 'var(--font-size-xs)';
+    });
+    
+    document.querySelectorAll('.adaptive-text-sm').forEach(el => {
+        el.style.fontSize = 'var(--font-size-sm)';
+    });
+    
+    document.querySelectorAll('.adaptive-text-md').forEach(el => {
+        el.style.fontSize = 'var(--font-size-md)';
+    });
+    
+    document.querySelectorAll('.adaptive-text-lg').forEach(el => {
+        el.style.fontSize = 'var(--font-size-lg)';
+    });
+    
+    document.querySelectorAll('.adaptive-text-xl').forEach(el => {
+        el.style.fontSize = 'var(--font-size-xl)';
+    });
+    
+    // Apply spacing
+    document.querySelectorAll('.adaptive-p').forEach(el => {
+        el.style.padding = 'var(--spacing-md)';
+    });
+    
+    document.querySelectorAll('.adaptive-m').forEach(el => {
+        el.style.margin = 'var(--spacing-md)';
+    });
+    
+    document.querySelectorAll('.adaptive-gap').forEach(el => {
+        el.style.gap = 'var(--spacing-md)';
+    });
+    
+    // Apply adaptive sizing to specific components
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+        btn.style.fontSize = 'var(--font-size-lg)';
+    });
+    
+    document.querySelectorAll('.comment-meta').forEach(meta => {
+        meta.style.fontSize = 'var(--font-size-xs)';
+    });
+    
+    document.querySelectorAll('.post-title').forEach(title => {
+        title.style.fontSize = 'var(--font-size-xl)';
+    });
+    
+    document.querySelectorAll('.community-name').forEach(name => {
+        name.style.fontSize = 'var(--font-size-md)';
+    });
+    
+    // Apply adaptive spacing to specific components
+    document.querySelectorAll('.post-card').forEach(card => {
+        card.style.padding = 'var(--spacing-md)';
+        card.style.margin = 'var(--spacing-md) 0';
+        card.style.borderRadius = 'var(--border-radius-md)';
+    });
+    
+    document.querySelectorAll('.comment-item').forEach(item => {
+        item.style.marginBottom = 'var(--spacing-sm)';
+        item.style.paddingLeft = 'var(--spacing-md)';
+    });
+    
+    document.querySelectorAll('.thread-collapse-line').forEach(line => {
+        line.style.width = 'var(--spacing-xs)';
+    });
+    
+    // Apply adaptive icon sizes
+    document.querySelectorAll('.icon-sm').forEach(icon => {
+        icon.style.width = 'var(--icon-size-sm)';
+        icon.style.height = 'var(--icon-size-sm)';
+    });
+    
+    document.querySelectorAll('.icon-md').forEach(icon => {
+        icon.style.width = 'var(--icon-size-md)';
+        icon.style.height = 'var(--icon-size-md)';
+    });
+    
+    document.querySelectorAll('.icon-lg').forEach(icon => {
+        icon.style.width = 'var(--icon-size-lg)';
+        icon.style.height = 'var(--icon-size-lg)';
+    });
+}
+
+/**
+ * Set the adaptive scale based on screen size
+ */
+function setAdaptiveScale() {
+    let adaptiveScale;
+    
+    // Determine scale based on viewport width
+    if (window.innerWidth < 576) {
+        // Mobile phones
+        adaptiveScale = 0.85;
+    } else if (window.innerWidth < 768) {
+        // Large phones and small tablets
+        adaptiveScale = 0.9;
+    } else if (window.innerWidth < 992) {
+        // Tablets
+        adaptiveScale = 0.92;
+    } else if (window.innerWidth < 1200) {
+        // Desktops
+        adaptiveScale = 1;
+    } else {
+        // Large desktops
+        adaptiveScale = 1.1;
+    }
+    
+    // Set the CSS variable
+    document.documentElement.style.setProperty('--adaptive-scale', adaptiveScale);
+    console.log("Setting adaptive scale to:", adaptiveScale);
+}
+
 function setupAjaxVoting() {
     console.log("Setting up AJAX voting");
     
