@@ -41,7 +41,7 @@
                         <a href="{{ message.url }}">{{ message.subject }}</a>
                         {% if message.is_new %}</strong>{% endif %}
                     </td>
-                    <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
+                    <td>{{ message.sent_at|date:"Y-m-d H:i" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

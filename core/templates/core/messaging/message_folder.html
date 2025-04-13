@@ -247,7 +247,7 @@
                                                     <strong>{% trans "From:" %}</strong> {{ msg.obfuscated_sender|or_me:user }}
                                                 </div>
                                                 <div>
-                                                    {{ msg.sent_at|date:"DATETIME_FORMAT" }}
+                                                    {{ msg.sent_at|date:"Y-m-d H:i" }}
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +265,7 @@
                                             <strong>{% trans "From:" %}</strong> {{ message.obfuscated_sender|or_me:user }}
                                         </div>
                                         <div>
-                                            {{ message.sent_at|date:"DATETIME_FORMAT" }}
+                                            {{ message.sent_at|date:"Y-m-d H:i" }}
                                         </div>
                                     </div>
                                 </div>
@@ -298,7 +298,7 @@
                                         {{ thread_message.obfuscated_sender|or_me:user }}
                                     </div>
                                     <div>
-                                        {{ thread_message.sent_at|date:"DATETIME_FORMAT" }}
+                                        {{ thread_message.sent_at|date:"Y-m-d H:i" }}
                                     </div>
                                 </div>
                                 <div class="mt-2">
