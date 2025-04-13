@@ -58,10 +58,7 @@
 
 /* ===== DARK THEME STYLING ===== */
 /* From dark-theme.css */
-body {
-    background-color: #121212 !important;
-    color: #e0e0e0 !important;
-}
+/* body styling consolidated at the Slate theme section */
 
 /* Navbar styling */
 .navbar {
