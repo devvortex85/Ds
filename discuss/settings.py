@@ -101,7 +101,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # All templates are now in the core/templates directory
+            os.path.join(BASE_DIR, 'core/templates'),
+            os.path.join(BASE_DIR, 'core/templates/account'),
+            os.path.join(BASE_DIR, 'core/templates/account/includes'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
