@@ -59,14 +59,14 @@ def mark_notification_read(request, pk):
     elif notification.comment:
         return redirect('post_detail', pk=notification.comment.post.id)
     
-    return redirect('notifications_list')
+    return redirect('notification_list')
 
 @login_required
 def mark_all_notifications_read(request):
     """View to mark all notifications as read"""
     Notification.objects.filter(recipient=request.user).update(is_read=True)
     messages.success(request, 'All notifications marked as read.')
-    return redirect('notifications_list')
+    return redirect('notification_list')
 
 def home(request, template='core/index.html', extra_context=None):
     """
@@ -153,7 +153,7 @@ def profile(request, username):
         'page_type': 'view'
     })
     
-    return render(request, 'core/profile_page.html', context)
+    return render(request, 'core/profile/profile_page.html', context)
 
 @login_required
 def edit_profile(request):
@@ -180,7 +180,7 @@ def edit_profile(request):
         'page_type': 'edit'
     }
     
-    return render(request, 'core/profile_page.html', context)
+    return render(request, 'core/profile/profile_page.html', context)
 
 def community_list(request):
     """
@@ -191,7 +191,7 @@ def community_list(request):
         post_count=Count('posts')
     ).order_by('-created_at')
     
-    return render(request, 'core/community_page.html', {
+    return render(request, 'core/community/community_page.html', {
         'communities': communities,
         'title': 'Communities',
         'page_type': 'list'
