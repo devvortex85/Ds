@@ -83,6 +83,10 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.head.appendChild(style);
         
+        // Get current scale and log it
+        const scale = window.innerWidth < 576 ? '0.85' : (window.innerWidth < 992 ? '0.92' : '1');
+        console.log("Setting adaptive scale to:", scale);
+        
         // Add adaptive classes to various elements
         addAdaptiveClasses();
     }
