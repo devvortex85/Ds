@@ -1022,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize payment method visibility on the payment/confirmation page
     initPaymentMethodVisibility();
-}
+});
 
 /**
  * Initialize and handle payment method visibility on the payment/confirmation page
