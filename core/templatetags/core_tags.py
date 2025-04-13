@@ -172,6 +172,19 @@ def get_reputation_progress(user):
         return 0
 
 @register.filter
+def or_me(username, user):
+    """
+    Used in messaging system to replace username with 'me' when the user 
+    is the current user.
+    
+    Usage:
+    {{ message.sender|or_me:request.user }}
+    """
+    if user.username == username or str(user.pk) == username:
+        return "me"
+    return username
+
+@register.filter
 def reputation_badge(user_or_karma):
     """
     Generate an HTML badge for user reputation level.
