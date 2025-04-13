@@ -4,7 +4,7 @@
 {% block title %}Donate to Discuss{% endblock %}
 
 {% block content %}
-{% with content_block %}
+{% with content_block as page_content %}
     <p class="lead">Your donations help us keep the lights on and improve the platform for everyone.</p>
     
     {% include 'core/includes/donation_form.html' with form=form messages=messages %}
@@ -12,7 +12,7 @@
 
 {% include 'core/includes/payment_layout.html' with 
     title="Support Discuss" 
-    content=content_block 
+    content=page_content 
     footer_message="Payments are secure and processed via our payment provider." %}
 
 <!-- Donation form JavaScript has been moved to the consolidated script.js file -->
