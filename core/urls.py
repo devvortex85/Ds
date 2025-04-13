@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from payments import urls as payment_urls
+from .messaging_urls import urlpatterns as postman_urls
 
 urlpatterns = [
     # Home
@@ -39,7 +40,7 @@ urlpatterns = [
     path('advanced-search/', views.advanced_search, name='advanced_search'),
     
     # Notifications
-    path('notifications/', views.notifications_list, name='notification_list'),
+    path('notifications/', views.notification_list, name='notification_list'),
     path('notifications/mark-read/<int:pk>/', views.mark_notification_read, name='mark_notification_read'),
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     

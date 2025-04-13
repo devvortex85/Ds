@@ -26,7 +26,7 @@ from .post_views import (
 
 # Notification views
 from .notification_views import (
-    notifications_list, mark_notification_read,
+    notification_list, mark_notification_read,
     mark_all_notifications_read, get_unread_notification_count
 )
 

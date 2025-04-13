@@ -15,7 +15,7 @@ def get_unread_notification_count(user):
 
 
 @login_required
-def notifications_list(request):
+def notification_list(request):
     """View to display all notifications for the current user"""
     notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
     unread_count = get_unread_notification_count(request.user)
