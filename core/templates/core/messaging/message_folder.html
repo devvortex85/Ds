@@ -203,16 +203,88 @@
                         </div>
                         {% endif %}
                         
-                        {% include 'core/includes/postman/includes/message_form.html' with 
-                            form=form 
-                            recipient=recipient 
-                            subject=subject %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for field in form.visible_fields %}
+                                    <div class="mb-3">
+                                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                        {% endif %}
+                                        {% if field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in field.errors %}
+                                            {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <div class="d-flex mt-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-envelope-fill me-1"></i> {% trans "Send" %}
+                                        </button>
+                                        <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">
+                                            <i class="bi bi-arrow-left me-1"></i> {% trans "Cancel" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     
                     {% elif folder_type == 'view' %}
-                        {% include 'core/includes/postman/includes/message_detail.html' with message=message user=user next_url=next_url reply_to_pk=reply_to_pk %}
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{% trans "From:" %}</strong> {{ message.obfuscated_sender|or_me:user }}
+                                    </div>
+                                    <div>
+                                        {{ message.sent_at|date:"DATETIME_FORMAT" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ message.subject }}</h5>
+                                <div class="card-text mb-3">{{ message.body|linebreaksbr }}</div>
+                                
+                                <div class="d-flex">
+                                    <a href="{% url 'postman:reply' message.pk %}" class="btn btn-primary">
+                                        <i class="bi bi-reply-fill me-1"></i> {% trans "Reply" %}
+                                    </a>
+                                    <a href="{{ next_url }}" class="btn btn-outline-secondary ms-2">
+                                        <i class="bi bi-arrow-left me-1"></i> {% trans "Back" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         
                         {% if message.thread_id %}
-                        {% include 'core/includes/postman/includes/message_thread.html' with thread_messages=thread_messages user=user %}
+                        <h4 class="mt-4 mb-3">{% trans "Conversation" %}</h4>
+                        <div class="list-group">
+                            {% for thread_message in thread_messages %}
+                            <div class="list-group-item {% if thread_message.pk == message.pk %}active{% endif %}">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{% trans "From:" %}</strong> 
+                                        {{ thread_message.obfuscated_sender|or_me:user }}
+                                    </div>
+                                    <div>
+                                        {{ thread_message.sent_at|date:"DATETIME_FORMAT" }}
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{% url 'postman:view' thread_message.pk %}" class="{% if thread_message.pk == message.pk %}text-white{% endif %}">
+                                        {{ thread_message.subject }}
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     
                     {% endif %}
