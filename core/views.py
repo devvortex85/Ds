@@ -1008,10 +1008,12 @@ def payment_success(request):
     except Payment.DoesNotExist:
         payment = None
     
-    return render(request, 'core/payment_result.html', {
+    return render(request, 'core/payment_page.html', {
         'payment': payment,
         'success': True,
-        'title': 'Payment Successful'
+        'title': 'Payment Successful',
+        'page_type': 'result',
+        'result_title': 'Thank You for Your Support!'
     })
 
 @login_required
@@ -1058,11 +1060,13 @@ def payment_failure(request):
     error_reason = request.session.get('payment_error', 'Unknown error')
     payment_details = request.session.get('payment_details', {})
     
-    return render(request, 'core/payment_result.html', {
+    return render(request, 'core/payment_page.html', {
         'success': False,
         'title': 'Payment Failed',
         'error_reason': error_reason,
-        'payment_details': payment_details
+        'payment_details': payment_details,
+        'page_type': 'result',
+        'result_title': 'Payment Unsuccessful'
     })
 
 @login_required
