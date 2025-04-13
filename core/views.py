@@ -68,7 +68,7 @@ def mark_all_notifications_read(request):
     messages.success(request, 'All notifications marked as read.')
     return redirect('notification_list')
 
-def home(request, template='core/index.html', extra_context=None):
+def home(request, template='core/common/index.html', extra_context=None):
     """
     Homepage view showing a list of posts with various filtering options
     """
@@ -1194,7 +1194,7 @@ def sentry_status(request):
     sentry_dsn = os.environ.get('SENTRY_DSN', '')
     sentry_enabled = bool(sentry_dsn and 'sentry_sdk' in globals())
     
-    return render(request, 'core/sentry_status.html', {
+    return render(request, 'core/utils/sentry_status.html', {
         'sentry_enabled': sentry_enabled,
         'title': 'Sentry Status'
     })
@@ -1208,4 +1208,4 @@ def sentry_test(request):
     division_by_zero = 1 / 0
     
     # This line will never be reached due to the exception above
-    return render(request, 'core/home.html')
+    return render(request, 'core/common/home.html')
