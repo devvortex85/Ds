@@ -1,5 +1,8 @@
 from django import template
 from django.db.models import Q, Count
+from django.utils.safestring import mark_safe
+from django.forms import widgets
+import os
 
 register = template.Library()
 
@@ -37,7 +40,23 @@ def unread_message_count(user):
         return 0
         
     # Import here to avoid circular imports
-    from postman.models import Message
+    try:
+        from postman.models import Message
+        return Message.objects.inbox_unread_count(user)
+    except ImportError:
+        return 0
+
+@register.filter
+def class_name(obj):
+    """
+    Return the class name of an object
     
-    # Count unread messages
-    return Message.objects.inbox_unread_count(user)
+    Usage:
+    {{ object|class_name }}
+    
+    Example:
+    {% if object|class_name == 'User' %}
+        <!-- do something -->
+    {% endif %}
+    """
+    return obj.__class__.__name__
