@@ -77,6 +77,10 @@ core/                   # Main application
 ├── forms.py            # Form classes
 ├── models.py           # Database models
 └── urls.py             # URL configuration
+utils/                  # Utility scripts
+├── check_comments.py   # Script to list posts with comments
+├── migrate_data.py     # Database migration utility for SQLite to PostgreSQL
+└── reset_sequences.py  # PostgreSQL sequence reset utility
 ```
 
 ### Code Organization Principles
@@ -86,6 +90,26 @@ core/                   # Main application
 3. **JavaScript Consolidation**: Core functionality is in `script.js` with specialized functions as needed.
 4. **Template Tags**: Consolidated in `core_tags.py` for better maintainability.
 5. **View Organization**: Views are separated by feature in the `views/` directory.
+6. **Utility Scripts**: Database and maintenance utilities are stored in the `utils/` directory.
+
+### Utility Scripts
+
+The `utils/` directory contains helpful scripts for database management and debugging:
+
+1. **check_comments.py**: Lists all posts that have comments with their count
+   ```
+   python -c "import django; django.setup(); from utils import check_comments"
+   ```
+
+2. **migrate_data.py**: Migrates data from SQLite to PostgreSQL
+   ```
+   python utils/migrate_data.py
+   ```
+
+3. **reset_sequences.py**: Resets PostgreSQL sequences after data migration or manual edits
+   ```
+   python utils/reset_sequences.py
+   ```
 
 ## Development Environment Setup
 
