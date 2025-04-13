@@ -56,7 +56,7 @@ def mark_notification_read(request, pk):
     if notification.link:
         return redirect(notification.link)
     
-    return redirect('notifications')
+    return redirect('notifications_list')
 
 @login_required
 def mark_all_notifications_read(request):
