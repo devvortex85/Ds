@@ -861,7 +861,7 @@ def search(request):
         }
     })
     
-    return render(request, 'core/search_page.html', context)
+    return render(request, 'core/search/search_page.html', context)
 
 def advanced_search(request):
     """Advanced search with full-text search and filtering capabilities"""
