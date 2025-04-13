@@ -1,65 +1,74 @@
 {% comment %}
-  Template for rendering a form field with consistent styling
-  
-  Parameters:
-  - field: The form field to render (required)
-  - label_class: Additional CSS classes for the label (optional)
-  - field_class: Additional CSS classes for the field (optional)
-  - help_text_class: Additional CSS classes for the help text (optional)
-  - error_class: Additional CSS classes for error messages (optional)
-  
-  Usage:
-  {% include 'core/includes/form_field.html' with field=form.field_name %}
+Consolidated form field template
+Parameters:
+- field: The form field to render
+- show_label: Boolean to display the label (default: True)
+- custom_label: Custom label text (optional)
+- placeholder: Custom placeholder text (optional)
+- help_text: Custom help text (optional)
+- input_class: Additional CSS classes for the input (optional)
+- input_attrs: Additional HTML attributes for the input (optional)
 {% endcomment %}
 
-<div class="mb-3">
-    {% if field.label %}
-        <label for="{{ field.id_for_label }}" class="form-label {{ label_class }}">{{ field.label }}</label>
+<div class="mb-3 {% if field.errors %}has-error{% endif %}">
+    {% if show_label|default:True %}
+    <label for="{{ field.id_for_label }}" class="form-label">
+        {{ custom_label|default:field.label }}
+        {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+    </label>
     {% endif %}
     
-    {% if field|field_type == 'CharField' and field.widget_type != 'Textarea' %}
-        <input type="{{ field.field.widget.input_type|default:'text' }}" 
-               name="{{ field.html_name }}" 
-               id="{{ field.id_for_label }}" 
-               class="form-control {% if field.errors %}is-invalid{% endif %} {{ field_class }}" 
-               {% if field.value %}value="{{ field.value }}"{% endif %} 
-               {% if field.field.required %}required{% endif %}>
-    {% elif field.widget_type == 'Textarea' %}
-        <textarea name="{{ field.html_name }}" 
-                  id="{{ field.id_for_label }}" 
-                  class="form-control {% if field.errors %}is-invalid{% endif %} {{ field_class }}" 
-                  rows="5" 
-                  {% if field.field.required %}required{% endif %}>{% if field.value %}{{ field.value }}{% endif %}</textarea>
-    {% elif field|field_type == 'BooleanField' %}
+    {% if field|fieldtype == 'CheckboxInput' %}
         <div class="form-check">
-            <input type="checkbox" 
-                   name="{{ field.html_name }}" 
-                   id="{{ field.id_for_label }}" 
-                   class="form-check-input {% if field.errors %}is-invalid{% endif %} {{ field_class }}" 
-                   {% if field.value %}checked{% endif %} 
-                   {% if field.field.required %}required{% endif %}>
-            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            <label class="form-check-label" for="{{ field.id_for_label }}">
+                {{ custom_label|default:field.label }}
+            </label>
         </div>
-    {% elif field|field_type == 'ChoiceField' %}
-        <select name="{{ field.html_name }}" 
-                id="{{ field.id_for_label }}" 
-                class="form-select {% if field.errors %}is-invalid{% endif %} {{ field_class }}" 
-                {% if field.field.required %}required{% endif %}>
-            {% for choice in field.field.choices %}
-                <option value="{{ choice.0 }}" {% if field.value == choice.0|stringformat:"s" %}selected{% endif %}>{{ choice.1 }}</option>
-            {% endfor %}
-        </select>
-    {% else %}
+    {% elif field|fieldtype == 'RadioSelect' %}
         {{ field }}
-    {% endif %}
-    
-    {% if field.help_text %}
-        <div class="form-text {{ help_text_class }}">{{ field.help_text }}</div>
+    {% elif field|fieldtype == 'CheckboxSelectMultiple' %}
+        {{ field }}
+    {% elif field|fieldtype == 'Select' or field|fieldtype == 'SelectMultiple' %}
+        {{ field }}
+    {% elif field|fieldtype == 'Textarea' %}
+        <textarea name="{{ field.name }}"
+                  id="{{ field.id_for_label }}"
+                  class="form-control {{ input_class|default:'' }}"
+                  placeholder="{{ placeholder|default:field.field.widget.attrs.placeholder|default:'' }}"
+                  {% if field.field.required %}required{% endif %}
+                  {{ input_attrs|default:'' }}
+                  rows="{{ field.field.widget.attrs.rows|default:'3' }}">{{ field.value|default:'' }}</textarea>
+    {% elif field|fieldtype == 'FileInput' %}
+        {% if field.value %}
+        <div class="mb-2">
+            <p class="form-text">Current: {{ field.value }}</p>
+            {% if field.value|is_image %}
+            <img src="{{ field.value.url }}" alt="Current image" class="img-thumbnail mb-2" style="max-width: 200px;">
+            {% endif %}
+        </div>
+        {% endif %}
+        {{ field }}
+    {% else %}
+        <input type="{{ field.field.widget.input_type|default:'text' }}"
+               name="{{ field.name }}"
+               id="{{ field.id_for_label }}"
+               class="form-control {{ input_class|default:'' }}"
+               placeholder="{{ placeholder|default:field.field.widget.attrs.placeholder|default:'' }}"
+               value="{{ field.value|default:'' }}"
+               {% if field.field.required %}required{% endif %}
+               {{ input_attrs|default:'' }}>
     {% endif %}
     
     {% if field.errors %}
-        <div class="invalid-feedback {{ error_class }}">
-            {% for error in field.errors %}{{ error }}{% endfor %}
-        </div>
+    <div class="text-danger">
+        {% for error in field.errors %}
+        <small>{{ error }}</small>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if help_text or field.help_text %}
+    <div class="form-text">{{ help_text|default:field.help_text }}</div>
     {% endif %}
 </div>

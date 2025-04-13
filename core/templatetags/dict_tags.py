@@ -4,14 +4,14 @@ register = template.Library()
 
 @register.filter
 def get_item(dictionary, key):
-    """Get an item from a dictionary using key."""
+    """
+    Get an item from a dictionary using the key.
+    This is useful in templates to access dictionary values by key, since Django 
+    templates don't allow dictionary lookups with variables.
+    
+    Usage:
+    {{ dictionary|get_item:key_variable }}
+    """
     if dictionary is None:
         return None
     return dictionary.get(key)
-
-@register.filter
-def nesting_color(comment_id):
-    """Returns a number from 1-5 based on the comment ID, for colorizing nested comments."""
-    if comment_id is None:
-        return 1
-    return (int(comment_id) % 5) + 1

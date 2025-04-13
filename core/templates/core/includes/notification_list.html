@@ -1,76 +1,56 @@
 {% comment %}
-Consolidated notification list template for displaying user notifications
+Consolidated notification list template
 Parameters:
 - notifications: List of notification objects
-- show_header: Boolean to display header with mark all read button (default: False)
+- show_pagination: Boolean to show pagination (default: True)
+- empty_message: Message to show when no notifications (default: "No notifications")
 {% endcomment %}
 
-{% if show_header %}
-<!-- Header with notification count and mark all read button -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">Notifications</h1>
-    {% if notifications %}
-        <form method="post" action="{% url 'mark_all_notifications_read' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-secondary btn-sm">
-                <i class="fas fa-check-double me-2"></i> Mark all as read
-            </button>
-        </form>
-    {% endif %}
+{% if notifications %}
+<div class="notification-list">
+    {% for notification in notifications %}
+    <div class="notification-item {% if not notification.is_read %}unread{% endif %}" id="notification-{{ notification.id }}">
+        <div class="notification-icon">
+            {% if notification.notification_type == 'mention' %}
+            <i class="bi bi-at text-info" aria-hidden="true"></i>
+            {% elif notification.notification_type == 'reply' %}
+            <i class="bi bi-reply-fill text-success" aria-hidden="true"></i>
+            {% elif notification.notification_type == 'vote' %}
+            <i class="bi bi-hand-thumbs-up-fill text-primary" aria-hidden="true"></i>
+            {% else %}
+            <i class="bi bi-bell-fill text-secondary" aria-hidden="true"></i>
+            {% endif %}
+        </div>
+        <div class="notification-content">
+            <div class="notification-text">{{ notification.text }}</div>
+            <div class="notification-meta">
+                <small class="text-muted">{{ notification.created_at|timesince }} ago from @{{ notification.sender.username }}</small>
+            </div>
+            <div class="notification-actions">
+                {% if notification.post %}
+                <a href="{% url 'post_detail' notification.post.id %}" class="btn btn-sm btn-outline-primary">View Post</a>
+                {% endif %}
+                {% if notification.comment %}
+                <a href="{% url 'post_detail' notification.comment.post.id %}#comment-{{ notification.comment.id }}" class="btn btn-sm btn-outline-primary">View Comment</a>
+                {% endif %}
+                {% if not notification.is_read %}
+                <form method="post" action="{% url 'mark_notification_read' notification.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Mark Read</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
+
+{% if show_pagination|default:True %}
+    {% include 'core/includes/pagination.html' with page_obj=notifications %}
 {% endif %}
 
-<!-- Notification list -->
-<div class="card">
-    <div class="list-group list-group-flush">
-        {% if notifications %}
-            {% for notification in notifications %}
-                <div class="list-group-item list-group-item-action {% if not notification.is_read %}bg-light{% endif %}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-1">
-                            {% if notification.notification_type == 'mention' %}
-                                <i class="fas fa-at text-primary me-2"></i>
-                            {% elif notification.notification_type == 'reply' %}
-                                <i class="fas fa-reply text-success me-2"></i>
-                            {% elif notification.notification_type == 'vote' %}
-                                <i class="fas fa-arrow-up text-warning me-2"></i>
-                            {% endif %}
-                            {{ notification.text }}
-                        </h6>
-                        <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
-                    </div>
-                    
-                    <!-- Action buttons -->
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div>
-                            {% if notification.post %}
-                                <a href="{% url 'post_detail' notification.post.id %}" class="btn btn-sm btn-primary me-2">
-                                    <i class="fas fa-external-link-alt me-1"></i> View Post
-                                </a>
-                            {% elif notification.comment %}
-                                <a href="{% url 'post_detail' notification.comment.post.id %}#comment-{{ notification.comment.id }}" class="btn btn-sm btn-primary me-2">
-                                    <i class="fas fa-external-link-alt me-1"></i> View Comment
-                                </a>
-                            {% endif %}
-                        </div>
-                        
-                        {% if not notification.is_read %}
-                            <form method="post" action="{% url 'mark_notification_read' notification.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fas fa-check me-1"></i> Mark as read
-                                </button>
-                            </form>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="list-group-item py-4 text-center">
-                <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
-                <p class="mb-0">You don't have any notifications yet.</p>
-                <p class="text-muted small">Notifications will appear when someone mentions you, replies to your posts or comments.</p>
-            </div>
-        {% endif %}
-    </div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    {{ empty_message|default:"No notifications" }}
 </div>
+{% endif %}

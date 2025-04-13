@@ -1,50 +1,97 @@
 from django import template
+from core.models import Profile
 from django.utils.safestring import mark_safe
 
 register = template.Library()
 
 @register.filter
-def get_item(dictionary, key):
-    """Get an item from a dictionary using the key"""
-    if dictionary is None:
-        return None
-    return dictionary.get(key)
-
-@register.filter(is_safe=True)
-def reputation_badge(karma):
-    """Display a reputation badge based on karma level with Bootstrap Icons"""
-    if karma >= 10000:
-        badge = '<span class="badge bg-danger"><i class="bi bi-trophy-fill"></i></span>'
-    elif karma >= 5000:
-        badge = '<span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i></span>'
-    elif karma >= 2500:
-        badge = '<span class="badge bg-primary"><i class="bi bi-patch-check-fill"></i></span>'
-    elif karma >= 1000:
-        badge = '<span class="badge bg-info text-dark"><i class="bi bi-award"></i></span>'
-    elif karma >= 500:
-        badge = '<span class="badge bg-success"><i class="bi bi-shield-fill"></i></span>'
-    elif karma >= 100:
-        badge = '<span class="badge bg-secondary"><i class="bi bi-person-check-fill"></i></span>'
-    else:
-        badge = '<span class="badge bg-light text-dark"><i class="bi bi-person"></i></span>'
+def get_reputation_level(user):
+    """
+    Get the current reputation level of a user based on their karma.
     
-    return mark_safe(badge)
-
-@register.filter(is_safe=True)
-def reputation_level_badge(level_name, karma=0):
-    """Display a reputation level badge with appropriate styling and icons"""
-    level_badges = {
-        'New User': '<span class="badge bg-light text-dark"><i class="bi bi-person"></i></span>',
-        'Regular': '<span class="badge bg-secondary"><i class="bi bi-person-check-fill"></i></span>',
-        'Established Member': '<span class="badge bg-success"><i class="bi bi-shield-fill"></i></span>',
-        'Trusted Contributor': '<span class="badge bg-info text-dark"><i class="bi bi-award"></i></span>',
-        'Expert': '<span class="badge bg-primary"><i class="bi bi-patch-check-fill"></i></span>',
-        'Community Leader': '<span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i></span>',
-        'Legend': '<span class="badge bg-danger"><i class="bi bi-trophy-fill"></i></span>',
-    }
+    Usage:
+    {{ user|get_reputation_level }}
+    """
+    if user.is_anonymous:
+        return "Guest"
     
-    if level_name in level_badges:
-        return mark_safe(level_badges[level_name])
-    else:
-        # Default badge if level name not found
-        return mark_safe('<span class="badge bg-secondary"><i class="bi bi-question-circle"></i></span>')
+    try:
+        profile = user.profile
+        return profile.get_reputation_level()
+    except (Profile.DoesNotExist, AttributeError):
+        return "New User"
+
+@register.filter
+def get_reputation_progress(user):
+    """
+    Get the progress to the next reputation level as a percentage.
+    
+    Usage:
+    {{ user|get_reputation_progress }}
+    """
+    if user.is_anonymous:
+        return 0
+    
+    try:
+        profile = user.profile
+        return profile.get_reputation_progress()
+    except (Profile.DoesNotExist, AttributeError):
+        return 0
+
+@register.filter
+def reputation_badge(user_or_karma):
+    """
+    Generate an HTML badge for user reputation level.
+    Can be given either a user object or a karma integer value.
+    
+    Usage:
+    {{ user|reputation_badge }}
+    {{ karma_value|reputation_badge }}
+    """
+    try:
+        # Handle if we're given a karma value directly
+        if isinstance(user_or_karma, int):
+            karma = user_or_karma
+            # Get the reputation level based on karma
+            level = "New User"
+            if karma >= 10000:
+                level = "Legend"
+            elif karma >= 5000:
+                level = "Community Leader"
+            elif karma >= 2500:
+                level = "Expert"
+            elif karma >= 1000:
+                level = "Trusted Contributor"
+            elif karma >= 500:
+                level = "Established Member"
+            elif karma >= 100:
+                level = "Regular"
+        # Handle user object
+        elif hasattr(user_or_karma, 'is_anonymous'):
+            if user_or_karma.is_anonymous:
+                return ""
+            profile = user_or_karma.profile
+            level = profile.get_reputation_level()
+            karma = profile.karma
+        else:
+            return ""
+        
+        # Determine badge style based on karma
+        badge_class = "bg-secondary"  # Default badge style
+        
+        if karma >= 10000:  # Legend
+            badge_class = "bg-danger"
+        elif karma >= 5000:  # Community Leader
+            badge_class = "bg-warning text-dark"
+        elif karma >= 2500:  # Expert
+            badge_class = "bg-info text-dark"
+        elif karma >= 1000:  # Trusted Contributor
+            badge_class = "bg-primary"
+        elif karma >= 500:   # Established Member
+            badge_class = "bg-success"
+        elif karma >= 100:   # Regular
+            badge_class = "bg-light text-dark"
+        
+        return mark_safe(f'<span class="badge {badge_class} ms-1">{level}</span>')
+    except (Profile.DoesNotExist, AttributeError, TypeError):
+        return ""
