@@ -966,7 +966,7 @@ def donate(request):
     else:
         form = DonationForm()
     
-    return render(request, 'core/donation_page.html', {
+    return render(request, 'core/payment_page.html', {
         'form': form,
         'title': 'Support Discuss',
         'page_type': 'form'
@@ -989,7 +989,7 @@ def donation_confirmation(request):
         # User confirmed the donation, proceed to payment processing
         return redirect('process_payment', payment_id=payment.id)
     
-    return render(request, 'core/donation_page.html', {
+    return render(request, 'core/payment_page.html', {
         'payment': payment,
         'title': 'Confirm Your Donation',
         'page_type': 'confirmation',
@@ -1075,7 +1075,7 @@ def donation_history(request):
         total=Sum('total')
     )['total'] or 0
     
-    return render(request, 'core/donation_page.html', {
+    return render(request, 'core/payment_page.html', {
         'payments': payments,
         'total_donated': total_donated,
         'title': 'Your Donation History',
