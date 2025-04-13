@@ -1,6 +1,12 @@
 /**
  * Discuss - Unified JavaScript functionality
  * Consolidated from multiple JS files to avoid redundancy and conflicts
+ * Includes:
+ * - Core application features
+ * - AJAX voting system 
+ * - Comment threading functionality
+ * - Adaptive sizing system
+ * - UI responsiveness
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -20,6 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
             new bootstrap.Tooltip(tooltipTriggerEl)
         );
     }
+    
+    // Initialize the adaptive sizing system
+    initAdaptiveSystem();
+    
+    // Apply initial sizing
+    applyAdaptiveSizing();
     
     // Add responsive layout adjustments
     applyResponsiveLayout();
