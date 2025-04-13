@@ -342,7 +342,7 @@ def delete_post(request, pk):
         messages.success(request, 'Your post has been deleted.')
         return redirect('community_detail', pk=community_id)
     
-    return render(request, 'core/confirmation_page.html', {
+    return render(request, 'core/utility/confirmation_page.html', {
         'title': 'Delete Post',
         'message': f'Are you sure you want to delete the post "{post.title}"?',
         'confirm_url': reverse('delete_post', kwargs={'pk': post.pk}),
@@ -433,7 +433,7 @@ def delete_comment(request, pk):
         messages.success(request, 'Your comment has been deleted.')
         return redirect('post_detail', pk=post_id)
     
-    return render(request, 'core/confirmation_page.html', {
+    return render(request, 'core/utility/confirmation_page.html', {
         'title': 'Delete Comment',
         'message': 'Are you sure you want to delete this comment?',
         'confirm_url': reverse('delete_comment', kwargs={'pk': comment.pk}),
