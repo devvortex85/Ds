@@ -220,46 +220,13 @@
         </div>
     </article>
 
-    <!-- Add a comment -->
-    {% if user.is_authenticated %}
-    <section class="card mb-4" aria-labelledby="comment-form-heading">
-        <div class="card-body p-3">
-            <h2 id="comment-form-heading" class="sr-only">Add a comment</h2>
-            <div class="d-flex align-items-center mb-3">
-                {% if user.profile.avatar %}
-                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
-                {% else %}
-                    <div class="avatar-placeholder rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #e9ecef;" aria-hidden="true">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
-                {% endif %}
-                <span>Comment as <a href="{% url 'profile' user.username %}" class="fw-bold">{{ user.username }}</a></span>
-            </div>
-            <form method="post" action="{% url 'add_comment' post.id %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="content_id_content" class="form-label sr-only">Comment text</label>
-                    {{ comment_form.content }}
-                </div>
-                <button type="submit" class="btn btn-primary">Comment</button>
-            </form>
-        </div>
-    </section>
-    {% endif %}
-
     <!-- Comments -->
     <section class="card" aria-labelledby="comments-heading">
         <div class="card-header bg-primary text-white">
             <h2 id="comments-heading" class="h5 card-title mb-0">Comments ({{ total_comments_count }})</h2>
         </div>
         <div class="card-body p-0">
-            {% if comments %}
-                {% include 'core/reddit_comments.html' %}
-            {% else %}
-                <div class="list-group-item p-4 text-center" aria-live="polite">
-                    <p class="mb-0 text-muted">No comments yet. Be the first to comment!</p>
-                </div>
-            {% endif %}
+            {% include 'core/includes/comments_display.html' with post=post comments=comments %}
         </div>
     </section>
 </div>

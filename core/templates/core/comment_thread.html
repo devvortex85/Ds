@@ -74,46 +74,7 @@
         </div>
         <div class="card-body p-0">
           <div class="comments-container" aria-label="Comments section">
-            <!-- Root comment (the continued thread starting point) -->
-            <div class="comment-thread" id="thread-{{ comment.id }}" data-comment-id="{{ comment.id }}">
-              <!-- Root comment rendering -->
-              <article id="comment-{{ comment.id }}" class="comment-item">
-                <div class="comment-wrapper">
-                  <!-- Vote controls -->
-                  <div class="vote-column">
-                    {% include 'core/includes/comment_rendering.html' %}
-                  </div>
-                  
-                  <!-- Comment content -->
-                  <div class="comment-content-column">
-                    <div class="comment-meta">
-                      <span class="collapse-indicator">▼</span>
-                      {% include 'core/includes/comment_author.html' %}
-                    </div>
-                    
-                    <div class="comment-body">
-                      {{ comment.content|linebreaks }}
-                    </div>
-                    
-                    {% include 'core/includes/comment_reply_form.html' with post=comment.post %}
-                  </div>
-                </div>
-              </article>
-              
-              <!-- Child comments -->
-              {% if not comment.is_leaf_node %}
-                <!-- Thread collapse line -->
-                <div class="thread-collapse-line" data-thread-id="{{ comment.id }}" role="button" tabindex="0" aria-label="Collapse or expand comment thread"></div>
-                
-                <div class="nested-comments" aria-label="Replies to this comment">
-                  {% for node in descendants %}
-                    {% with max_depth=5 level_adjustment="-2" %}
-                      {% include 'core/includes/nested_comments.html' %}
-                    {% endwith %}
-                  {% endfor %}
-                </div>
-              {% endif %}
-            </div>
+            {% include 'core/includes/comment_thread_structure.html' with comment=comment descendants=descendants max_depth=5 level_adjustment="-2" %}
           </div>
         </div>
       </div>
