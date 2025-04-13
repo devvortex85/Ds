@@ -12,7 +12,7 @@ class InboxView(BaseInboxView):
     """
     Override the inbox view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,7 +23,7 @@ class SentView(BaseSentView):
     """
     Override the sent view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,7 +34,7 @@ class ArchivesView(BaseArchivesView):
     """
     Override the archives view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,7 +45,7 @@ class TrashView(BaseTrashView):
     """
     Override the trash view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,7 +56,7 @@ class WriteView(BaseWriteView):
     """
     Override the write view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -67,7 +67,7 @@ class ReplyView(BaseReplyView):
     """
     Override the reply view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -78,7 +78,7 @@ class MessageView(BaseMessageView):
     """
     Override the message view to use our consolidated template
     """
-    template_name = 'postman/message_folder.html'
+    template_name = 'core/messaging/message_folder.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
