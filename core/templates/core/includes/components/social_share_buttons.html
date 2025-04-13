@@ -1,0 +1,6 @@
+{% comment %}
+  Redirects to the component location of social_share_buttons.html
+  This is to maintain backward compatibility with existing imports
+{% endcomment %}
+
+{% include 'core/includes/components/social_share_buttons.html' with post=post request=request button_class=button_class button_text=button_text dropdown_direction=dropdown_direction %}

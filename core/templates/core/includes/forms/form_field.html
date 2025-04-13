@@ -1,12 +1,13 @@
 {% comment %}
-  Redirects to the forms location of form_field.html
+  Redirects to the form location of form_field.html
   This is to maintain backward compatibility with existing imports
 {% endcomment %}
 
 {% include 'core/includes/forms/form_field.html' with 
   field=field 
+  label_text=label_text 
   label_class=label_class 
-  field_class=field_class 
-  small_text=small_text 
+  help_text=help_text 
+  use_invalid_feedback=use_invalid_feedback 
   classes=classes
 %}

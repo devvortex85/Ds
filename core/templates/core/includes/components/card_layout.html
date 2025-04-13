@@ -1,0 +1,16 @@
+{% comment %}
+  Redirects to the component location of card_layout.html
+  This is to maintain backward compatibility with existing imports
+{% endcomment %}
+
+{% include 'core/includes/components/card_layout.html' with 
+  title=title 
+  content=content 
+  footer=footer 
+  header=header 
+  id=id 
+  card_classes=card_classes 
+  body_classes=body_classes 
+  header_classes=header_classes 
+  footer_classes=footer_classes 
+%}
