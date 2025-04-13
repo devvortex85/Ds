@@ -216,41 +216,41 @@
 
 /* Indentation markers for each nesting level */
 .comment-indent {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: calc(3px * var(--adaptive-scale, 1)); /* Thicker for better visibility */
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 3px !important;
     transition: all 0.2s ease;
-    border-radius: calc(3px * var(--adaptive-scale, 1)); /* Rounded edges */
-    opacity: 0.8; /* Slightly transparent for visual depth */
+    border-radius: 3px !important; 
+    opacity: 1 !important;
+    z-index: 2 !important;
 }
 
 /* Enhanced colors for different nesting levels with distinct visualization */
 .indent-level-1 { 
-    background-color: var(--nesting-level-1); /* Bootstrap info blue */
-    left: 0;
-    box-shadow: 0 0 calc(4px * var(--adaptive-scale, 1)) var(--nesting-glow-1); /* Subtle glow */
+    background-color: #5bc0de !important; /* Info blue */
+    left: 0px !important;
+    box-shadow: 0 0 6px rgba(91, 192, 222, 0.6) !important;
 }
 .indent-level-2 { 
-    background-color: var(--nesting-level-2); /* Bootstrap warning orange */
-    left: calc(0.5rem * var(--adaptive-scale, 1)); /* Increased spacing */
-    box-shadow: 0 0 calc(4px * var(--adaptive-scale, 1)) var(--nesting-glow-2);
+    background-color: #f0ad4e !important; /* Warning orange */
+    left: 5px !important;
+    box-shadow: 0 0 6px rgba(240, 173, 78, 0.6) !important;
 }
 .indent-level-3 { 
-    background-color: var(--nesting-level-3); /* Bootstrap success green */
-    left: calc(1rem * var(--adaptive-scale, 1));
-    box-shadow: 0 0 calc(4px * var(--adaptive-scale, 1)) var(--nesting-glow-3);
+    background-color: #5cb85c !important; /* Success green */
+    left: 10px !important;
+    box-shadow: 0 0 6px rgba(92, 184, 92, 0.6) !important;
 }
 .indent-level-4 { 
-    background-color: var(--nesting-level-4); /* Bootstrap danger red */
-    left: calc(1.5rem * var(--adaptive-scale, 1));
-    box-shadow: 0 0 calc(4px * var(--adaptive-scale, 1)) var(--nesting-glow-4);
+    background-color: #d9534f !important; /* Danger red */
+    left: 15px !important;
+    box-shadow: 0 0 6px rgba(217, 83, 79, 0.6) !important;
 }
 .indent-level-5 { 
-    background-color: var(--nesting-level-5); /* Purple */
-    left: calc(2rem * var(--adaptive-scale, 1));
-    box-shadow: 0 0 calc(4px * var(--adaptive-scale, 1)) var(--nesting-glow-5);
+    background-color: #a179f3 !important; /* Purple */
+    left: 20px !important;
+    box-shadow: 0 0 6px rgba(161, 121, 243, 0.6) !important;
 }
 
 /* Limit indicators for deeply nested comments */

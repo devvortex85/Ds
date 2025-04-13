@@ -157,7 +157,7 @@
                                 {% with level=node.level %}
                                     {% for i in "12345"|make_list %}
                                         {% if forloop.counter <= level %}
-                                            <div class="comment-indent indent-level-{{ forloop.counter }}" style="position: absolute; top: 0; bottom: 0; width: 3px; left: calc({{ forloop.counter }}rem - 1rem);"></div>
+                                            <div class="comment-indent indent-level-{{ forloop.counter }}"></div>
                                         {% endif %}
                                     {% endfor %}
                                 {% endwith %}
