@@ -62,11 +62,11 @@
                                     <tbody>
                                         {% for message in pm_messages %}
                                         <tr class="{% if message.is_new %}bg-info bg-opacity-10{% endif %}">
-                                            <td>{{ message.form.id }} {{ message.form.instance.pk }} {{ message.form.selected }}</td>
+                                            <td>{{ message.form.id }}  {{ message.form.selected }}</td>
                                             <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>
                                             <td>
                                                 {% if message.is_new %}<strong>{% endif %}
-                                                <a href="{% url 'postman:view' message.form.instance.pk %}">{{ message.subject }}</a>
+                                                <a href="{% url 'postman:view' message.pk %}">{{ message.subject }}</a>
                                                 {% if message.is_new %}</strong>{% endif %}
                                             </td>
                                             <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
@@ -124,11 +124,11 @@
                                     <tbody>
                                         {% for message in pm_messages %}
                                         <tr class="{% if message.is_new %}bg-info bg-opacity-10{% endif %}">
-                                            <td>{{ message.form.id }} {{ message.form.instance.pk }} {{ message.form.selected }}</td>
+                                            <td>{{ message.form.id }}  {{ message.form.selected }}</td>
                                             <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>
                                             <td>
                                                 {% if message.is_new %}<strong>{% endif %}
-                                                <a href="{% url 'postman:view' message.form.instance.pk %}">{{ message.subject }}</a>
+                                                <a href="{% url 'postman:view' message.pk %}">{{ message.subject }}</a>
                                                 {% if message.is_new %}</strong>{% endif %}
                                             </td>
                                             <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
