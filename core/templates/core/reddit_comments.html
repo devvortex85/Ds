@@ -59,37 +59,7 @@
                                 {{ root_comment.content|linebreaks }}
                             </div>
                             
-                            <div class="comment-actions">
-                                {% if user.is_authenticated %}
-                                <button type="button" class="comment-action-btn reply-toggle" 
-                                        data-comment-id="{{ root_comment.id }}"
-                                        aria-controls="reply-form-{{ root_comment.id }}"
-                                        aria-expanded="false">
-                                    <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
-                                </button>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Reply form (hidden by default) -->
-                            {% if user.is_authenticated %}
-                            <div id="reply-form-{{ root_comment.id }}" class="reply-form" aria-hidden="true">
-                                <form action="{% url 'add_comment' post.id %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="parent_id" value="{{ root_comment.id }}">
-                                    <div class="form-group">
-                                        <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
-                                    </div>
-                                    <div class="reply-form-actions">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
-                                                data-comment-id="{{ root_comment.id }}"
-                                                aria-controls="reply-form-{{ root_comment.id }}">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" class="btn btn-primary btn-sm">Reply</button>
-                                    </div>
-                                </form>
-                            </div>
-                            {% endif %}
+                            {% include 'core/includes/comment_reply_form.html' with comment=root_comment %}
                             
                             <!-- Collapsed thread comment count (shown when thread is collapsed) -->
                             <div class="collapsed-count">

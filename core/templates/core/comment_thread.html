@@ -76,6 +76,7 @@
           <div class="comments-container" aria-label="Comments section">
             <!-- Root comment (the continued thread starting point) -->
             <div class="comment-thread" id="thread-{{ comment.id }}" data-comment-id="{{ comment.id }}">
+              <!-- Root comment rendering -->
               <article id="comment-{{ comment.id }}" class="comment-item">
                 <div class="comment-wrapper">
                   <!-- Vote controls -->
@@ -94,37 +95,7 @@
                       {{ comment.content|linebreaks }}
                     </div>
                     
-                    <div class="comment-actions">
-                      {% if user.is_authenticated %}
-                      <button type="button" class="comment-action-btn reply-toggle" 
-                              data-comment-id="{{ comment.id }}"
-                              aria-controls="reply-form-{{ comment.id }}"
-                              aria-expanded="false">
-                          <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
-                      </button>
-                      {% endif %}
-                    </div>
-                    
-                    <!-- Reply form (hidden by default) -->
-                    {% if user.is_authenticated %}
-                    <div id="reply-form-{{ comment.id }}" class="reply-form" aria-hidden="true">
-                      <form action="{% url 'add_comment' comment.post.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <div class="form-group">
-                          <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
-                        </div>
-                        <div class="reply-form-actions">
-                          <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
-                                  data-comment-id="{{ comment.id }}"
-                                  aria-controls="reply-form-{{ comment.id }}">
-                              Cancel
-                          </button>
-                          <button type="submit" class="btn btn-primary btn-sm">Reply</button>
-                        </div>
-                      </form>
-                    </div>
-                    {% endif %}
+                    {% include 'core/includes/comment_reply_form.html' with post=comment.post %}
                   </div>
                 </div>
               </article>
@@ -139,7 +110,6 @@
                     {% with max_depth=5 level_adjustment="-2" %}
                       {% include 'core/includes/nested_comments.html' %}
                     {% endwith %}
-                  {% endfor %}
                   {% endfor %}
                 </div>
               {% endif %}

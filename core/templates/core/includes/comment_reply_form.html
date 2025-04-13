@@ -1,24 +1,42 @@
-{# 
-This partial template renders the comment reply form
-It's used in both reddit_comments.html and comment_thread.html
-#}
+{% comment %}
+  Template for displaying comment reply action button and form.
 
+  Parameters:
+  - comment: The comment to which a reply is being made
+  - post: The post to which the comment belongs
+  
+  Usage:
+  {% include 'core/includes/comment_reply_form.html' with post=post %}
+{% endcomment %}
+
+<div class="comment-actions">
+  {% if user.is_authenticated %}
+  <button type="button" class="comment-action-btn reply-toggle" 
+          data-comment-id="{{ comment.id }}"
+          aria-controls="reply-form-{{ comment.id }}"
+          aria-expanded="false">
+      <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
+  </button>
+  {% endif %}
+</div>
+
+<!-- Reply form (hidden by default) -->
 {% if user.is_authenticated %}
 <div id="reply-form-{{ comment.id }}" class="reply-form" aria-hidden="true">
-    <form action="{% url 'add_comment' post_id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        <div class="form-group">
-            <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
-        </div>
-        <div class="reply-form-actions">
-            <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
-                    data-comment-id="{{ comment.id }}"
-                    aria-controls="reply-form-{{ comment.id }}">
-                Cancel
-            </button>
-            <button type="submit" class="btn btn-primary btn-sm">Reply</button>
-        </div>
-    </form>
+  <form action="{% url 'add_comment' post.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+    <div class="form-group">
+      <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+    </div>
+    <div class="reply-form-actions">
+      <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+              data-comment-id="{{ comment.id }}"
+              aria-controls="reply-form-{{ comment.id }}">
+          Cancel
+      </button>
+      <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+    </div>
+  </form>
 </div>
 {% endif %}
