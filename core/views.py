@@ -135,7 +135,25 @@ def profile(request, username):
         'title': f'{user.username}\'s Profile',
     }
     
-    return render(request, 'core/profile.html', context)
+    # Calculate additional context needed for the template
+    posts_count = posts.count()
+    comments_count = comments.count()
+    communities_count = communities.count()
+    
+    # Get reputation level and progress
+    reputation_level = profile.get_reputation_level()
+    reputation_progress = profile.get_reputation_progress()
+    
+    context.update({
+        'posts_count': posts_count,
+        'comments_count': comments_count,
+        'communities_count': communities_count,
+        'reputation_level': reputation_level,
+        'reputation_progress': reputation_progress,
+        'page_type': 'view'
+    })
+    
+    return render(request, 'core/profile_page.html', context)
 
 @login_required
 def edit_profile(request):
@@ -156,12 +174,13 @@ def edit_profile(request):
         profile_form = ProfileUpdateForm(instance=request.user.profile)
     
     context = {
-        'user_form': user_form,
-        'profile_form': profile_form,
+        'u_form': user_form,  # Template expects u_form not user_form
+        'p_form': profile_form,  # Template expects p_form not profile_form
         'title': 'Edit Profile',
+        'page_type': 'edit'
     }
     
-    return render(request, 'core/edit_profile.html', context)
+    return render(request, 'core/profile_page.html', context)
 
 def community_list(request):
     """
