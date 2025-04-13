@@ -253,17 +253,12 @@
                                 <div class="card-text mb-3">
                                     {% if message.body %}
                                         {{ message.body|linebreaksbr }}
-                                    {% elif message.content %}
-                                        {{ message.content|linebreaksbr }}
                                     {% else %}
-                                        <p><strong>Available message properties:</strong></p>
-                                        <pre>
-Subject: {{ message.subject }}
-From: {{ message.obfuscated_sender }}
-Sent: {{ message.sent_at }}
-ID: {{ message.pk }}
-Body Keys: {% for key, value in message.items %}{{ key }}, {% endfor %}
-                                        </pre>
+                                        {% for m in pm_messages %}
+                                            {% if m.pk == message.pk %}
+                                                {{ m.body|linebreaksbr }}
+                                            {% endif %}
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                                 <!-- Debug info: Message ID: {{ message.pk|default:'None' }}, Message ID in URL: {{ view.kwargs.message_id }} -->
