@@ -214,43 +214,179 @@
     width: calc(4px * var(--adaptive-scale, 1)); /* Wider on hover for better UX */
 }
 
-/* Indentation markers for each nesting level */
+/**
+ * Consolidated Comment Nesting Visualization
+ * All comment styling is now in this single file
+ */
+
+/* Comment form styling */
+/* These styles were previously in comment_fixes.css */
+.form-control {
+    font-size: 0.9rem !important;
+}
+
+textarea.form-control {
+    min-height: 40px !important;
+    max-height: 150px !important;
+    padding: 5px 8px !important;
+    font-size: 0.85rem !important;
+}
+
+.form-control, .btn {
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+}
+
+.reply-form {
+    padding: 5px !important;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+    border-radius: 4px !important;
+    background-color: #f8f9fa !important;
+}
+
+.reply-form textarea {
+    min-height: 35px !important;
+    font-size: 0.85rem !important;
+    padding: 4px !important;
+}
+
+.reply-form .btn {
+    padding: 2px 6px !important;
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+}
+
+.card-body form textarea {
+    min-height: 40px !important;
+    max-height: 100px !important;
+}
+
+.btn-sm {
+    padding: 2px 6px !important;
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+}
+
+/* Comment structure */
+.comment-item {
+    position: relative !important;
+    padding: 8px !important;
+    padding-left: 25px !important; /* Space for indentation markers */
+    margin-bottom: 10px !important;
+    background-color: #333 !important;
+    border-radius: 5px !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Container for nested comments */
+.nested-comments {
+    position: relative !important;
+    margin-left: 15px !important; /* Reduced indentation for mobile */
+    padding-left: 0 !important;
+}
+
+/* Comment wrapper and vote column */
+.comment-wrapper {
+    display: flex !important;
+    flex-direction: column !important; /* Stack vertically on mobile */
+}
+
+.vote-column {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal on mobile */
+    align-items: center !important;
+    margin-bottom: 5px !important;
+}
+
+.vote-btn {
+    padding: 3px 5px !important;
+    min-width: 30px !important;
+    text-align: center !important;
+}
+
+.vote-count {
+    margin: 0 8px !important;
+}
+
+/* Indentation markers with fixed positioning */
 .comment-indent {
     position: absolute !important;
     top: 0 !important;
     bottom: 0 !important;
-    width: 3px !important;
+    width: 2px !important; /* Thinner on mobile */
     transition: all 0.2s ease;
-    border-radius: 3px !important; 
+    border-radius: 2px !important; 
     opacity: 1 !important;
     z-index: 2 !important;
 }
 
-/* Enhanced colors for different nesting levels with distinct visualization */
+/* Fixed spacing for indentation levels */
 .indent-level-1 { 
     background-color: #5bc0de !important; /* Info blue */
-    left: 0px !important;
-    box-shadow: 0 0 6px rgba(91, 192, 222, 0.6) !important;
+    left: 3px !important;
+    box-shadow: 0 0 4px rgba(91, 192, 222, 0.6) !important;
 }
 .indent-level-2 { 
     background-color: #f0ad4e !important; /* Warning orange */
-    left: 5px !important;
-    box-shadow: 0 0 6px rgba(240, 173, 78, 0.6) !important;
+    left: 7px !important;
+    box-shadow: 0 0 4px rgba(240, 173, 78, 0.6) !important;
 }
 .indent-level-3 { 
     background-color: #5cb85c !important; /* Success green */
-    left: 10px !important;
-    box-shadow: 0 0 6px rgba(92, 184, 92, 0.6) !important;
+    left: 11px !important;
+    box-shadow: 0 0 4px rgba(92, 184, 92, 0.6) !important;
 }
 .indent-level-4 { 
     background-color: #d9534f !important; /* Danger red */
     left: 15px !important;
-    box-shadow: 0 0 6px rgba(217, 83, 79, 0.6) !important;
+    box-shadow: 0 0 4px rgba(217, 83, 79, 0.6) !important;
 }
 .indent-level-5 { 
     background-color: #a179f3 !important; /* Purple */
-    left: 20px !important;
-    box-shadow: 0 0 6px rgba(161, 121, 243, 0.6) !important;
+    left: 19px !important;
+    box-shadow: 0 0 4px rgba(161, 121, 243, 0.6) !important;
+}
+
+/* Thread collapse line */
+.thread-collapse-line {
+    position: absolute !important;
+    left: -3px !important;
+    width: 2px !important;
+    background-color: #666 !important;
+    cursor: pointer !important;
+    z-index: 3 !important;
+}
+
+/* For larger screens */
+@media (min-width: 768px) {
+    .comment-item {
+        padding-left: 30px !important;
+    }
+    
+    .nested-comments {
+        margin-left: 25px !important;
+    }
+    
+    .comment-wrapper {
+        flex-direction: row !important;
+    }
+    
+    .vote-column {
+        flex-direction: column !important;
+        margin-right: 10px !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .comment-indent {
+        width: 3px !important;
+    }
+    
+    .indent-level-1 { left: 4px !important; }
+    .indent-level-2 { left: 10px !important; }
+    .indent-level-3 { left: 16px !important; }
+    .indent-level-4 { left: 22px !important; }
+    .indent-level-5 { left: 28px !important; }
 }
 
 /* Limit indicators for deeply nested comments */
