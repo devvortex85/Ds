@@ -26,12 +26,12 @@
               
               <div class="socialaccount_ballot">
                 <ul class="socialaccount_providers list-unstyled">
-                  {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                  {% include "core/includes/social/provider_list.html" with process="login" %}
                 </ul>
                 <div class="login-or text-center my-3">{% trans 'or' %}</div>
               </div>
               
-              {% include "socialaccount/snippets/login_extra.html" %}
+              {% include "core/includes/social/login_extra.html" %}
             </div>
             {% else %}
             <div class="mb-3 text-center">
