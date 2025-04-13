@@ -1,34 +1,82 @@
 {% comment %}
-Consolidated social sharing buttons template
-Parameters:
-- post: The post object to share
-- compact: Boolean for compact display (default: False)
+  Template for displaying social sharing options dropdown
+  
+  Parameters:
+  - post: The post to share (required)
+  - request: The request object (required)
+  - button_class: CSS classes for the button (optional, default: btn-outline-secondary btn-sm)
+  - button_text: Text to display on the button (optional, default: Share)
+  - dropdown_direction: Direction for dropdown menu (optional, default: down)
+  
+  Usage:
+  {% include 'core/includes/social_share_buttons.html' with post=post request=request %}
 {% endcomment %}
 
-<div class="btn-group me-2">
-    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share options">
-        <i class="bi bi-share" aria-hidden="true"></i> Share
+<div class="btn-group me-2 mb-2">
+    <button type="button" 
+            class="btn {{ button_class|default:'btn-outline-secondary btn-sm' }} dropdown-toggle action-btn share-btn" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false"
+            aria-label="Share options">
+        <i class="bi bi-share me-1" aria-hidden="true"></i> {{ button_text|default:'Share' }}
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu {% if dropdown_direction == 'up' %}dropdown-menu-up{% endif %}">
         <li>
-            <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" target="_blank" rel="noopener" aria-label="Share on Facebook">
+            <a class="dropdown-item" 
+               href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+               target="_blank" 
+               rel="noopener" 
+               aria-label="Share on Facebook">
                 <i class="fab fa-facebook me-2" aria-hidden="true"></i>Facebook
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" target="_blank" rel="noopener" aria-label="Share on Twitter">
+            <a class="dropdown-item" 
+               href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.build_absolute_uri }}" 
+               target="_blank" 
+               rel="noopener" 
+               aria-label="Share on Twitter">
                 <i class="fab fa-twitter me-2" aria-hidden="true"></i>Twitter
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" aria-label="Share via Email">
+            <a class="dropdown-item" 
+               href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}" 
+               target="_blank" 
+               rel="noopener" 
+               aria-label="Share on LinkedIn">
+                <i class="fab fa-linkedin me-2" aria-hidden="true"></i>LinkedIn
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
+               href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}" 
+               aria-label="Share via Email">
                 <i class="bi bi-envelope-fill me-2" aria-hidden="true"></i>Email
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" 
+               href="https://reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ post.title }}" 
+               target="_blank" 
+               rel="noopener" 
+               aria-label="Share on Reddit">
+                <i class="fab fa-reddit me-2" aria-hidden="true"></i>Reddit
             </a>
         </li>
         <li><hr class="dropdown-divider"></li>
         <li>
-            <button class="dropdown-item" onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}{% url 'post_detail' post.id %}'); alert('Link copied to clipboard!'); return false;" aria-label="Copy link to clipboard">
+            <button class="dropdown-item" 
+                    onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); window.announceToScreenReader && window.announceToScreenReader('Link copied to clipboard'); alert('Link copied to clipboard!'); return false;"
+                    aria-label="Copy link to clipboard">
                 <i class="bi bi-clipboard me-2" aria-hidden="true"></i>Copy Link
+            </button>
+        </li>
+        <li>
+            <button class="dropdown-item" 
+                    onclick="navigator.share && navigator.share({title: '{{ post.title }}', url: window.location.href}); return false;"
+                    aria-label="Share via device sharing options">
+                <i class="bi bi-share-fill me-2" aria-hidden="true"></i>Native Share
             </button>
         </li>
     </ul>

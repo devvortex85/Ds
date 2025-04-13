@@ -1,30 +1,27 @@
 {% comment %}
-Consolidated post content template
-Parameters:
-- post: The post object to display
-- truncate: Boolean to truncate content (default: True)
-- word_limit: Number of words to show when truncated (default: 50)
+  Template for displaying post content (text or link)
+  
+  Parameters:
+  - post: The post to display content for (required)
+  - show_link_preview: Whether to show the link preview (default: True)
+  
+  Usage:
+  {% include 'core/includes/post_content.html' with post=post %}
 {% endcomment %}
 
-{% if post.post_type == 'text' and post.content %}
-<div class="post-content-text {% if not detail_view %}small text-muted{% endif %}">
-    {% if truncate|default:True %}
-        {{ post.content|truncatewords:word_limit|default:50 }}
-        {% if post.content|wordcount > word_limit|default:50 %}
-        <a href="{% url 'post_detail' post.id %}" class="text-primary">Read more</a>
-        {% endif %}
-    {% else %}
-        {{ post.content }}
-    {% endif %}
-</div>
+{% if post.post_type == 'link' and show_link_preview|default:True %}
+    <div class="post-url mb-3">
+        <a href="{{ post.url }}" class="btn btn-outline-primary" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>
+            Visit Link
+            <span class="sr-only">(opens in a new tab)</span>
+        </a>
+        <span class="ms-2 text-muted d-none d-sm-inline-block">{{ post.url }}</span>
+    </div>
 {% endif %}
 
-{% if post.post_type == 'link' and detail_view %}
-<div class="post-url-detail mt-2 mb-3">
-    <a href="{{ post.url }}" target="_blank" rel="noopener" class="btn btn-outline-primary">
-        <i class="bi bi-box-arrow-up-right me-2"></i>
-        Visit Link
-    </a>
-    <span class="text-muted ms-2">{{ post.url }}</span>
-</div>
+{% if post.content %}
+    <div class="post-content mb-3">
+        {{ post.content|linebreaks }}
+    </div>
 {% endif %}
