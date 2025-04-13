@@ -1322,7 +1322,7 @@ def bootstrap_icons_demo(request):
     Demo page for Bootstrap Icons.
     This view displays a documentation/showcase page for Bootstrap Icons implementation.
     """
-    return render(request, 'temporary/bootstrap_icons_demo.html')
+    return render(request, 'core/bootstrap_icons_demo.html')
     
     # This line will never be reached due to the exception above
     return render(request, 'core/home.html')
