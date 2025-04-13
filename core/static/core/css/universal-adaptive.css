@@ -1407,3 +1407,740 @@ a:hover .bi-arrow-down-short {
     margin: 0.1rem 0 !important;
     text-align: center !important;
 }
+
+/* ===== ADAPTIVE TYPOGRAPHY AND SIZING CLASSES ===== */
+/* Adaptive Typography Classes */
+.text-adaptive-xs {
+    font-size: var(--font-size-xs) !important;
+    line-height: 1.4 !important;
+}
+
+.text-adaptive-sm {
+    font-size: var(--font-size-sm) !important;
+    line-height: 1.5 !important;
+}
+
+.text-adaptive-md {
+    font-size: var(--font-size-md) !important;
+    line-height: 1.6 !important;
+}
+
+.text-adaptive-lg {
+    font-size: var(--font-size-lg) !important;
+    line-height: 1.5 !important;
+}
+
+.text-adaptive-xl {
+    font-size: var(--font-size-xl) !important;
+    line-height: 1.4 !important;
+}
+
+/* Adaptive Spacing Classes */
+.mt-adaptive {
+    margin-top: var(--spacing-md) !important;
+}
+
+.mb-adaptive {
+    margin-bottom: var(--spacing-md) !important;
+}
+
+.my-adaptive {
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-md) !important;
+}
+
+.mx-adaptive {
+    margin-left: var(--spacing-md) !important;
+    margin-right: var(--spacing-md) !important;
+}
+
+.p-adaptive {
+    padding: var(--spacing-md) !important;
+}
+
+.pt-adaptive {
+    padding-top: var(--spacing-md) !important;
+}
+
+.pb-adaptive {
+    padding-bottom: var(--spacing-md) !important;
+}
+
+.py-adaptive {
+    padding-top: var(--spacing-md) !important;
+    padding-bottom: var(--spacing-md) !important;
+}
+
+.px-adaptive {
+    padding-left: var(--spacing-md) !important;
+    padding-right: var(--spacing-md) !important;
+}
+
+/* Extra small spacing variants */
+.mt-adaptive-xs {
+    margin-top: var(--spacing-xs) !important;
+}
+
+.mb-adaptive-xs {
+    margin-bottom: var(--spacing-xs) !important;
+}
+
+.p-adaptive-xs {
+    padding: var(--spacing-xs) !important;
+}
+
+/* Small spacing variants */
+.mt-adaptive-sm {
+    margin-top: var(--spacing-sm) !important;
+}
+
+.mb-adaptive-sm {
+    margin-bottom: var(--spacing-sm) !important;
+}
+
+.p-adaptive-sm {
+    padding: var(--spacing-sm) !important;
+}
+
+/* Large spacing variants */
+.mt-adaptive-lg {
+    margin-top: var(--spacing-lg) !important;
+}
+
+.mb-adaptive-lg {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.p-adaptive-lg {
+    padding: var(--spacing-lg) !important;
+}
+
+/* Adaptive Icon Classes */
+.icon-adaptive-xs {
+    font-size: var(--icon-size-xs) !important;
+}
+
+.icon-adaptive-sm {
+    font-size: var(--icon-size-sm) !important;
+}
+
+.icon-adaptive-md {
+    font-size: var(--icon-size-md) !important;
+}
+
+.icon-adaptive-lg {
+    font-size: var(--icon-size-lg) !important;
+}
+
+/* Touch-optimized elements */
+.touch-optimized {
+    min-height: var(--min-touch-target) !important;
+    min-width: var(--min-touch-target) !important;
+}
+
+/* Adaptive width and height constraints */
+.w-adaptive-25 {
+    width: calc(25% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-50 {
+    width: calc(50% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-75 {
+    width: calc(75% * var(--adaptive-scale)) !important;
+}
+
+.w-adaptive-100 {
+    width: calc(100% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-25 {
+    height: calc(25% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-50 {
+    height: calc(50% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-75 {
+    height: calc(75% * var(--adaptive-scale)) !important;
+}
+
+.h-adaptive-100 {
+    height: calc(100% * var(--adaptive-scale)) !important;
+}
+
+/* Adaptive container widths - more precise than Bootstrap defaults */
+@media (min-width: 576px) {
+    .container-adaptive {
+        max-width: 540px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .container-adaptive {
+        max-width: 720px !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .container-adaptive {
+        max-width: 960px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-adaptive {
+        max-width: 1140px !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container-adaptive {
+        max-width: 1320px !important;
+    }
+}
+
+/* Special handling for mobile-first image adaptations */
+img.img-adaptive {
+    max-width: 100% !important;
+    height: auto !important;
+    transition: max-height 0.3s ease-in-out !important;
+}
+
+@media (max-width: 575.98px) {
+    img.img-adaptive:not(.img-adaptive-lg):not(.img-adaptive-xl) {
+        max-height: 200px !important;
+    }
+    
+    img.img-adaptive-lg {
+        max-height: 250px !important;
+    }
+    
+    img.img-adaptive-xl {
+        max-height: 300px !important;
+    }
+}
+
+/* ===== NAVBAR UNIFIED STYLING ===== */
+/* Reset all navbar styles to ensure we start clean */
+body .navbar,
+body .navbar *,
+body .navbar *:before,
+body .navbar *:after {
+    box-sizing: border-box !important;
+}
+
+/* Base navbar structure */
+body .navbar {
+    background-color: #272b30 !important;
+    padding: 0 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important; /* Lighter, smaller shadow */
+    width: 100% !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1030 !important;
+    border: none !important; /* Remove any borders */
+}
+
+body .navbar .container {
+    padding: 0.2rem 0.4rem !important; /* Ultra-compact padding */
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 1200px !important;
+    border-bottom: none !important; /* Removed border */
+}
+
+/* Header row with all elements in single row */
+body .navbar .header-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0.2rem 0 !important; /* Reduced padding */
+    height: 32px !important; /* Reduced height */
+    position: relative !important; /* Needed for absolute positioning of search */
+    border: none !important; /* Ensure no borders */
+}
+
+/* Left side with logo and donation link */
+body .navbar .header-left {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100px !important; /* Increased from 70px to accommodate donate text */
+    z-index: 3 !important; /* Stay above search bar */
+    border: none !important; /* Ensure no borders */
+}
+
+/* Donation link styles */
+body .navbar .donation-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 0 !important; /* Removed margin */
+    padding: 0.2rem !important; /* Reduced padding */
+    color: #5bc0de !important;
+    border: none !important; /* Ensure no borders */
+}
+
+/* Donate text styling */
+body .navbar .donate-text {
+    color: #FF8C00 !important; /* Orange color */
+    font-size: 0.75rem !important; /* Slightly larger */
+    font-weight: bold !important;
+    margin-left: 0.2rem !important; /* Increased spacing */
+    text-transform: lowercase !important;
+    display: inline-block !important; /* Ensure it's displayed */
+}
+
+/* Only hide donate text on very small screens */
+@media (max-width: 350px) {
+    body .navbar .donate-text {
+        display: none !important;
+    }
+}
+
+body .navbar .donation-link:hover,
+body .navbar .donation-link:focus {
+    color: #fff !important;
+}
+
+body .navbar .donation-link:hover .donate-text,
+body .navbar .donation-link:focus .donate-text {
+    color: #FFA500 !important; /* Brighter orange on hover */
+}
+
+/* Common navbar elements */
+body .navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    margin-left: 10px !important; /* Added margin to move away from left edge */
+    padding: 0 !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+body .navbar-brand i {
+    font-size: 1.2rem !important;
+    margin-right: 0 !important; /* Removed margin */
+    color: #5bc0de !important;
+    border: none !important; /* Ensure no borders */
+}
+
+/* Unified search bar */
+body .navbar .search-container {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-width: 280px !important; /* Reduced width for all screens */
+    display: flex !important;
+    align-items: center !important;
+    z-index: 2 !important;
+}
+
+body .navbar .search-container .input-group {
+    height: 26px !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    border-radius: 3px !important;
+    overflow: hidden !important; /* Fix search bar background extending issue */
+    max-height: 26px !important; /* Ensure height doesn't extend */
+    box-sizing: border-box !important; /* Ensure padding is included in height */
+}
+
+body .navbar .search-container .form-control,
+body .navbar .search-container .search-input {
+    background-color: #2c2c2c !important;
+    border: 1px solid #333 !important; /* Darker, less visible border */
+    height: 26px !important;
+    min-height: 26px !important;
+    max-height: 26px !important;
+    font-size: 0.8rem !important;
+    border-radius: 4px !important; /* Rounded corners on both sides */
+    color: #fff !important;
+    padding: 0.15rem 0.5rem !important;
+    flex: 1 !important;
+    box-shadow: none !important; /* Remove any shadow */
+    width: 160px !important; /* Fixed width since we don't have a button */
+    line-height: 26px !important; /* Match line height to container height */
+    box-sizing: border-box !important; /* Ensure padding is included in height */
+    display: flex !important; /* Use flexbox */
+    align-items: center !important; /* Center content vertically */
+    overflow: hidden !important; /* Prevent content overflow */
+}
+
+/* Style for standalone search without a button */
+body .navbar .search-container .standalone-search {
+    border-radius: 4px !important; /* Rounded corners on both sides */
+    text-align: center !important; /* Center the placeholder text */
+}
+
+body .navbar .search-container .btn i.bi,
+body .navbar .search-container .search-icon {
+    font-size: 0.8rem !important;
+    color: #fff !important;
+}
+
+/* User menu area */
+body .navbar .user-menu {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    margin-left: auto !important;
+    margin-right: 10px !important; /* Added margin to move away from right edge */
+    width: 100px !important; /* Increased to match header-left (100px) */
+    z-index: 3 !important; /* Stay above search bar */
+}
+
+body .navbar .user-menu .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.25rem !important; /* Further reduced for tighter spacing */
+    position: relative !important;
+    color: #aaa !important;
+    text-decoration: none !important;
+    border: none !important; /* Remove any borders */
+}
+
+body .navbar .user-menu .nav-link:hover,
+body .navbar .user-menu .nav-link:focus {
+    color: #fff !important;
+}
+
+body .navbar .user-menu .dropdown-menu {
+    min-width: 200px !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 0.5rem !important;
+    background-color: #3e444c !important;
+    border: 1px solid #444 !important;
+    border-radius: 0.25rem !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+body .navbar .user-menu .dropdown-item {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+    color: #ddd !important;
+    background-color: transparent !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+body .navbar .user-menu .dropdown-item:hover,
+body .navbar .user-menu .dropdown-item:focus {
+    background-color: #4e5460 !important;
+    color: #fff !important;
+}
+
+/* Badge notifications */
+body .navbar .badge-notification {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    transform: translate(50%, -50%) !important;
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.35rem !important;
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-radius: 10rem !important;
+    min-width: 1rem !important;
+    height: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Square avatars - aligned with other header elements */
+body .navbar .avatar, 
+body .navbar .nav-avatar img {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 0 !important; /* Square avatars */
+    object-fit: cover !important;
+    margin: 0 !important; /* Remove any margins */
+    display: inline-flex !important;
+    vertical-align: middle !important; /* Align with text */
+    align-self: center !important; /* Ensure avatar is centered vertically */
+}
+
+body .navbar .nav-avatar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 22px !important; /* Match height of avatar */
+    line-height: 22px !important; /* Ensure vertical alignment */
+}
+
+body .navbar .avatar-placeholder {
+    width: 22px !important;
+    height: 22px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border-radius: 0 !important; /* Square placeholder */
+    font-size: 0.75rem !important;
+    margin: 0 !important;
+}
+
+/* Responsive adjustments for the search bar */
+@media (max-width: 767.98px) {
+    body .navbar .search-container {
+        max-width: 150px !important;
+    }
+    
+    body .navbar .search-container .form-control {
+        width: 100px !important;
+        min-width: 80px !important;
+        padding: 0.1rem 0.2rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    body .navbar .search-container .btn {
+        width: 24px !important;
+        min-width: 24px !important;
+    }
+    
+    body .navbar .search-container .btn i.bi {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Responsive navbar adaptations for mobile */
+@media (max-width: 575.98px) {
+    /* Fix search container for very small screens */
+    body .navbar .search-container {
+        max-width: 120px !important;
+    }
+    
+    /* Fix search field for very small screens */
+    body .navbar .search-container .form-control {
+        width: 70px !important;
+        min-width: 50px !important;
+    }
+    
+    /* Compact for mobile */
+    body .navbar .container {
+        padding: 0 !important; /* Removed padding completely */
+        border-bottom: none !important; /* Remove bottom border */
+    }
+    
+    body .navbar .header-row {
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        gap: 0 !important; /* No gaps between elements */
+        height: 32px !important;
+        padding: 0.15rem 0 !important;
+        position: relative !important;
+    }
+    
+    /* Complete mobile search bar fix - using absolute positioning */
+    body .navbar .search-container {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 120px !important;
+        height: 22px !important;
+        border-radius: 4px !important;
+        overflow: hidden !important;
+        z-index: 2 !important;
+        background-color: #2c2c2c !important;
+    }
+    
+    /* Mobile specific search styling */
+    body .navbar .search-container .search-form {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    body .navbar .search-container .search-wrapper {
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        border-radius: 4px !important;
+    }
+    
+    body .navbar .search-container .input-group {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 22px !important;
+        max-height: 22px !important;
+        max-width: 120px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        background: none !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        line-height: 22px !important;
+        display: block !important;
+    }
+    
+    body .navbar .search-container .form-control,
+    body .navbar .search-container .search-input {
+        width: 100% !important;
+        max-width: 120px !important;
+        height: 22px !important;
+        min-height: 22px !important;
+        max-height: 22px !important;
+        font-size: 0.7rem !important;
+        padding: 0 0.25rem !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        border: 1px solid #333 !important;
+        border-radius: 4px !important;
+        background-color: #2c2c2c !important;
+        color: #f8f9fa !important;
+        text-align: center !important;
+        line-height: 22px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Mobile icons spacing */
+    body .navbar .donation-link {
+        padding: 0.15rem !important;
+        margin: 0 0.1rem !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    body .navbar .donate-text {
+        font-size: 0.7rem !important;
+        margin-left: 0.1rem !important;
+    }
+    
+    body .navbar .user-menu .nav-link {
+        padding: 0.15rem !important;
+        margin: 0 0.1rem !important;
+    }
+    
+    body .navbar-brand i {
+        font-size: 0.9rem !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* Media query for base adaptive scale */
+@media (max-width: 575.98px) {
+    :root {
+        --adaptive-scale: var(--mobile-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-sm) !important;
+        padding-right: var(--spacing-sm) !important;
+    }
+    
+    /* Adjust card and list styles for mobile */
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-sm) !important;
+    }
+    
+    /* Optimize touch targets on mobile */
+    button:not(.no-touch-optimize), 
+    .btn:not(.no-touch-optimize), 
+    a.nav-link:not(.no-touch-optimize), 
+    .dropdown-item:not(.no-touch-optimize) {
+        min-height: var(--min-touch-target) !important;
+    }
+    
+    /* Mobile-specific text adjustments */
+    h1, .h1 {
+        font-size: calc(1.5rem * var(--adaptive-scale)) !important;
+    }
+    
+    h2, .h2 {
+        font-size: calc(1.25rem * var(--adaptive-scale)) !important;
+    }
+    
+    /* Mobile optimization for tables */
+    table.table-adaptive {
+        font-size: var(--font-size-sm) !important;
+    }
+    
+    table.table-adaptive th, 
+    table.table-adaptive td {
+        padding: 0.25rem 0.5rem !important;
+    }
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    :root {
+        --adaptive-scale: var(--tablet-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-md) !important;
+        padding-right: var(--spacing-md) !important;
+    }
+    
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-md) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-md) !important;
+    }
+    
+    /* Table adaptations for tablet */
+    table.table-adaptive {
+        font-size: var(--font-size-md) !important;
+    }
+    
+    table.table-adaptive th, 
+    table.table-adaptive td {
+        padding: 0.5rem 0.75rem !important;
+    }
+}
+
+/* Medium to large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    :root {
+        --adaptive-scale: var(--desktop-scale);
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--spacing-lg) !important;
+        padding-right: var(--spacing-lg) !important;
+    }
+    
+    .card, .list-group-item {
+        margin-bottom: var(--spacing-lg) !important;
+    }
+    
+    .card-body {
+        padding: var(--spacing-lg) !important;
+    }
+}
+
+/* Extra large devices (large desktops, 1400px and up) */
+@media (min-width: 1400px) {
+    :root {
+        --adaptive-scale: var(--large-desktop-scale);
+    }
+    
+    /* Increase spacing for very large screens */
+    .container, .container-fluid {
+        padding-left: var(--spacing-xl) !important;
+        padding-right: var(--spacing-xl) !important;
+    }
+}
