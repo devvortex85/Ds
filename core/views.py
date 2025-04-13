@@ -64,7 +64,7 @@ def mark_notification_read(request, pk):
 @login_required
 def mark_all_notifications_read(request):
     """View to mark all notifications as read"""
-    Notification.objects.filter(recipient=request.user).update(read=True)
+    Notification.objects.filter(recipient=request.user).update(is_read=True)
     messages.success(request, 'All notifications marked as read.')
     return redirect('notifications_list')
 
