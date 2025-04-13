@@ -1,0 +1,25 @@
+{% comment %}
+Generic payment layout for all payment-related pages
+Parameters:
+- title: Card title (required)
+- content_block_id: ID for the content block (optional)
+- footer_message: Message for the card footer (optional)
+- container_class: Additional CSS classes for container (optional, default: "my-4")
+- card_class: Additional CSS classes for card (optional)
+{% endcomment %}
+
+<div class="container {{ container_class|default:'my-4' }}">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card {{ card_class }}">
+                {% include 'core/includes/payment_card_header.html' with title=title %}
+                <div class="card-body" {% if content_block_id %}id="{{ content_block_id }}"{% endif %}>
+                    {{ content }}
+                </div>
+                {% if footer_message %}
+                {% include 'core/includes/payment_card_footer.html' with message=footer_message %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
