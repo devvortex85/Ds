@@ -226,11 +226,12 @@
                 
                 <!-- Center: Search bar -->
                 <div class="search-container">
-                    <form action="{% url 'search' %}" method="GET" role="search">
+                    <form action="{% url 'search' %}" method="GET" role="search" class="search-form">
                         <div class="input-group">
                             <label for="search-input" class="sr-only">Search</label>
-                            <input id="search-input" class="form-control search-input standalone-search" type="search" name="query" placeholder="Search" aria-label="Search">
-                            <!-- Removed search button completely -->
+                            <div class="search-wrapper">
+                                <input id="search-input" class="form-control search-input standalone-search" type="search" name="query" placeholder="Search" aria-label="Search">
+                            </div>
                         </div>
                     </form>
                 </div>
