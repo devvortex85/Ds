@@ -31,7 +31,7 @@ def search(request):
         'page_type': 'results'
     }
     
-    return render(request, 'core/search_page.html', context)
+    return render(request, 'core/search/search_page.html', context)
 
 
 def advanced_search(request):
@@ -177,4 +177,4 @@ def advanced_search(request):
         'page_type': 'advanced'
     }
     
-    return render(request, 'core/search_page.html', context)
+    return render(request, 'core/search/search_page.html', context)

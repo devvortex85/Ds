@@ -158,7 +158,7 @@ def post_detail(request, pk):
         'title': post.title,
     }
     
-    return render(request, 'core/post_detail.html', context)
+    return render(request, 'core/posts/post_detail.html', context)
 
 
 def comment_thread(request, pk):
@@ -245,7 +245,7 @@ def comment_thread(request, pk):
         'title': f'Comment on {post.title}',
     }
     
-    return render(request, 'core/comment_thread.html', context)
+    return render(request, 'core/posts/comment_thread.html', context)
 
 
 @login_required
@@ -277,7 +277,7 @@ def create_text_post(request, community_id):
     else:
         form = TextPostForm()
     
-    return render(request, 'core/post_page.html', {
+    return render(request, 'core/posts/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'text',
@@ -315,7 +315,7 @@ def create_link_post(request, community_id):
     else:
         form = LinkPostForm()
     
-    return render(request, 'core/post_page.html', {
+    return render(request, 'core/posts/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'link',
