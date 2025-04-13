@@ -85,7 +85,7 @@ def donate(request):
     else:
         form = DonationForm()
     
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'form': form,
         'title': 'Make a Donation',
         'page_type': 'donate'
@@ -97,7 +97,7 @@ def donation_confirmation(request):
     """
     Confirmation page after initiating a donation
     """
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'title': 'Donation Confirmation',
         'page_type': 'confirmation'
     })
@@ -108,7 +108,7 @@ def payment_success(request):
     """
     Success page after a successful payment
     """
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'title': 'Payment Successful',
         'page_type': 'success'
     })
@@ -132,7 +132,7 @@ def process_payment(request, payment_id):
     except RedirectNeeded as redirect_to:
         return redirect(str(redirect_to))
     
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'form': form,
         'payment': payment,
         'title': 'Process Payment',
@@ -145,7 +145,7 @@ def payment_failure(request):
     """
     Failure page after a failed payment
     """
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'title': 'Payment Failed',
         'page_type': 'failure'
     })
@@ -159,7 +159,7 @@ def donation_history(request):
     # Get all payments for the current user
     payments = Payment.objects.filter(user=request.user).order_by('-created_at')
     
-    return render(request, 'core/payment/payment_page.html', {
+    return render(request, 'core/payments/payment_page.html', {
         'payments': payments,
         'title': 'Donation History',
         'page_type': 'history'

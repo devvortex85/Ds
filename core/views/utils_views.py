@@ -17,7 +17,7 @@ def sentry_status(request):
         'title': 'Sentry Status',
     }
     
-    return render(request, 'core/utility/sentry_status.html', context)
+    return render(request, 'core/utils/sentry_status.html', context)
 
 
 def sentry_test(request):
