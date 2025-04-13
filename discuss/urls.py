@@ -11,6 +11,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('markdownx/', include('markdownx.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('core.api.urls')),  # API endpoints
+    path('silk/', include('silk.urls', namespace='silk')),  # Django Silk profiling
     # Override specific auth URLs with our consolidated templates
     path('accounts/', include('core.views.auth_urls')),
     # Include remaining allauth URLs
