@@ -8,33 +8,13 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Confirm Your Donation</h2>
-                </div>
+                {% include 'core/includes/payment_card_header.html' with title="Confirm Your Donation" %}
                 <div class="card-body">
                     <div class="alert alert-info">
                         <p class="mb-0">Please review your donation details before proceeding to payment.</p>
                     </div>
                     
-                    <div class="donation-summary mt-4">
-                        <h4>Donation Summary</h4>
-                        <table class="table">
-                            <tr>
-                                <th>Amount:</th>
-                                <td>${{ payment.total|floatformat:2 }} USD</td>
-                            </tr>
-                            {% if payment.description %}
-                            <tr>
-                                <th>Message:</th>
-                                <td>{{ payment.description }}</td>
-                            </tr>
-                            {% endif %}
-                            <tr>
-                                <th>Date:</th>
-                                <td>{{ payment.created_at|date }}</td>
-                            </tr>
-                        </table>
-                    </div>
+                    {% include 'core/includes/payment_summary.html' with payment=payment title="Donation Summary" show_date=True table_class="table" %}
                     
                     <form method="post" class="mt-4">
                         {% csrf_token %}

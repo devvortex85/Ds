@@ -6,9 +6,7 @@
     <div class="row">
         <div class="col-lg-10 mx-auto">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="my-2"><i class="fas fa-history me-2"></i>Your Donation History</h2>
-                </div>
+                {% include 'core/includes/payment_card_header.html' with title="Your Donation History" %}
                 <div class="card-body">
                     {% if payments %}
                         <div class="table-responsive">
@@ -39,23 +37,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if payment.status == 'confirmed' %}
-                                                    <span class="badge bg-success">Confirmed</span>
-                                                {% elif payment.status == 'waiting' %}
-                                                    <span class="badge bg-warning text-dark">Pending</span>
-                                                {% elif payment.status == 'preauth' %}
-                                                    <span class="badge bg-info">Pre-authorized</span>
-                                                {% elif payment.status == 'refunded' %}
-                                                    <span class="badge bg-secondary">Refunded</span>
-                                                {% elif payment.status == 'rejected' %}
-                                                    <span class="badge bg-danger">Rejected</span>
-                                                {% elif payment.status == 'error' %}
-                                                    <span class="badge bg-danger">Error</span>
-                                                {% elif payment.status == 'input' %}
-                                                    <span class="badge bg-light text-dark">Input</span>
-                                                {% else %}
-                                                    <span class="badge bg-light text-dark">{{ payment.status }}</span>
-                                                {% endif %}
+                                                {% include 'core/includes/payment_status_badge.html' with status=payment.status %}
                                             </td>
                                             <td>
                                                 {% if payment.transaction_id %}
@@ -70,16 +52,8 @@
                             </table>
                         </div>
                     {% else %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-donate fa-5x text-muted mb-3"></i>
-                            <h4>You haven't made any donations yet</h4>
-                            <p class="text-muted mb-4">
-                                Consider supporting Discuss to help maintain and improve the platform.
-                            </p>
-                            <a href="{% url 'donate' %}" class="btn btn-primary">
-                                Make Your First Donation
-                            </a>
-                        </div>
+                        {% url 'donate' as donate_url %}
+                        {% include 'core/includes/empty_donations.html' with donate_url=donate_url %}
                     {% endif %}
                 </div>
                 <div class="card-footer">

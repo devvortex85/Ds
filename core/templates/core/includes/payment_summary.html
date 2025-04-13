@@ -1,0 +1,45 @@
+{% comment %}
+  Template for displaying payment summary information
+  
+  Parameters:
+  - payment: The payment object with details (required)
+  - title: The summary title (default: "Payment Summary")
+  - include_description: Boolean to show description if available (default: True)
+  
+  Usage:
+  {% include 'core/includes/payment_summary.html' with payment=payment %}
+{% endcomment %}
+
+<div class="payment-summary mb-4">
+    <h4>{{ title|default:"Payment Summary" }}</h4>
+    <table class="table {% if table_class %}{{ table_class }}{% else %}table-bordered{% endif %}">
+        <tr>
+            <th>Amount:</th>
+            <td>${{ payment.total|floatformat:2 }} USD</td>
+        </tr>
+        {% if payment.variant and show_method %}
+        <tr>
+            <th>Payment Method:</th>
+            <td>{{ payment.variant|title }}</td>
+        </tr>
+        {% endif %}
+        {% if payment.created_at and show_date %}
+        <tr>
+            <th>Date:</th>
+            <td>{{ payment.created_at|date }}</td>
+        </tr>
+        {% endif %}
+        {% if payment.description and include_description %}
+        <tr>
+            <th>Message:</th>
+            <td>{{ payment.description }}</td>
+        </tr>
+        {% endif %}
+        {% if payment.transaction_id and show_transaction %}
+        <tr>
+            <th>Transaction ID:</th>
+            <td><small class="text-muted">{{ payment.transaction_id }}</small></td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
