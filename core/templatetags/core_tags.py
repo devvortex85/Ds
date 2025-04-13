@@ -7,17 +7,7 @@ import os
 
 register = template.Library()
 
-@register.filter
-def class_name(obj):
-    """
-    Return the class name of an object.
-    
-    Usage:
-    {% if object|class_name == 'Post' %}
-        {# Do something for posts #}
-    {% endif %}
-    """
-    return obj.__class__.__name__
+# Class name filter is defined later in this file
 
 # Dictionary access filters
 @register.filter
