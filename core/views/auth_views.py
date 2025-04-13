@@ -11,10 +11,13 @@ class LoginView(BaseLoginView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        from django.urls import reverse
         context.update({
             'page_title': 'Sign In',
             'page_type': 'login',
             'show_sidebar': False,
+            'login_url': self.request.path,
+            'signup_url': reverse('account_signup'),
         })
         return context
 
@@ -27,10 +30,13 @@ class SignupView(BaseSignupView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        from django.urls import reverse
         context.update({
             'page_title': 'Sign Up',
             'page_type': 'signup',
             'show_sidebar': True,
+            'signup_url': self.request.path,
+            'login_url': reverse('account_login'),
         })
         return context
 
