@@ -1,95 +1,133 @@
 /**
- * Comment Nesting Visualization Fixes
- * This file contains fixes for properly displaying nested comments with colorful indentation markers
+ * Comment Nesting Visualization Fixes - Simplified Mobile First Version
  */
 
-/* Make sure comment items have relative positioning for absolute positioned indentation markers */
-.comment-item {
-    position: relative !important;
-    margin-left: 0.5rem !important;
-    margin-bottom: 8px !important;
-    padding-left: 15px !important;
+/* Base container */
+.comments-container {
+    margin-top: 15px !important;
 }
 
-/* Fix nested comments container */
+/* Root comment */
+.comment-item {
+    position: relative !important;
+    padding: 8px !important;
+    padding-left: 25px !important; /* Space for indentation markers */
+    margin-bottom: 10px !important;
+    background-color: #333 !important;
+    border-radius: 5px !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Container for nested comments */
 .nested-comments {
     position: relative !important;
-    margin-left: 15px !important;
+    margin-left: 15px !important; /* Reduced indentation for mobile */
     padding-left: 0 !important;
 }
 
-/* Ensure indentation lines are visible and properly positioned */
+/* Basic comment structure */
+.comment-wrapper {
+    display: flex !important;
+    flex-direction: column !important; /* Stack vertically on mobile */
+}
+
+/* Vote column */
+.vote-column {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal on mobile */
+    align-items: center !important;
+    margin-bottom: 5px !important;
+}
+
+/* Properly sized vote buttons */
+.vote-btn {
+    padding: 3px 5px !important;
+    min-width: 30px !important;
+    text-align: center !important;
+}
+
+/* Fix vote count spacing */
+.vote-count {
+    margin: 0 8px !important;
+}
+
+/* Indentation markers with fixed positioning */
 .comment-indent {
     position: absolute !important;
     top: 0 !important;
     bottom: 0 !important;
-    width: 3px !important;
+    width: 2px !important; /* Thinner on mobile */
     z-index: 2 !important;
 }
 
-/* Enhanced indentation markers for each level with increased visibility */
+/* Fixed spacing for indentation levels */
 .indent-level-1 {
     background-color: #5bc0de !important; /* Info blue */
-    left: 0px !important;
-    box-shadow: 0 0 6px rgba(91, 192, 222, 0.4) !important;
+    left: 3px !important;
+    box-shadow: 0 0 4px rgba(91, 192, 222, 0.6) !important;
 }
 
 .indent-level-2 {
     background-color: #f0ad4e !important; /* Warning orange */
-    left: 5px !important;
-    box-shadow: 0 0 6px rgba(240, 173, 78, 0.4) !important;
+    left: 7px !important;
+    box-shadow: 0 0 4px rgba(240, 173, 78, 0.6) !important;
 }
 
 .indent-level-3 {
     background-color: #5cb85c !important; /* Success green */
-    left: 10px !important;
-    box-shadow: 0 0 6px rgba(92, 184, 92, 0.4) !important;
+    left: 11px !important;
+    box-shadow: 0 0 4px rgba(92, 184, 92, 0.6) !important;
 }
 
 .indent-level-4 {
     background-color: #d9534f !important; /* Danger red */
     left: 15px !important;
-    box-shadow: 0 0 6px rgba(217, 83, 79, 0.4) !important;
+    box-shadow: 0 0 4px rgba(217, 83, 79, 0.6) !important;
 }
 
 .indent-level-5 {
     background-color: #a179f3 !important; /* Purple */
-    left: 20px !important;
-    box-shadow: 0 0 6px rgba(161, 121, 243, 0.4) !important;
+    left: 19px !important;
+    box-shadow: 0 0 4px rgba(161, 121, 243, 0.6) !important;
 }
 
-/* Thread collapse line - make it more visible */
+/* Thread collapse line */
 .thread-collapse-line {
     position: absolute !important;
-    left: -4px !important;
-    width: 3px !important;
+    left: -3px !important;
+    width: 2px !important;
     background-color: #666 !important;
     cursor: pointer !important;
     z-index: 3 !important;
 }
 
-.thread-collapse-line:hover {
-    background-color: #007bff !important;
-    width: 4px !important;
-}
-
-/* Mobile optimizations for better visibility on small screens */
-@media (max-width: 576px) {
+/* For larger screens */
+@media (min-width: 768px) {
     .comment-item {
-        padding-left: 12px !important;
+        padding-left: 30px !important;
     }
     
     .nested-comments {
-        margin-left: 8px !important;
+        margin-left: 25px !important;
+    }
+    
+    .comment-wrapper {
+        flex-direction: row !important;
+    }
+    
+    .vote-column {
+        flex-direction: column !important;
+        margin-right: 10px !important;
+        margin-bottom: 0 !important;
     }
     
     .comment-indent {
-        width: 2px !important;
+        width: 3px !important;
     }
     
-    .indent-level-1 { left: 0px !important; }
-    .indent-level-2 { left: 3px !important; }
-    .indent-level-3 { left: 6px !important; }
-    .indent-level-4 { left: 9px !important; }
-    .indent-level-5 { left: 12px !important; }
+    .indent-level-1 { left: 4px !important; }
+    .indent-level-2 { left: 10px !important; }
+    .indent-level-3 { left: 16px !important; }
+    .indent-level-4 { left: 22px !important; }
+    .indent-level-5 { left: 28px !important; }
 }

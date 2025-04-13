@@ -7,68 +7,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/reddit-comments.css' %}">
-<style>
-/* Comment nesting visualization fixes - direct in template */
-.comment-item {
-    position: relative !important;
-    margin-left: 0.5rem !important;
-    margin-bottom: 8px !important;
-    padding-left: 15px !important;
-}
-
-.nested-comments {
-    position: relative !important;
-    margin-left: 15px !important;
-    padding-left: 0 !important;
-}
-
-.comment-indent {
-    position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    width: 3px !important;
-    z-index: 2 !important;
-}
-
-.indent-level-1 {
-    background-color: #5bc0de !important; /* Info blue */
-    left: 0px !important;
-    box-shadow: 0 0 6px rgba(91, 192, 222, 0.6) !important;
-}
-
-.indent-level-2 {
-    background-color: #f0ad4e !important; /* Warning orange */
-    left: 5px !important;
-    box-shadow: 0 0 6px rgba(240, 173, 78, 0.6) !important;
-}
-
-.indent-level-3 {
-    background-color: #5cb85c !important; /* Success green */
-    left: 10px !important;
-    box-shadow: 0 0 6px rgba(92, 184, 92, 0.6) !important;
-}
-
-.indent-level-4 {
-    background-color: #d9534f !important; /* Danger red */
-    left: 15px !important;
-    box-shadow: 0 0 6px rgba(217, 83, 79, 0.6) !important;
-}
-
-.indent-level-5 {
-    background-color: #a179f3 !important; /* Purple */
-    left: 20px !important;
-    box-shadow: 0 0 6px rgba(161, 121, 243, 0.6) !important;
-}
-
-.thread-collapse-line {
-    position: absolute !important;
-    left: -4px !important;
-    width: 3px !important;
-    background-color: #666 !important;
-    cursor: pointer !important;
-    z-index: 3 !important;
-}
-</style>
 {% endblock %}
 
 {% block content %}
