@@ -1019,7 +1019,52 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listener for when the donation type changes
         donationTypeSelect.addEventListener('change', toggleCustomAmount);
     }
-});
+    
+    // Initialize payment method visibility on the payment/confirmation page
+    initPaymentMethodVisibility();
+}
+
+/**
+ * Initialize and handle payment method visibility on the payment/confirmation page
+ */
+function initPaymentMethodVisibility() {
+    // Check if we're on a page with payment method options
+    const paymentRadios = document.querySelectorAll('.payment-method-radio');
+    
+    if (paymentRadios.length) {
+        console.log("Initializing payment method visibility");
+        
+        // Hide all payment details initially
+        updatePaymentMethodVisibility();
+        
+        // Add change event listeners to radio buttons
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', updatePaymentMethodVisibility);
+        });
+    }
+}
+
+/**
+ * Show only the selected payment method details and hide others
+ */
+function updatePaymentMethodVisibility() {
+    const paymentDetails = document.querySelectorAll('.payment-method-details');
+    const selectedMethod = document.querySelector('.payment-method-radio:checked');
+    
+    // Hide all details sections
+    paymentDetails.forEach(detail => {
+        detail.style.display = 'none';
+    });
+    
+    // Show only the selected method's details
+    if (selectedMethod) {
+        const detailsId = selectedMethod.value + '-details';
+        const detailsElement = document.getElementById(detailsId);
+        if (detailsElement) {
+            detailsElement.style.display = 'block';
+        }
+    }
+}
 
 /**
  * Accessibility Enhancements

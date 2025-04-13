@@ -36,30 +36,4 @@
     </div>
 </form>
 
-<!-- This script toggles the custom amount field visibility based on donation type -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get references to donation type dropdown and custom amount div
-        var donationTypeSelect = document.querySelector('[name="donation_type"]');
-        var customAmountDiv = document.getElementById('custom-amount-group');
-        
-        // Set initial state based on current value
-        toggleCustomAmount();
-        
-        // Add change event listener
-        if (donationTypeSelect) {
-            donationTypeSelect.addEventListener('change', toggleCustomAmount);
-        }
-        
-        function toggleCustomAmount() {
-            if (donationTypeSelect && customAmountDiv) {
-                // Show custom amount field only when "Custom Amount" (0) is selected
-                if (donationTypeSelect.value === '0') {
-                    customAmountDiv.style.display = 'block';
-                } else {
-                    customAmountDiv.style.display = 'none';
-                }
-            }
-        }
-    });
-</script>
+<!-- Custom amount visibility is handled by consolidated script.js -->

@@ -111,36 +111,5 @@
 </form>
 
 {% if use_enhanced_ui %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Hide all payment details initially except for the default selected one
-        const paymentRadios = document.querySelectorAll('.payment-method-radio');
-        const paymentDetails = document.querySelectorAll('.payment-method-details');
-        
-        // Set initial state
-        updatePaymentMethodVisibility();
-        
-        // Add change event listeners
-        paymentRadios.forEach(radio => {
-            radio.addEventListener('change', updatePaymentMethodVisibility);
-        });
-        
-        function updatePaymentMethodVisibility() {
-            // Hide all details sections
-            paymentDetails.forEach(detail => {
-                detail.style.display = 'none';
-            });
-            
-            // Show only the selected method's details
-            const selectedMethod = document.querySelector('.payment-method-radio:checked');
-            if (selectedMethod) {
-                const detailsId = selectedMethod.value + '-details';
-                const detailsElement = document.getElementById(detailsId);
-                if (detailsElement) {
-                    detailsElement.style.display = 'block';
-                }
-            }
-        }
-    });
-</script>
+<!-- Payment method visibility is handled by consolidated script.js -->
 {% endif %}
