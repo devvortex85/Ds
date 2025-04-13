@@ -94,7 +94,7 @@ utils/                  # Utility scripts
 
 ### Utility Scripts
 
-The `utils/` directory contains helpful scripts for database management and debugging:
+The `utils/` directory contains helpful scripts for database management, deployment, and maintenance:
 
 1. **check_comments.py**: Lists all posts that have comments with their count
    ```
@@ -111,7 +111,62 @@ The `utils/` directory contains helpful scripts for database management and debu
    python utils/reset_sequences.py
    ```
 
+4. **deploy.py**: Automated deployment script with interactive setup
+   ```
+   # For development deployment
+   python utils/deploy.py
+   
+   # For production deployment
+   python utils/deploy.py --production
+   ```
+
+5. **update.py**: Automated update script for code and database
+   ```
+   # Basic update
+   python utils/update.py
+   
+   # Update with database backup
+   python utils/update.py --backup
+   
+   # Update and restart server
+   python utils/update.py --restart
+   
+   # Full update with backup and restart
+   python utils/update.py --backup --restart
+   ```
+
+6. **clean_profiles.py**: Utility to clean up Silk profiling files
+   ```
+   python utils/clean_profiles.py
+   ```
+
 ## Development Environment Setup
+
+### Automated Setup (Recommended)
+
+1. Clone the repository:
+   ```
+   git clone https://codeberg.org/Adamcatholic/Ds.git
+   cd Ds
+   ```
+
+2. Run the automated deployment script:
+   ```
+   python utils/deploy.py
+   ```
+   
+   This script will:
+   - Prompt for database configuration
+   - Create a virtual environment if needed
+   - Install all dependencies
+   - Set up the database
+   - Configure environment variables
+   - Offer to create a superuser
+   - Start the development server
+
+### Manual Setup
+
+If you prefer to set up manually:
 
 1. Clone the repository:
    ```
@@ -121,7 +176,7 @@ The `utils/` directory contains helpful scripts for database management and debu
 
 2. Install required Python packages:
    ```
-   pip install -r requirements.txt
+   pip install -e .
    ```
 
 3. Set up environment variables (create a .env file or export in your shell):
@@ -155,7 +210,42 @@ The `utils/` directory contains helpful scripts for database management and debu
 - Domain name (optional but recommended)
 - Knowledge of Linux, Nginx, PostgreSQL
 
-### 1. Server Setup
+### Automated Production Deployment (Recommended)
+
+1. Update your system packages and install required software:
+   ```
+   sudo apt update && sudo apt upgrade -y
+   sudo apt install python3 python3-pip python3-venv git nginx postgresql postgresql-contrib
+   ```
+
+2. Clone the repository:
+   ```
+   git clone https://codeberg.org/Adamcatholic/Ds.git /home/discuss/app
+   cd /home/discuss/app
+   ```
+
+3. Run the automated deployment script in production mode:
+   ```
+   python utils/deploy.py --production
+   ```
+   
+   This script will:
+   - Guide you through database configuration
+   - Help set up secure credentials
+   - Generate or prompt for a secure Django secret key
+   - Set up Sentry error tracking (optional)
+   - Install all dependencies
+   - Create Gunicorn configuration
+   - Provide Nginx configuration instructions
+   - Offer to create a superuser
+   
+4. Follow the script's instructions for completing the Nginx setup and enabling SSL with Let's Encrypt.
+
+### Manual Production Deployment
+
+If you prefer to deploy manually or need more control over the setup process:
+
+#### 1. Server Setup
 
 1. Update your system packages and install required software:
    ```
@@ -169,7 +259,7 @@ The `utils/` directory contains helpful scripts for database management and debu
    sudo usermod -aG sudo discuss
    ```
 
-### 2. Database Setup
+#### 2. Database Setup
 
 1. Create a PostgreSQL database and user:
    ```
@@ -185,7 +275,7 @@ The `utils/` directory contains helpful scripts for database management and debu
 
 2. Update your environment variables with the database connection information.
 
-### 3. Application Setup
+#### 3. Application Setup
 
 1. Clone the repository:
    ```
@@ -201,7 +291,7 @@ The `utils/` directory contains helpful scripts for database management and debu
 
 3. Install dependencies:
    ```
-   pip install -r requirements.txt
+   pip install -e .
    pip install gunicorn
    ```
 
@@ -225,7 +315,7 @@ The `utils/` directory contains helpful scripts for database management and debu
    python manage.py createsuperuser
    ```
 
-### 4. Web Server Configuration
+#### 4. Web Server Configuration
 
 1. Create a systemd service file for Gunicorn:
    ```
@@ -299,7 +389,31 @@ The `utils/` directory contains helpful scripts for database management and debu
    sudo certbot --nginx -d your-domain.com -d www.your-domain.com
    ```
 
-### 5. Maintenance and Monitoring
+### Maintenance and Updates
+
+#### Automated Updates (Recommended)
+
+To update your application with the latest code:
+
+1. Navigate to your application directory:
+   ```
+   cd /home/discuss/app
+   source venv/bin/activate
+   ```
+
+2. Run the automated update script:
+   ```
+   # Basic update
+   python utils/update.py
+   
+   # Update with database backup
+   python utils/update.py --backup
+   
+   # Update and restart server
+   python utils/update.py --restart
+   ```
+
+#### Manual Maintenance
 
 1. Set up automatic database backups:
    ```
@@ -333,12 +447,12 @@ The `utils/` directory contains helpful scripts for database management and debu
    sudo tail -f /var/log/nginx/error.log
    ```
 
-3. Update application:
+3. Update application manually:
    ```
    cd /home/discuss/app
    source venv/bin/activate
    git pull
-   pip install -r requirements.txt
+   pip install -e .
    python manage.py migrate
    python manage.py collectstatic
    sudo systemctl restart gunicorn_discuss
