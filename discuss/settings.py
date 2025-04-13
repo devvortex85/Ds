@@ -165,6 +165,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Custom datetime formats using 24-hour clock
+TIME_FORMAT = 'H:i'  # 24-hour format without seconds
+DATE_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:i'
+SHORT_DATETIME_FORMAT = 'Y-m-d H:i'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
