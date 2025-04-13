@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title|default:"Donation" }}{% endblock %}
+
+{% block content %}
+{% with content_block %}
+    {% if page_type == 'form' %}
+        <p class="lead">Your donations help us keep the lights on and improve the platform for everyone.</p>
+        {% include 'core/includes/donation_form.html' with form=form messages=messages %}
+    {% elif page_type == 'confirmation' %}
+        <div class="alert alert-info">
+            <p class="mb-0">Please review your donation details before proceeding to payment.</p>
+        </div>
+        
+        {% include 'core/includes/payment_summary.html' with payment=payment title="Donation Summary" show_date=True table_class="table" %}
+        
+        {% include 'core/includes/payment_method_form.html' with cancel_url='donate' use_enhanced_ui=True %}
+    {% elif page_type == 'history' %}
+        {% include 'core/includes/donation_history_content.html' with payments=payments %}
+    {% endif %}
+{% endwith %}
+
+{% include 'core/includes/payment_layout.html' with 
+    title=title|default:"Donation"
+    content=content_block 
+    footer_message=footer_message|default:"Payments are secure and processed via our payment provider."
+    container_class=container_class|default:"" %}
+{% endblock %}

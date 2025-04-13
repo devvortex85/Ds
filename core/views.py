@@ -966,9 +966,10 @@ def donate(request):
     else:
         form = DonationForm()
     
-    return render(request, 'core/donation.html', {
+    return render(request, 'core/donation_page.html', {
         'form': form,
-        'title': 'Donate'
+        'title': 'Support Discuss',
+        'page_type': 'form'
     })
 
 @login_required
@@ -988,9 +989,11 @@ def donation_confirmation(request):
         # User confirmed the donation, proceed to payment processing
         return redirect('process_payment', payment_id=payment.id)
     
-    return render(request, 'core/donation_confirmation.html', {
+    return render(request, 'core/donation_page.html', {
         'payment': payment,
-        'title': 'Confirm Donation'
+        'title': 'Confirm Your Donation',
+        'page_type': 'confirmation',
+        'footer_message': 'Your support means a lot to our community. Thank you!'
     })
 
 @login_required
@@ -1072,10 +1075,12 @@ def donation_history(request):
         total=Sum('total')
     )['total'] or 0
     
-    return render(request, 'core/donation_history.html', {
+    return render(request, 'core/donation_page.html', {
         'payments': payments,
         'total_donated': total_donated,
-        'title': 'Donation History'
+        'title': 'Your Donation History',
+        'page_type': 'history',
+        'container_class': 'py-5'
     })
 
 def sentry_status(request):
