@@ -85,7 +85,7 @@ def donate(request):
     else:
         form = DonationForm()
     
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payment/payment_page.html', {
         'form': form,
         'title': 'Make a Donation',
         'page_type': 'donate'
@@ -97,7 +97,7 @@ def donation_confirmation(request):
     """
     Confirmation page after initiating a donation
     """
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payment/payment_page.html', {
         'title': 'Donation Confirmation',
         'page_type': 'confirmation'
     })
@@ -108,7 +108,7 @@ def payment_success(request):
     """
     Success page after a successful payment
     """
-    return render(request, 'core/payment_page.html', {
+    return render(request, 'core/payment/payment_page.html', {
         'title': 'Payment Successful',
         'page_type': 'success'
     })
