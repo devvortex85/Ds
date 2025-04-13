@@ -11,6 +11,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('markdownx/', include('markdownx.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    # Override specific auth URLs with our consolidated templates
+    path('accounts/', include('core.auth_views.urls')),
+    # Include remaining allauth URLs
     path('accounts/', include('allauth.urls')),
     # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
     # path('user-guide/', include('user_guide.urls')),  # User guide removed from application
