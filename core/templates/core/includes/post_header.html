@@ -1,0 +1,42 @@
+{% comment %}
+Consolidated post header template
+Parameters:
+- post: The post object to display
+- compact: Boolean for compact display (default: False)
+{% endcomment %}
+
+{% load reputation_tags %}
+
+<header>
+    {% if post.post_type == 'link' %}
+    <h2 class="{% if not compact %}h5 card-title mb-1{% else %}h6 mb-1{% endif %}">
+        <a href="{{ post.url }}" target="_blank" rel="noopener" class="post-title">
+            {{ post.title }}
+            <span class="sr-only">(opens in a new tab)</span>
+        </a>
+        <small class="text-muted">
+            <i class="bi bi-box-arrow-up-right fa-xs" aria-hidden="true"></i>
+        </small>
+    </h2>
+    {% else %}
+    <h2 class="{% if not compact %}h5 card-title mb-1{% else %}h6 mb-1{% endif %}">
+        <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+    </h2>
+    {% endif %}
+    
+    <div class="post-meta small text-muted mb-1">
+        <span>Posted {{ post.created_at|timesince }} ago by</span>
+        <a href="{% url 'profile' post.author.username %}" class="text-decoration-none">
+            {{ post.author.username }}
+        </a>
+        
+        {% if post.author.profile.country %}
+        <img src="{{ post.author.profile.country.flag }}" alt="{{ post.author.profile.country.name }}" class="country-flag" style="width: 20px; height: 13px; vertical-align: middle;" />
+        {% endif %}
+        
+        {{ post.author.profile.karma|reputation_badge }}
+        
+        <span class="mx-1">in</span>
+        <a href="{% url 'community_detail' post.community.id %}" class="community-link">{% if prefix_community %}d/{% endif %}{{ post.community.name }}</a>
+    </div>
+</header>

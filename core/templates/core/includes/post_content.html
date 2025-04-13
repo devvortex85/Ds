@@ -1,0 +1,30 @@
+{% comment %}
+Consolidated post content template
+Parameters:
+- post: The post object to display
+- truncate: Boolean to truncate content (default: True)
+- word_limit: Number of words to show when truncated (default: 50)
+{% endcomment %}
+
+{% if post.post_type == 'text' and post.content %}
+<div class="post-content-text {% if not detail_view %}small text-muted{% endif %}">
+    {% if truncate|default:True %}
+        {{ post.content|truncatewords:word_limit|default:50 }}
+        {% if post.content|wordcount > word_limit|default:50 %}
+        <a href="{% url 'post_detail' post.id %}" class="text-primary">Read more</a>
+        {% endif %}
+    {% else %}
+        {{ post.content }}
+    {% endif %}
+</div>
+{% endif %}
+
+{% if post.post_type == 'link' and detail_view %}
+<div class="post-url-detail mt-2 mb-3">
+    <a href="{{ post.url }}" target="_blank" rel="noopener" class="btn btn-outline-primary">
+        <i class="bi bi-box-arrow-up-right me-2"></i>
+        Visit Link
+    </a>
+    <span class="text-muted ms-2">{{ post.url }}</span>
+</div>
+{% endif %}

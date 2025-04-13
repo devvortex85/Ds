@@ -1,0 +1,35 @@
+{% comment %}
+Consolidated social sharing buttons template
+Parameters:
+- post: The post object to share
+- compact: Boolean for compact display (default: False)
+{% endcomment %}
+
+<div class="btn-group me-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share options">
+        <i class="bi bi-share" aria-hidden="true"></i> Share
+    </button>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                <i class="fab fa-facebook me-2" aria-hidden="true"></i>Facebook
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                <i class="fab fa-twitter me-2" aria-hidden="true"></i>Twitter
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}{% url 'post_detail' post.id %}" aria-label="Share via Email">
+                <i class="bi bi-envelope-fill me-2" aria-hidden="true"></i>Email
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <button class="dropdown-item" onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}{% url 'post_detail' post.id %}'); alert('Link copied to clipboard!'); return false;" aria-label="Copy link to clipboard">
+                <i class="bi bi-clipboard me-2" aria-hidden="true"></i>Copy Link
+            </button>
+        </li>
+    </ul>
+</div>
