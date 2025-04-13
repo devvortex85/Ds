@@ -1,0 +1,49 @@
+{% comment %}
+Consolidated post voting buttons template
+Parameters:
+- post: The post object to vote on
+- user_post_votes: Dictionary of user votes on posts (optional)
+- return_url: URL to return after vote (default: request.path)
+- compact: Boolean for compact display (default: False)
+{% endcomment %}
+
+<!-- Votes section -->
+<div class="vote-column {% if not compact %}me-2{% else %}me-1{% endif %}" aria-label="Voting controls">
+    {% if user.is_authenticated %}
+    <a href="{% url 'vote_post' post.id 'upvote' %}?next={{ return_url|default:request.path }}{% if hashtag %}#{{ hashtag }}{% else %}#post-{{ post.id }}{% endif %}" 
+       class="vote-btn upvote-btn post-vote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == 1 %}active voted{% endif %}"
+       data-post-id="{{ post.id }}" 
+       data-vote-type="upvote"
+       aria-label="Upvote"
+       role="button"
+       tabindex="0">
+        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+        <span class="sr-only">Upvote</span>
+    </a>
+    {% else %}
+    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
+        <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
+        <span class="sr-only">Login to upvote</span>
+    </a>
+    {% endif %}
+    
+    <div class="vote-count" id="post-{{ post.id }}-votes" aria-live="polite" aria-label="Post score: {{ post.vote_count }}">{{ post.vote_count }}</div>
+    
+    {% if user.is_authenticated %}
+    <a href="{% url 'vote_post' post.id 'downvote' %}?next={{ return_url|default:request.path }}{% if hashtag %}#{{ hashtag }}{% else %}#post-{{ post.id }}{% endif %}" 
+       class="vote-btn downvote-btn post-vote-btn {% if user_post_votes and post.id in user_post_votes and user_post_votes|get_item:post.id == -1 %}active voted{% endif %}"
+       data-post-id="{{ post.id }}" 
+       data-vote-type="downvote"
+       aria-label="Downvote"
+       role="button"
+       tabindex="0">
+        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+        <span class="sr-only">Downvote</span>
+    </a>
+    {% else %}
+    <a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
+        <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
+        <span class="sr-only">Login to downvote</span>
+    </a>
+    {% endif %}
+</div>

@@ -20,23 +20,7 @@
         {% if communities %}
             <div class="list-group list-group-flush">
                 {% for community in communities %}
-                    <div class="list-group-item p-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-users fa-2x text-primary me-3"></i>
-                            <div class="community-info flex-grow-1">
-                                <h5 class="mb-1">
-                                    <a href="{% url 'community_detail' community.id %}" class="text-decoration-none">d/{{ community.name }}</a>
-                                </h5>
-                                <p class="text-muted mb-1">{{ community.description|truncatechars:100 }}</p>
-                                <div class="community-meta small text-muted">
-                                    <span><i class="fas fa-user me-1"></i> {{ community.member_count }} members</span>
-                                    <span class="mx-2">•</span>
-                                    <span><i class="fas fa-calendar-alt me-1"></i> Created {{ community.created_at|date:"M d, Y" }}</span>
-                                </div>
-                            </div>
-                            <a href="{% url 'community_detail' community.id %}" class="btn btn-outline-primary">View</a>
-                        </div>
-                    </div>
+                    {% include 'core/includes/community_item.html' with community=community show_actions=True %}
                 {% endfor %}
             </div>
         {% else %}
@@ -88,10 +72,9 @@
         {% if user.communities.all %}
             <div class="list-group list-group-flush">
                 {% for community in user.communities.all %}
-                    <a href="{% url 'community_detail' community.id %}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-users me-2 text-primary"></i>
-                        d/{{ community.name }}
-                    </a>
+                    <div class="list-group-item list-group-item-action">
+                        {% include 'core/includes/community_item.html' with community=community show_actions=False compact=True %}
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
