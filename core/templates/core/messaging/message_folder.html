@@ -66,7 +66,7 @@
                                             <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>
                                             <td>
                                                 {% if message.is_new %}<strong>{% endif %}
-                                                <a href="{{ message.url }}">{{ message.subject }}</a>
+                                                <a href="{% url 'postman:view' message.form.instance.pk %}">{{ message.subject }}</a>
                                                 {% if message.is_new %}</strong>{% endif %}
                                             </td>
                                             <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
@@ -128,7 +128,7 @@
                                             <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>
                                             <td>
                                                 {% if message.is_new %}<strong>{% endif %}
-                                                <a href="{{ message.url }}">{{ message.subject }}</a>
+                                                <a href="{% url 'postman:view' message.form.instance.pk %}">{{ message.subject }}</a>
                                                 {% if message.is_new %}</strong>{% endif %}
                                             </td>
                                             <td>{{ message.sent_at|date:"DATETIME_FORMAT" }}</td>
