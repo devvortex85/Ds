@@ -57,14 +57,9 @@
                         {% endif %}
                     </div>
 
-                    <div class="mt-4">
-                        <a href="{% url 'donate' %}" class="btn btn-primary me-2">
-                            <i class="fas fa-sync me-1"></i> Try Again
-                        </a>
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-home me-1"></i> Return to Home
-                        </a>
-                    </div>
+                    {% include 'core/includes/action_buttons.html' with 
+                        primary_link="donate" primary_text="Try Again" primary_icon="fas fa-sync" primary_class="btn-primary"
+                        secondary_link="home" secondary_text="Return to Home" secondary_icon="fas fa-home" %}
                 </div>
             </div>
         </div>

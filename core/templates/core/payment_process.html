@@ -30,13 +30,17 @@
                                 <div class="form-text">For testing, use 4242424242424242</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_expiration" class="form-label">Expiration Date (MM/YY)</label>
-                                    <input type="text" name="expiration" id="id_expiration" class="form-control" value="12/25" required>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_expiration" class="form-label">Expiration Date (MM/YY)</label>
+                                        <input type="text" name="expiration" id="id_expiration" class="form-control" value="12/25" required>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_cvv2" class="form-label">CVV</label>
-                                    <input type="text" name="cvv2" id="id_cvv2" class="form-control" value="123" required>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_cvv2" class="form-label">CVV</label>
+                                        <input type="text" name="cvv2" id="id_cvv2" class="form-control" value="123" required>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -52,20 +56,7 @@
                             {% else %}
                             <!-- For other providers, show the form fields -->
                             {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field }}
-                                {% if field.help_text %}
-                                <div class="form-text">{{ field.help_text }}</div>
-                                {% endif %}
-                                {% if field.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                    {{ error }}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                            </div>
+                                {% include 'core/includes/form_field.html' with field=field use_invalid_feedback=True %}
                             {% endfor %}
                             {% endif %}
                             

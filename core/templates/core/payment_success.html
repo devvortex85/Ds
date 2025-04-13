@@ -22,39 +22,7 @@
                                 </p>
                             </div>
                             
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h5 class="mb-0">Payment Details</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Payment ID:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ payment.id }}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Status:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {% include 'core/includes/payment_status_badge.html' with status=payment.status %}
-                                        </div>
-                                    </div>
-                                    {% if payment.transaction_id %}
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <strong>Transaction ID:</strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ payment.transaction_id }}
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            {% include 'core/includes/payment_summary.html' with payment=payment title="Payment Details" show_id=True show_status=True show_transaction=True card_class="mb-4" %}
                         {% endif %}
 
                         <p class="text-muted">

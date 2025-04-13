@@ -58,12 +58,10 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <a href="{% url 'home' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-home me-1"></i> Return to Home
-                        </a>
-                        <a href="{% url 'donate' %}" class="btn btn-success">
-                            <i class="fas fa-donate me-1"></i> Make a New Donation
-                        </a>
+                        {% include 'core/includes/action_buttons.html' with 
+                            primary_link="home" primary_text="Return to Home" primary_icon="fas fa-home" primary_class="btn-outline-primary" container_class="" %}
+                        {% include 'core/includes/action_buttons.html' with 
+                            primary_link="donate" primary_text="Make a New Donation" primary_icon="fas fa-donate" primary_class="btn-success" container_class="" %}
                     </div>
                 </div>
             </div>

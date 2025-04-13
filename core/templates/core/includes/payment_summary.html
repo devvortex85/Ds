@@ -5,14 +5,35 @@
   - payment: The payment object with details (required)
   - title: The summary title (default: "Payment Summary")
   - include_description: Boolean to show description if available (default: True)
+  - show_method: Show payment method (default: False)
+  - show_date: Show payment date (default: False)
+  - show_transaction: Show transaction ID (default: False)
+  - show_id: Show payment ID (default: False)
+  - show_status: Show payment status (default: False)
+  - table_class: Additional classes for the table (default: "table-bordered")
+  - card_class: Additional classes for the container (default: "mb-4")
   
   Usage:
   {% include 'core/includes/payment_summary.html' with payment=payment %}
 {% endcomment %}
 
-<div class="payment-summary mb-4">
+<div class="{% if use_card %}card {% endif %}{{ card_class|default:'mb-4' }}">
+    {% if use_card %}
+    <div class="card-header bg-light">
+        <h5 class="mb-0">{{ title|default:"Payment Summary" }}</h5>
+    </div>
+    <div class="card-body">
+    {% else %}
     <h4>{{ title|default:"Payment Summary" }}</h4>
+    {% endif %}
+    
     <table class="table {% if table_class %}{{ table_class }}{% else %}table-bordered{% endif %}">
+        {% if payment.id and show_id %}
+        <tr>
+            <th>Payment ID:</th>
+            <td>{{ payment.id }}</td>
+        </tr>
+        {% endif %}
         <tr>
             <th>Amount:</th>
             <td>${{ payment.total|floatformat:2 }} USD</td>
@@ -33,6 +54,12 @@
         <tr>
             <th>Message:</th>
             <td>{{ payment.description }}</td>
+        </tr>
+        {% endif %}
+        {% if payment.status and show_status %}
+        <tr>
+            <th>Status:</th>
+            <td>{% include 'core/includes/payment_status_badge.html' with status=payment.status %}</td>
         </tr>
         {% endif %}
         {% if payment.transaction_id and show_transaction %}
