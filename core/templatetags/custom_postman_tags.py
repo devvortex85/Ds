@@ -1,27 +1,18 @@
 from django import template
-from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 register = template.Library()
 
-@register.filter
-def or_me(value, user):
+@register.simple_tag
+def unread_message_count(user):
     """
-    Displays the username, or 'me' if the user is the logged in user.
+    Return the count of unread messages for a user
+    """
+    if not user.is_authenticated:
+        return 0
     
-    Args:
-        value: The username to display or a user object
-        user: The current logged in user
-        
-    Returns:
-        str: Either the username or translated "me"
-    """
-    if hasattr(value, 'username'):
-        if value.username == user.username:
-            return _("me")
-        else:
-            return value.username
-    else:
-        if value == user.username:
-            return _("me")
-        else:
-            return value
+    try:
+        from postman.models import Message
+        return Message.objects.inbox_unread_count(user)
+    except ImportError:
+        return 0

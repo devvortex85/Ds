@@ -17,7 +17,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     # path('avatar/', include('avatar.urls')),  # Replaced with native ImageField in Profile model
     # path('user-guide/', include('user_guide.urls')),  # User guide removed from application
-    path('messages/', include('postman.urls', namespace='postman')),
+    # Override postman URLs with our consolidated views
+    path('messages/', include('core.messaging_urls', namespace='postman')),
     path('', include('core.urls')),
 ]
 
