@@ -29,4 +29,5 @@ dependencies = [
     "django-extensions>=3.2.3",
     "django-silk>=5.3.2",
     "stripe>=12.0.0",
+    "trafilatura>=2.0.0",
 ]
