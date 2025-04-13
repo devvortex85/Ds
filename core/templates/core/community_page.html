@@ -60,7 +60,7 @@
     {% endif %}
 </div>
 
-{% with content_block %}
+{% with content_block='' %}
     {% with empty_message="No communities found." empty_action_url=user.is_authenticated|yesno:"create_community,account_login" empty_action_text=user.is_authenticated|yesno:"Create the first community,Login to create a community" %}
         {% include 'core/includes/list_group.html' with 
             items=communities 
@@ -106,7 +106,7 @@
 </div>
 {% else %}
 <!-- Community List Sidebar -->
-{% with content_block %}
+{% with content_block='' %}
     <p>Communities are groups where users can post, comment, and discuss shared interests.</p>
     
     <h6 class="mt-3">Community Guidelines</h6>
@@ -132,7 +132,7 @@
     card_class="mb-4" %}
 
 {% if user.is_authenticated %}
-{% with content_block %}
+{% with content_block='' %}
     {% include 'core/includes/list_group.html' with 
         items=user.communities.all 
         item_template='core/includes/community_item.html' 

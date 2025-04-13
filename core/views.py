@@ -627,10 +627,17 @@ def delete_comment(request, pk):
         messages.success(request, 'Your comment has been deleted.')
         return redirect('post_detail', pk=post_id)
     
-    return render(request, 'core/delete_confirm.html', {
-        'object': comment,
-        'object_type': 'comment',
-        'title': 'Delete Comment',
+    return render(request, 'core/confirmation_page.html', {
+        'object_display': comment.content[:100] + ('...' if len(comment.content) > 100 else ''),
+        'object_details': f'Comment by {comment.author.username} on "{comment.post.title}"',
+        'object_icon': 'bi bi-chat-text',
+        'confirmation_message': 'Are you sure you want to delete this comment? This action cannot be undone.',
+        'warning_message': 'All replies to this comment will also be deleted.',
+        'confirmation_type': 'danger',
+        'header_title': 'Delete Comment',
+        'page_title': 'Delete Comment',
+        'cancel_url': reverse('post_detail', kwargs={'pk': comment.post.pk}),
+        'confirm_button_text': 'Delete Comment Permanently'
     })
 
 @login_required
@@ -801,7 +808,39 @@ def search(request):
         'title': 'Search Results',
     }
     
-    return render(request, 'core/search_results.html', context)
+    # Prepare variables for context
+    user_results = []
+    post_results = []
+    community_results = []
+    tag_results = Tag.objects.filter(name__icontains=query)[:10] if query else []
+    
+    # Extract individual result types if we have search results
+    if query and isinstance(results, list):
+        for item in results:
+            if isinstance(item, Post):
+                post_results.append(item)
+            elif isinstance(item, Community):
+                community_results.append(item)
+            elif isinstance(item, User):
+                user_results.append(item)
+    
+    # Add additional context for the consolidated search page
+    context.update({
+        'search_mode': 'basic',
+        'communities': community_results,
+        'users': user_results,
+        'posts': post_results,
+        'tags': tag_results,
+        'result_counts': {
+            'total': result_count,
+            'posts': len(post_results),
+            'communities': len(community_results),
+            'users': len(user_results),
+            'tags': len(tag_results)
+        }
+    })
+    
+    return render(request, 'core/search_page.html', context)
 
 def advanced_search(request):
     """Advanced search with full-text search and filtering capabilities"""
@@ -889,7 +928,38 @@ def advanced_search(request):
         'title': 'Advanced Search',
     }
     
-    return render(request, 'core/advanced_search.html', context)
+    # Add additional context for the consolidated search page
+    context.update({
+        'search_mode': 'advanced',
+        'search_query': query,
+        'posts': results,
+        'filter': {
+            'form': {
+                'period': {
+                    'label': 'Time Period'
+                },
+                'post_type': {
+                    'label': 'Post Type'
+                },
+                'sort': {
+                    'label': 'Sort By'
+                },
+                'community': {
+                    'label': 'Communities'
+                },
+                'tags': {
+                    'label': 'Tags'
+                },
+                'min_votes': {
+                    'label': 'Minimum Votes'
+                }
+            }
+        },
+        'all_tags': Tag.objects.annotate(num_times=Count('taggit_taggeditem_items')).order_by('-num_times')[:20],
+        'using_fallback': False
+    })
+    
+    return render(request, 'core/search_page.html', context)
 
 def post_votes_api(request, pk):
     """API endpoint to get post vote count and user's vote"""
