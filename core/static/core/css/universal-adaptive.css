@@ -720,9 +720,20 @@ img.rounded-circle,
 .post-wrapper,
 .comment-wrapper,
 article.post,
-article.comment {
+article.comment,
+.card.post-card,
+.row.post-row,
+.post,
+.reply,
+.comment,
+.nested-comment,
+.media.post,
+.media.comment,
+.list-group-item.post,
+.list-group-item.comment {
     border-radius: calc(0.375rem * var(--adaptive-scale)) !important;
     margin-bottom: calc(1rem * var(--adaptive-scale)) !important;
+    border-width: calc(1px * var(--adaptive-scale)) !important;
 }
 
 /* Card bodies and content containers */
@@ -731,8 +742,23 @@ article.comment {
 .comment-body,
 .content-container,
 .post-content-wrapper,
-.comment-content-wrapper {
+.comment-content-wrapper,
+.post-content,
+.comment-content,
+.card-text,
+.media-body,
+.content,
+.post-text,
+.comment-text,
+.body-content,
+.card.post-card .card-body,
+.post .card-body,
+.comment .card-body,
+.post-detail .card-body,
+.comment-detail .card-body {
     padding: calc(1rem * var(--adaptive-scale)) !important;
+    font-size: calc(0.95rem * var(--adaptive-scale)) !important;
+    line-height: calc(1.5 * var(--adaptive-scale)) !important;
 }
 
 /* Post and comment actions */
@@ -741,9 +767,46 @@ article.comment {
 .action-buttons,
 .post-footer,
 .comment-footer,
-.action-bar {
+.action-bar,
+.post-card-footer,
+.comment-card-footer,
+.card-actions,
+.action-links,
+.action-row,
+.interactions,
+.post-meta-actions,
+.comment-meta-actions,
+.card-footer,
+.post .card-footer,
+.comment .card-footer {
     margin-top: calc(0.75rem * var(--adaptive-scale)) !important;
     padding-top: calc(0.5rem * var(--adaptive-scale)) !important;
+    padding-bottom: calc(0.5rem * var(--adaptive-scale)) !important;
+    gap: calc(0.5rem * var(--adaptive-scale)) !important;
+}
+
+/* Post and comment action buttons */
+.post-actions .btn,
+.comment-actions .btn,
+.action-buttons .btn,
+.action-bar .btn,
+.post-footer .btn,
+.comment-footer .btn,
+.card-actions .btn,
+.action-links .btn,
+.interactions .btn,
+.btn-action,
+.btn-vote,
+.btn-reply,
+.btn-share,
+.btn-report {
+    font-size: calc(0.85rem * var(--adaptive-scale)) !important;
+    padding: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale)) !important;
+    margin-right: calc(0.25rem * var(--adaptive-scale)) !important;
+    min-height: calc(30px * var(--adaptive-scale)) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 /* Tags - add more specific selectors */
@@ -768,7 +831,13 @@ a.badge,
 .reputation-badge,
 .reputation-level,
 .badge-container .badge,
-span.badge {
+span.badge,
+.post-meta .badge,
+.post-info .badge,
+.community-tags .badge,
+.tag-cloud .badge,
+.post-footer .badge,
+.list-item-tags .badge {
     font-size: calc(0.75rem * var(--adaptive-scale)) !important;
     padding: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale)) !important;
     border-radius: calc(0.25rem * var(--adaptive-scale)) !important;
@@ -776,6 +845,10 @@ span.badge {
     margin-bottom: calc(0.25rem * var(--adaptive-scale)) !important;
     display: inline-flex !important;
     align-items: center !important;
+    max-width: calc(100% * var(--adaptive-scale)) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 /* Links in posts and comments */
