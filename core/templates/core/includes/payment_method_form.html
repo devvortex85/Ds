@@ -1,0 +1,40 @@
+{% comment %}
+  Template for displaying a payment method selection form
+  
+  Parameters:
+  - cancel_url: The URL to redirect to if user cancels (optional, default: 'donate')
+  - submit_label: The label for the submit button (optional, default: "Proceed to Payment")
+  - cancel_label: The label for the cancel button (optional, default: "Cancel")
+  - show_test_note: Whether to show test mode instructions (optional, default: True)
+  
+  Usage:
+  {% include 'core/includes/payment_method_form.html' with cancel_url='donate' %}
+{% endcomment %}
+
+{% load i18n %}
+
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="form-group mb-3">
+        <label class="form-label"><strong>Payment Method</strong></label>
+        <select name="payment_variant" class="form-select">
+            <option value="default" selected>Credit Card (Test Mode)</option>
+            <option value="paypal">PayPal</option>
+            <option value="stripe">Stripe</option>
+        </select>
+        {% if show_test_note|default:True %}
+        <div class="form-text">
+            <small class="text-muted">Note: For testing, select "Credit Card (Test Mode)" and use credit card number 4242424242424242</small>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="d-grid gap-2 mt-4">
+        <button type="submit" class="btn btn-success btn-lg">
+            {{ submit_label|default:"Proceed to Payment" }}
+        </button>
+        <a href="{% url cancel_url|default:'donate' %}" class="btn btn-outline-secondary">
+            {{ cancel_label|default:"Cancel" }}
+        </a>
+    </div>
+</form>
