@@ -1,35 +1,56 @@
 {% comment %}
-  Template for displaying consistent action buttons
+  Template for standardized action buttons layout
   
   Parameters:
-  - primary_link: Primary button link URL (optional)
-  - primary_text: Primary button text (optional, default: "Return to Home")
-  - primary_icon: Primary button icon class (optional, default: "fas fa-home")
-  - secondary_link: Secondary button link URL (optional)
-  - secondary_text: Secondary button text (optional)
-  - secondary_icon: Secondary button icon class (optional)
-  - container_class: Additional classes for the container (optional, default: "mt-4")
-  - primary_class: Additional classes for primary button (optional, default: "btn-primary")
-  - secondary_class: Additional classes for secondary button (optional, default: "btn-outline-secondary")
+  - primary_url: URL for the primary action (optional)
+  - primary_label: Label for the primary action (optional, default: "Save")
+  - primary_icon: Icon class for the primary action (optional)
+  - primary_type: Type attribute for the primary button (optional, default: "submit")
+  - primary_class: Additional CSS classes for the primary button (optional)
+  
+  - secondary_url: URL for the secondary action (optional)
+  - secondary_label: Label for the secondary action (optional, default: "Cancel")
+  - secondary_icon: Icon class for the secondary action (optional)
+  - secondary_type: Type attribute for the secondary button (optional, default: "button") 
+  - secondary_class: Additional CSS classes for the secondary button (optional)
+  
+  - container_class: Additional CSS classes for the button container (optional)
+  - align: Alignment of buttons: "start", "center", "end", "between", "around" (optional, default: "end")
   
   Usage:
   {% include 'core/includes/action_buttons.html' with 
-     primary_link="home" primary_text="Return to Home"
-     secondary_link="donation_history" secondary_text="View Donation History" %}
+     primary_label="Save Changes" 
+     primary_icon="bi-check-circle-fill" 
+     secondary_url=cancel_url 
+     secondary_label="Cancel" %}
 {% endcomment %}
 
-<div class="{{ container_class|default:'mt-4' }}">
-    {% if primary_link %}
-        <a href="{% url primary_link %}" class="btn {{ primary_class|default:'btn-primary' }} me-2">
-            {% if primary_icon %}<i class="{{ primary_icon|default:'fas fa-home' }} me-1" aria-hidden="true"></i> {% endif %}
-            {{ primary_text|default:"Return to Home" }}
+{% with primary_label=primary_label|default:"Save" secondary_label=secondary_label|default:"Cancel" %}
+
+<div class="d-flex {% if align == 'start' %}justify-content-start{% elif align == 'center' %}justify-content-center{% elif align == 'between' %}justify-content-between{% elif align == 'around' %}justify-content-around{% else %}justify-content-end{% endif %} {{ container_class }}" role="group" aria-label="Action buttons">
+    {% if secondary_url %}
+        <a href="{{ secondary_url }}" class="btn btn-outline-secondary me-2 {{ secondary_class }}">
+            {% if secondary_icon %}<i class="bi {{ secondary_icon }} me-1" aria-hidden="true"></i>{% endif %}
+            {{ secondary_label }}
         </a>
+    {% elif secondary_label %}
+        <button type="{{ secondary_type|default:'button' }}" class="btn btn-outline-secondary me-2 {{ secondary_class }}">
+            {% if secondary_icon %}<i class="bi {{ secondary_icon }} me-1" aria-hidden="true"></i>{% endif %}
+            {{ secondary_label }}
+        </button>
     {% endif %}
     
-    {% if secondary_link %}
-        <a href="{% url secondary_link %}" class="btn {{ secondary_class|default:'btn-outline-secondary' }}">
-            {% if secondary_icon %}<i class="{{ secondary_icon }} me-1" aria-hidden="true"></i> {% endif %}
-            {{ secondary_text }}
+    {% if primary_url %}
+        <a href="{{ primary_url }}" class="btn btn-primary {{ primary_class }}">
+            {% if primary_icon %}<i class="bi {{ primary_icon }} me-1" aria-hidden="true"></i>{% endif %}
+            {{ primary_label }}
         </a>
+    {% elif primary_label %}
+        <button type="{{ primary_type|default:'submit' }}" class="btn btn-primary {{ primary_class }}">
+            {% if primary_icon %}<i class="bi {{ primary_icon }} me-1" aria-hidden="true"></i>{% endif %}
+            {{ primary_label }}
+        </button>
     {% endif %}
 </div>
+
+{% endwith %}

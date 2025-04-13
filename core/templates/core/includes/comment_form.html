@@ -1,40 +1,50 @@
 {% comment %}
-  Template for the main comment form that appears at the top of comment sections
+  Template for the comment form
   
   Parameters:
   - post: The post being commented on (required)
+  - parent_comment: The parent comment if replying to a comment (optional)
+  - comment_form: The CommentForm instance (required)
   - card_class: Additional CSS classes for the card (optional)
-  - button_text: Text for the submit button (default: "Comment") 
   
   Usage:
-  {% include 'core/includes/comment_form.html' with post=post %}
+  {% include 'core/includes/comment_form.html' with post=post comment_form=comment_form %}
 {% endcomment %}
 
 {% if user.is_authenticated %}
-<!-- Main comment form at the top level -->
-<div class="card {{ card_class|default:'mb-3' }}">
-    <div class="card-body">
-        <form action="{% url 'add_comment' post.id %}" method="post">
+<section class="card {% if not parent_comment %}mb-4{% endif %} {{ card_class|default:'' }}" aria-labelledby="comment-form-heading">
+    <div class="card-body p-3">
+        <h2 id="comment-form-heading" class="sr-only">Add a comment</h2>
+        <div class="d-flex align-items-center mb-3">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}'s avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+            {% else %}
+                <div class="avatar-placeholder rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #e9ecef;" aria-hidden="true">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+            {% endif %}
+            <span>Comment as <a href="{% url 'profile' user.username %}" class="fw-bold">{{ user.username }}</a></span>
+        </div>
+        <form method="post" action="{% url 'add_comment' post.id %}">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="content" class="form-label">Add a comment</label>
-                <textarea name="content" id="content" class="form-control comment-textarea" rows="3" placeholder="What are your thoughts?" required></textarea>
+            {% if parent_comment %}
+                <input type="hidden" name="parent_id" value="{{ parent_comment.id }}">
+            {% endif %}
+            <div class="mb-3">
+                <label for="content_id_content" class="form-label sr-only">Comment text</label>
+                {{ comment_form.content }}
             </div>
-            <div class="d-flex justify-content-end mt-2">
-                <button type="submit" class="btn btn-primary">{{ button_text|default:"Comment" }}</button>
-            </div>
+            <button type="submit" class="btn btn-primary">{% if parent_comment %}Reply{% else %}Comment{% endif %}</button>
+            {% if parent_comment %}
+                <button type="button" class="btn btn-outline-secondary cancel-reply-btn ms-2">Cancel</button>
+            {% endif %}
         </form>
     </div>
-</div>
+</section>
 {% else %}
-<!-- Prompt to log in to comment -->
-<div class="card {{ card_class|default:'mb-3' }}">
-    <div class="card-body text-center">
-        <p class="mb-2">Log in or sign up to leave a comment</p>
-        <div>
-            <a href="{% url 'account_login' %}" class="btn btn-primary me-2">Log In</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">Sign Up</a>
-        </div>
-    </div>
+<div class="alert alert-info mb-4">
+    <p class="mb-0">
+        Please <a href="{% url 'account_login' %}">log in</a> or <a href="{% url 'account_signup' %}">sign up</a> to leave a comment.
+    </p>
 </div>
 {% endif %}

@@ -383,9 +383,14 @@ def post_detail(request, pk):
     else:
         comment_form = None
     
-    # Prepare comment tree
+    # Update denormalized vote counts for comments
     for comment in comments:
-        comment.vote_count = comment.votes.filter(value=1).count() - comment.votes.filter(value=-1).count()
+        # Update denormalized vote counts
+        upvotes = comment.votes.filter(value=1).count()
+        downvotes = comment.votes.filter(value=-1).count()
+        comment.upvote_count = upvotes
+        comment.downvote_count = downvotes
+        comment.save(update_fields=['upvote_count', 'downvote_count'])
         
         # Get user's vote for this comment if they're logged in
         if request.user.is_authenticated:
