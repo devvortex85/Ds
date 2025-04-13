@@ -2,181 +2,87 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Q, Sum, F
 from django.utils import timezone
-from django.http import JsonResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from taggit.models import Tag
-from watson import search as watson
+import watson
 from payments import get_payment_model, RedirectNeeded
-from decimal import Decimal
-
 from .models import Profile, Community, Post, Comment, Vote, Notification, Payment
-from .forms import (UserRegisterForm, UserUpdateForm, ProfileUpdateForm, 
-                   CommunityForm, TextPostForm, LinkPostForm, CommentForm, SearchForm,
-                   DonationForm)
-from .filters import PostFilter
+from .forms import (
+    UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
+    CommunityForm, TextPostForm, LinkPostForm, CommentForm,
+    SearchForm, DonationForm
+)
+import random
+import datetime
+import logging
+import json
+import uuid
+import os
+import requests
+import sentry_sdk
+
+
+logger = logging.getLogger(__name__)
 
 def get_unread_notification_count(user):
     """Helper function to get unread notification count for a user"""
-    if user.is_authenticated:
-        try:
-            # Try to get notification count if the model/functionality exists
-            return Notification.objects.filter(recipient=user, is_read=False).count()
-        except Exception as e:
-            # In case of any error (model doesn't exist, table doesn't exist, etc.)
-            print(f"Error getting notification count: {str(e)}")
-            return 0
-    return 0
+    if not user.is_authenticated:
+        return 0
+    return Notification.objects.filter(recipient=user, read=False).count()
 
 @login_required
 def notifications_list(request):
     """View to display all notifications for the current user"""
     notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    unread_count = get_unread_notification_count(request.user)
     
-    context = {
+    return render(request, 'core/notifications.html', {
         'notifications': notifications,
-        'unread_notification_count': get_unread_notification_count(request.user)
-    }
-    
-    return render(request, 'core/notifications.html', context)
+        'unread_count': unread_count,
+        'title': 'Notifications'
+    })
 
 @login_required
 def mark_notification_read(request, pk):
     """View to mark a notification as read"""
     notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
+    notification.read = True
+    notification.save()
     
-    if request.method == 'POST':
-        notification.is_read = True
-        notification.save()
-        
-        # If AJAX request, return a JSON response
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': 'Notification marked as read',
-            })
-        
-        # Otherwise, redirect back to notifications list
-        messages.success(request, 'Notification marked as read.')
-        return redirect('notifications_list')
+    if notification.link:
+        return redirect(notification.link)
     
-    # For GET requests, just show the notification
-    return render(request, 'core/notification_detail.html', {
-        'notification': notification,
-        'unread_notification_count': get_unread_notification_count(request.user)
-    })
+    return redirect('notifications')
 
 @login_required
 def mark_all_notifications_read(request):
     """View to mark all notifications as read"""
-    if request.method == 'POST':
-        Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
-        
-        # If AJAX request, return a JSON response
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': 'All notifications marked as read',
-            })
-        
-        # Otherwise, redirect back to notifications list
-        messages.success(request, 'All notifications marked as read.')
-        return redirect('notifications_list')
-    
-    # If not a POST request, redirect to notifications list
-    return redirect('notifications_list')
+    Notification.objects.filter(recipient=request.user).update(read=True)
+    messages.success(request, 'All notifications marked as read.')
+    return redirect('notifications')
 
 def home(request, template='core/index.html', extra_context=None):
     """
     Homepage view showing a list of posts with various filtering options
     """
-    # Get query parameters
-    community_id = request.GET.get('community')
-    tag_slug = request.GET.get('tag')
-    sort = request.GET.get('sort', 'recent')
+    # Get posts with vote counts
+    posts = Post.objects.select_related('author', 'community')\
+        .prefetch_related('tags')\
+        .annotate(vote_score=Count('votes', filter=Q(votes__value=1)) - 
+                 Count('votes', filter=Q(votes__value=-1)))\
+        .order_by('-created_at')
     
-    # Start with all posts
-    posts = Post.objects.all()
-    
-    # Filter by community if specified
-    if community_id:
-        try:
-            community = Community.objects.get(id=community_id)
-            posts = posts.filter(community=community)
-            active_community = community
-        except Community.DoesNotExist:
-            active_community = None
-    else:
-        active_community = None
-    
-    # Filter by tag if specified
-    active_tag = None
-    if tag_slug:
-        try:
-            tag = Tag.objects.get(slug=tag_slug)
-            posts = posts.filter(tags__slug=tag_slug)
-            active_tag = tag
-        except Tag.DoesNotExist:
-            pass
-    
-    # Always annotate posts with comment count
-    posts = posts.annotate(comment_count_anno=Count('comments'))
-    
-    # Apply sorting
-    if sort == 'popular':
-        posts = posts.annotate(vote_count_sum=Sum('votes__value')).order_by('-vote_count_sum')
-    elif sort == 'comments':
-        posts = posts.order_by('-comment_count_anno')
-    elif sort == 'oldest':
-        posts = posts.order_by('created_at')
-    else:  # Default to 'recent'
-        posts = posts.order_by('-created_at')
-    
-    # Get top communities
-    top_communities = Community.objects.annotate(
-        member_count=Count('members')
-    ).order_by('-member_count')[:5]
-    
-    # Get popular tags
-    popular_tags = Tag.objects.annotate(
-        num_times=Count('taggit_taggeditem_items')
-    ).order_by('-num_times')[:10]
-    
-    # Get unread notification count for the current user
-    unread_notification_count = get_unread_notification_count(request.user)
-    
-    # Get user's votes on posts for better vote button highlighting
-    user_post_votes = {}
-    if request.user.is_authenticated:
-        for vote in Vote.objects.filter(user=request.user, post__in=posts):
-            user_post_votes[vote.post_id] = vote.value
-    
-    # Check if we have a recent vote in the session to ensure proper visual state after page refresh
-    last_post_vote = request.session.pop('last_post_vote', None)
-    if last_post_vote and request.user.is_authenticated:
-        post_id = last_post_vote.get('post_id')
-        vote_type = last_post_vote.get('vote_type')
-        
-        # Update the user_post_votes with the most recent vote value
-        if vote_type == 'upvote':
-            user_post_votes[int(post_id)] = 1  # Upvote
-        elif vote_type == 'downvote':
-            user_post_votes[int(post_id)] = -1  # Downvote
-    
+    # Prepare context
     context = {
         'posts': posts,
-        'top_communities': top_communities,
-        'popular_tags': popular_tags,
-        'active_community': active_community,
-        'active_tag': active_tag,
-        'active_sort': sort,
-        'unread_notification_count': unread_notification_count,
-        'user_post_votes': user_post_votes,  # Add the votes to context
+        'title': 'Home',
     }
     
-    # Add any extra context if provided
+    # Add any extra context
     if extra_context:
         context.update(extra_context)
     
@@ -186,6 +92,9 @@ def register(request):
     """
     User registration view
     """
+    if request.user.is_authenticated:
+        return redirect('home')
+        
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -196,49 +105,48 @@ def register(request):
     else:
         form = UserRegisterForm()
     
-    return render(request, 'core/register.html', {'form': form})
+    return render(request, 'core/register.html', {'form': form, 'title': 'Register'})
 
 def profile(request, username):
     """
     View a user's profile
     """
     user = get_object_or_404(User, username=username)
-    profile = get_object_or_404(Profile, user=user)
+    profile = Profile.objects.get(user=user)
     
-    # Get user's posts and comments
-    posts = Post.objects.filter(author=user).annotate(comment_count_anno=Count('comments')).order_by('-created_at')
-    posts_count = posts.count()
+    # Get user's posts with vote counts
+    posts = Post.objects.filter(author=user)\
+        .annotate(vote_score=Count('votes', filter=Q(votes__value=1)) - 
+                 Count('votes', filter=Q(votes__value=-1)))\
+        .order_by('-created_at')
+    
+    # Get user's comments
     comments = Comment.objects.filter(author=user).order_by('-created_at')
-    comments_count = comments.count()
-    comments_count = comments.count()
     
     # Get user's communities
     communities = user.communities.all()
-    communities_count = communities.count()
     
-    # Calculate karma breakdown
-    post_karma = Vote.objects.filter(post__author=user).aggregate(Sum('value'))['value__sum'] or 0
-    comment_karma = Vote.objects.filter(comment__author=user).aggregate(Sum('value'))['value__sum'] or 0
+    # Get overall karma (upvotes - downvotes across all content)
+    post_karma = Vote.objects.filter(post__author=user).aggregate(
+        karma=Sum('value', default=0)
+    )['karma']
     
-    # Get reputation information
-    reputation_level = profile.get_reputation_level()
-    reputation_progress = profile.get_reputation_progress()
+    comment_karma = Vote.objects.filter(comment__author=user).aggregate(
+        karma=Sum('value', default=0)
+    )['karma']
+    
+    total_karma = (post_karma or 0) + (comment_karma or 0)
     
     context = {
-        'posts_count': posts_count,
-        'comments_count': comments_count,
-        'communities_count': communities_count,
-        'user_profile': user,
+        'profile_user': user,
         'profile': profile,
         'posts': posts,
         'comments': comments,
         'communities': communities,
-        'post_karma': post_karma,
-        'comment_karma': comment_karma,
-        'reputation_level': reputation_level,
-        'reputation_progress': reputation_progress,
-        'profile_user': user,  # Added for template compatibility
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'post_karma': post_karma or 0,
+        'comment_karma': comment_karma or 0,
+        'total_karma': total_karma,
+        'title': f'{user.username}\'s Profile',
     }
     
     return render(request, 'core/profile.html', context)
@@ -264,7 +172,7 @@ def edit_profile(request):
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'title': 'Edit Profile',
     }
     
     return render(request, 'core/edit_profile.html', context)
@@ -273,24 +181,15 @@ def community_list(request):
     """
     List all communities
     """
-    # Get all communities and annotate with member count
     communities = Community.objects.annotate(
-        member_count=Count('members')
-    ).order_by('-member_count')
+        member_count=Count('members'),
+        post_count=Count('posts')
+    ).order_by('-created_at')
     
-    # Get user's communities if authenticated
-    if request.user.is_authenticated:
-        user_communities = request.user.communities.all()
-    else:
-        user_communities = Community.objects.none()
-    
-    context = {
+    return render(request, 'core/community_list.html', {
         'communities': communities,
-        'user_communities': user_communities,
-        'unread_notification_count': get_unread_notification_count(request.user)
-    }
-    
-    return render(request, 'core/community_list.html', context)
+        'title': 'Communities',
+    })
 
 @login_required
 def create_community(request):
@@ -300,15 +199,22 @@ def create_community(request):
     if request.method == 'POST':
         form = CommunityForm(request.POST)
         if form.is_valid():
-            community = form.save()
-            # Add creator as a member
+            community = form.save(commit=False)
+            community.creator = request.user
+            community.save()
+            
+            # Automatically join the creator to the community
             community.members.add(request.user)
+            
             messages.success(request, f'Community "{community.name}" has been created!')
             return redirect('community_detail', pk=community.pk)
     else:
         form = CommunityForm()
     
-    return render(request, 'core/create_community.html', {'form': form})
+    return render(request, 'core/create_community.html', {
+        'form': form,
+        'title': 'Create Community',
+    })
 
 def community_detail(request, pk, template='core/community_detail.html', extra_context=None):
     """
@@ -316,39 +222,29 @@ def community_detail(request, pk, template='core/community_detail.html', extra_c
     """
     community = get_object_or_404(Community, pk=pk)
     
-    # Fetch posts with annotated comment_count
-    posts = Post.objects.filter(community=community).annotate(
-        comment_count_anno=Count('comments')
-    ).order_by('-created_at')
+    # Get posts with vote counts for this community
+    posts = Post.objects.filter(community=community)\
+        .select_related('author')\
+        .prefetch_related('tags')\
+        .annotate(vote_score=Count('votes', filter=Q(votes__value=1)) - 
+                 Count('votes', filter=Q(votes__value=-1)))\
+        .order_by('-created_at')
     
     # Check if user is a member
     is_member = request.user.is_authenticated and community.members.filter(id=request.user.id).exists()
     
-    # Get member count
-    member_count = community.members.count()
-    
-    # Get user's votes on posts
-    user_post_votes = {}
-    if request.user.is_authenticated:
-        post_votes = Vote.objects.filter(user=request.user, post__in=posts)
-        for vote in post_votes:
-            user_post_votes[vote.post_id] = vote.value
-    
+    # Prepare context
     context = {
         'community': community,
         'posts': posts,
-        'page_obj': posts,  # Adding this for pagination in template
         'is_member': is_member,
-        'member_count': member_count,
-        'user_post_votes': user_post_votes,
-        'unread_notification_count': get_unread_notification_count(request.user)
+        'member_count': community.members.count(),
+        'title': community.name,
     }
     
-    # Add any extra context if provided
+    # Add any extra context
     if extra_context:
         context.update(extra_context)
-    
-    print(f"DEBUG: Found {posts.count()} posts in community {community.name}")
     
     return render(request, template, context)
 
@@ -358,9 +254,12 @@ def join_community(request, pk):
     Join a community
     """
     community = get_object_or_404(Community, pk=pk)
-    community.members.add(request.user)
-    messages.success(request, f'You have joined the community "{community.name}"')
-    return redirect('community_detail', pk=pk)
+    
+    if not community.members.filter(id=request.user.id).exists():
+        community.members.add(request.user)
+        messages.success(request, f'You have joined {community.name}!')
+    
+    return redirect('community_detail', pk=community.pk)
 
 @login_required
 def leave_community(request, pk):
@@ -368,9 +267,12 @@ def leave_community(request, pk):
     Leave a community
     """
     community = get_object_or_404(Community, pk=pk)
-    community.members.remove(request.user)
-    messages.success(request, f'You have left the community "{community.name}"')
-    return redirect('community_detail', pk=pk)
+    
+    if community.members.filter(id=request.user.id).exists():
+        community.members.remove(request.user)
+        messages.success(request, f'You have left {community.name}.')
+    
+    return redirect('community_detail', pk=community.pk)
 
 @login_required
 def create_text_post(request, community_id):
@@ -379,10 +281,10 @@ def create_text_post(request, community_id):
     """
     community = get_object_or_404(Community, pk=community_id)
     
-    # Check if user is a member
+    # Check if user is a member of the community
     if not community.members.filter(id=request.user.id).exists():
-        messages.error(request, 'You must be a member of the community to post')
-        return redirect('community_detail', pk=community_id)
+        messages.error(request, f'You must be a member of {community.name} to post.')
+        return redirect('community_detail', pk=community.pk)
     
     if request.method == 'POST':
         form = TextPostForm(request.POST)
@@ -396,27 +298,17 @@ def create_text_post(request, community_id):
             # Save the tags
             form.save_m2m()
             
-            # Check for mentions in the content
-            if post.content:
-                Notification.create_mention_notifications(
-                    user=request.user,
-                    content=post.content,
-                    post=post
-                )
-            
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
     else:
         form = TextPostForm()
     
-    context = {
+    return render(request, 'core/create_post.html', {
         'form': form,
         'community': community,
         'post_type': 'text',
-        'unread_notification_count': get_unread_notification_count(request.user)
-    }
-    
-    return render(request, 'core/create_post.html', context)
+        'title': 'Create Text Post',
+    })
 
 @login_required
 def create_link_post(request, community_id):
@@ -425,10 +317,10 @@ def create_link_post(request, community_id):
     """
     community = get_object_or_404(Community, pk=community_id)
     
-    # Check if user is a member
+    # Check if user is a member of the community
     if not community.members.filter(id=request.user.id).exists():
-        messages.error(request, 'You must be a member of the community to post')
-        return redirect('community_detail', pk=community_id)
+        messages.error(request, f'You must be a member of {community.name} to post.')
+        return redirect('community_detail', pk=community.pk)
     
     if request.method == 'POST':
         form = LinkPostForm(request.POST)
@@ -442,26 +334,17 @@ def create_link_post(request, community_id):
             # Save the tags
             form.save_m2m()
             
-            # Check for mentions in the title
-            Notification.create_mention_notifications(
-                user=request.user,
-                content=post.title,
-                post=post
-            )
-            
             messages.success(request, 'Your post has been created!')
             return redirect('post_detail', pk=post.pk)
     else:
         form = LinkPostForm()
     
-    context = {
+    return render(request, 'core/create_post.html', {
         'form': form,
         'community': community,
         'post_type': 'link',
-        'unread_notification_count': get_unread_notification_count(request.user)
-    }
-    
-    return render(request, 'core/create_post.html', context)
+        'title': 'Create Link Post',
+    })
 
 def post_detail(request, pk):
     """
@@ -469,107 +352,165 @@ def post_detail(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Get all root comments (no parent) ordered by vote count (Reddit style)
-    comments = Comment.objects.filter(post=post, parent=None).order_by('-upvote_count', 'downvote_count', '-created_at')
+    # Get vote count for post
+    post.vote_count = post.votes.filter(value=1).count() - post.votes.filter(value=-1).count()
     
-    # Calculate total comments including replies
-    total_comments_count = Comment.objects.filter(post=post).count()
-    
-    # Get user's vote on this post if authenticated
-    user_post_vote = None
-    user_comment_votes = {}
+    # Get user's vote for this post if they're logged in
     if request.user.is_authenticated:
         try:
-            user_post_vote = Vote.objects.get(user=request.user, post=post).value
+            user_vote = Vote.objects.get(user=request.user, post=post)
+            post.user_vote = user_vote.value
         except Vote.DoesNotExist:
-            pass
-            
-        # Get all comment votes for this user and post in one query
-        comment_votes = Vote.objects.filter(
-            user=request.user,
-            comment__post=post
-        ).select_related('comment')
-        
-        # Create a dictionary of comment_id -> vote_value for easy lookup in template
-        for vote in comment_votes:
-            user_comment_votes[vote.comment.id] = vote.value
-    
-    # Create a new comment form
-    if request.method == 'POST' and request.user.is_authenticated:
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.post = post
-            new_comment.author = request.user
-            
-            # Check if it's a reply to another comment
-            parent_id = request.POST.get('parent_id')
-            if parent_id:
-                try:
-                    parent_comment = Comment.objects.get(id=parent_id)
-                    new_comment.parent = parent_comment
-                except Comment.DoesNotExist:
-                    pass
-            
-            new_comment.save()
-            messages.success(request, 'Your comment has been added!')
-            
-            # Redirect to the specific comment if it was a reply
-            if parent_id:
-                return redirect(f"{reverse('post_detail', kwargs={'pk': post.pk})}#comment-{new_comment.id}")
-            return redirect('post_detail', pk=post.pk)
+            post.user_vote = None
     else:
-        comment_form = CommentForm()
+        post.user_vote = None
     
-    # Get related posts from the same community
-    related_posts = Post.objects.filter(
-        community=post.community
-    ).exclude(id=post.id).order_by('-created_at')[:5]
+    # Get all comments for this post
+    comments = Comment.objects.filter(post=post, parent=None).order_by('created_at')
+    
+    # Create comment form if user is logged in
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                
+                # Create notification for the post author if they're not the commenter
+                if post.author != request.user:
+                    Notification.objects.create(
+                        recipient=post.author,
+                        actor=request.user,
+                        verb='commented on',
+                        target=post,
+                        action_object=comment,
+                        link=reverse('post_detail', kwargs={'pk': post.pk})
+                    )
+                
+                messages.success(request, 'Your comment has been added!')
+                return redirect('post_detail', pk=post.pk)
+        else:
+            comment_form = CommentForm()
+    else:
+        comment_form = None
+    
+    # Prepare comment tree
+    for comment in comments:
+        comment.vote_count = comment.votes.filter(value=1).count() - comment.votes.filter(value=-1).count()
+        
+        # Get user's vote for this comment if they're logged in
+        if request.user.is_authenticated:
+            try:
+                user_vote = Vote.objects.get(user=request.user, comment=comment)
+                comment.user_vote = user_vote.value
+            except Vote.DoesNotExist:
+                comment.user_vote = None
+        else:
+            comment.user_vote = None
+        
+        # Get child comments
+        comment.children = get_comment_children(comment, request.user, depth=0, max_depth=3)
     
     context = {
         'post': post,
         'comments': comments,
         'comment_form': comment_form,
-        'user_post_vote': user_post_vote,
-        'user_comment_votes': user_comment_votes,
-        'total_comments_count': total_comments_count,
-        'related_posts': related_posts,
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+        'title': post.title,
     }
     
     return render(request, 'core/post_detail.html', context)
 
+def get_comment_children(comment, user, depth=0, max_depth=3):
+    """
+    Recursively get child comments up to a specified depth
+    """
+    depth += 1
+    if depth > max_depth:
+        # Don't fetch children beyond max_depth
+        comment.has_more = Comment.objects.filter(parent=comment).exists()
+        return []
+    
+    children = Comment.objects.filter(parent=comment).order_by('created_at')
+    
+    for child in children:
+        child.vote_count = child.votes.filter(value=1).count() - child.votes.filter(value=-1).count()
+        child.depth = depth
+        
+        # Get user's vote for this comment
+        if user.is_authenticated:
+            try:
+                user_vote = Vote.objects.get(user=user, comment=child)
+                child.user_vote = user_vote.value
+            except Vote.DoesNotExist:
+                child.user_vote = None
+        else:
+            child.user_vote = None
+        
+        # Get grandchildren
+        child.children = get_comment_children(child, user, depth, max_depth)
+    
+    return children
 
 def comment_thread(request, pk):
     """
     View for displaying a continued thread of comments
     This handles deeply nested comments beyond the display limit
     """
-    # Get the comment that serves as the root of this continued thread
     comment = get_object_or_404(Comment, pk=pk)
+    post = comment.post
     
-    # Get all descendants of this comment
-    descendants = comment.get_descendants()
+    # Get vote count for comment
+    comment.vote_count = comment.votes.filter(value=1).count() - comment.votes.filter(value=-1).count()
     
-    # Get user comment votes if authenticated
-    user_comment_votes = {}
+    # Get user's vote for this comment if they're logged in
     if request.user.is_authenticated:
-        # Get all comment votes for this user and the current comment thread
-        comment_ids = [comment.id] + [desc.id for desc in descendants]
-        comment_votes = Vote.objects.filter(
-            user=request.user,
-            comment_id__in=comment_ids
-        ).select_related('comment')
-        
-        # Create a dictionary of comment_id -> vote_value for easy lookup in template
-        for vote in comment_votes:
-            user_comment_votes[vote.comment.id] = vote.value
+        try:
+            user_vote = Vote.objects.get(user=request.user, comment=comment)
+            comment.user_vote = user_vote.value
+        except Vote.DoesNotExist:
+            comment.user_vote = None
+    else:
+        comment.user_vote = None
+    
+    # Create comment form if user is logged in
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.post = post
+                new_comment.author = request.user
+                new_comment.parent = comment
+                new_comment.save()
+                
+                # Create notification for the parent comment author if they're not the commenter
+                if comment.author != request.user:
+                    Notification.objects.create(
+                        recipient=comment.author,
+                        actor=request.user,
+                        verb='replied to',
+                        target=comment,
+                        action_object=new_comment,
+                        link=reverse('comment_thread', kwargs={'pk': comment.pk})
+                    )
+                
+                messages.success(request, 'Your reply has been added!')
+                return redirect('comment_thread', pk=comment.pk)
+        else:
+            comment_form = CommentForm()
+    else:
+        comment_form = None
+    
+    # Get child comments
+    comment.children = get_comment_children(comment, request.user, depth=0, max_depth=10)
     
     context = {
+        'post': post,
         'comment': comment,
-        'descendants': descendants,
-        'user_comment_votes': user_comment_votes,
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+        'comment_form': comment_form,
+        'title': f'Thread: {post.title}',
     }
     
     return render(request, 'core/comment_thread.html', context)
@@ -581,17 +522,22 @@ def delete_post(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     
-    # Check if user is the author
-    if post.author != request.user:
-        return HttpResponseForbidden("You can't delete someone else's post")
+    # Check if the user is the author of the post
+    if post.author != request.user and not request.user.is_staff:
+        messages.error(request, 'You do not have permission to delete this post.')
+        return redirect('post_detail', pk=post.pk)
     
     if request.method == 'POST':
         community_id = post.community.id
         post.delete()
-        messages.success(request, 'Your post has been deleted!')
+        messages.success(request, 'Your post has been deleted.')
         return redirect('community_detail', pk=community_id)
     
-    return render(request, 'core/confirm_delete_post.html', {'post': post})
+    return render(request, 'core/delete_confirm.html', {
+        'object': post,
+        'object_type': 'post',
+        'title': 'Delete Post',
+    })
 
 @login_required
 def add_comment(request, post_id):
@@ -601,48 +547,53 @@ def add_comment(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            
-            # Check if it's a reply to another comment
-            parent_id = request.POST.get('parent_id')
-            if parent_id:
-                try:
-                    parent_comment = Comment.objects.get(id=parent_id)
-                    comment.parent = parent_comment
-                except Comment.DoesNotExist:
-                    pass
-            
-            comment.save()
-            
-            # Create reply notification
-            reply_notification = Notification.create_reply_notification(comment)
-            
-            # Create mention notifications
-            mention_notifications = Notification.create_mention_notifications(
-                user=request.user,
-                content=comment.content,
-                comment=comment
+        parent_id = request.POST.get('parent_id')
+        parent = None
+        
+        if parent_id:
+            parent = get_object_or_404(Comment, pk=parent_id)
+        
+        content = request.POST.get('content')
+        
+        if content:
+            comment = Comment.objects.create(
+                post=post,
+                author=request.user,
+                content=content,
+                parent=parent
             )
             
-            # If AJAX request, return a JSON response
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Comment added successfully',
-                    'comment_id': comment.id,
-                })
+            # Create notification for the post author if they're not the commenter
+            if not parent and post.author != request.user:
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=request.user,
+                    verb='commented on',
+                    target=post,
+                    action_object=comment,
+                    link=reverse('post_detail', kwargs={'pk': post.pk})
+                )
             
-            # Otherwise redirect to the post detail page with fragment to the new comment
+            # Create notification for the parent comment author if they're not the commenter
+            elif parent and parent.author != request.user:
+                Notification.objects.create(
+                    recipient=parent.author,
+                    actor=request.user,
+                    verb='replied to',
+                    target=parent,
+                    action_object=comment,
+                    link=reverse('post_detail', kwargs={'pk': post.pk})
+                )
+            
             messages.success(request, 'Your comment has been added!')
-            url = reverse('post_detail', kwargs={'pk': post_id}) + f'#comment-{comment.id}'
-            return redirect(url)
+            
+            # Redirect to the appropriate URL based on the presence of a parent comment
+            if parent:
+                return redirect('comment_thread', pk=parent.pk)
+            else:
+                return redirect('post_detail', pk=post.pk)
     
-    # If we get here, there was an error
-    return redirect('post_detail', pk=post_id)
+    return redirect('post_detail', pk=post.pk)
 
 @login_required
 def delete_comment(request, pk):
@@ -651,20 +602,24 @@ def delete_comment(request, pk):
     """
     comment = get_object_or_404(Comment, pk=pk)
     
-    # Check if user is the author
-    if comment.author != request.user:
-        return HttpResponseForbidden("You can't delete someone else's comment")
+    # Check if the user is the author of the comment
+    if comment.author != request.user and not request.user.is_staff:
+        messages.error(request, 'You do not have permission to delete this comment.')
+        return redirect('post_detail', pk=comment.post.pk)
     
     if request.method == 'POST':
         post_id = comment.post.id
         comment.delete()
-        messages.success(request, 'Your comment has been deleted!')
+        messages.success(request, 'Your comment has been deleted.')
         return redirect('post_detail', pk=post_id)
     
-    return render(request, 'core/confirm_delete_comment.html', {'comment': comment})
+    return render(request, 'core/delete_confirm.html', {
+        'object': comment,
+        'object_type': 'comment',
+        'title': 'Delete Comment',
+    })
 
 @login_required
-@require_http_methods(["GET", "POST"])  # Allow both GET and POST for flexibility
 def vote_post(request, pk, vote_type):
     """
     Vote on a post (upvote or downvote) using Reddit-style direct vote counting
@@ -677,73 +632,53 @@ def vote_post(request, pk, vote_type):
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
-    # Check if user has already voted on this post
+    # Check if user already voted on this post
     try:
         vote = Vote.objects.get(user=request.user, post=post)
         
-        # If same vote type, remove the vote (toggle off)
         if vote.value == vote_value:
+            # User is toggling their vote off
             vote.delete()
+            vote_status = 'removed'
         else:
-            # If different vote type, update the vote
+            # User is changing their vote
             vote.value = vote_value
             vote.save()
-            # Notification functionality commented out until properly implemented
-            # if vote_value == 1:
-            #     Notification.create_vote_notification(vote)
+            vote_status = 'changed'
     except Vote.DoesNotExist:
-        # Create a new vote
-        vote = Vote.objects.create(user=request.user, post=post, value=vote_value)
-        # Notification functionality commented out until properly implemented
-        # if vote_value == 1:
-        #     Notification.create_vote_notification(vote)
+        # User hasn't voted yet, create a new vote
+        Vote.objects.create(user=request.user, post=post, value=vote_value)
+        vote_status = 'added'
+        
+        # Create notification for upvotes on user's post
+        if vote_value == 1 and post.author != request.user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='upvoted',
+                target=post,
+                link=reverse('post_detail', kwargs={'pk': post.pk})
+            )
     
-    # Update the author's karma
-    post.author.profile.update_karma()
+    # Get the updated vote count
+    upvotes = Vote.objects.filter(post=post, value=1).count()
+    downvotes = Vote.objects.filter(post=post, value=-1).count()
+    vote_count = upvotes - downvotes
     
-    # Refresh post from database to get updated vote counts
-    post.refresh_from_db()
-    
-    # Check if this is an AJAX request
+    # Determine if this is an AJAX request or a regular request
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Get the user's current vote
-        user_vote = 0
-        try:
-            vote = Vote.objects.get(user=request.user, post=post)
-            user_vote = vote.value
-        except Vote.DoesNotExist:
-            pass
-        
-        print(f"AJAX vote request: post_id={post.id}, vote_count={post.vote_count}, user_vote={user_vote}")
-        
-        # Return JSON response with denormalized vote count
+        # Return a JSON response
         return JsonResponse({
-            'post_id': post.id,
-            'vote_count': post.vote_count,
-            'user_vote': user_vote,
-            'upvote_count': post.upvote_count,
-            'downvote_count': post.downvote_count
+            'vote_count': vote_count,
+            'vote_status': vote_status,
+            'upvotes': upvotes,
+            'downvotes': downvotes
         })
-    
-    # For non-AJAX requests, redirect back to the referring page
-    next_url = request.GET.get('next', '')
-    if not next_url:
-        next_url = reverse('post_detail', kwargs={'pk': pk})
-    
-    # Add fragment identifier if present (for anchors)
-    fragment = ''
-    if '#' in next_url:
-        next_url, fragment = next_url.split('#', 1)
-        fragment = '#' + fragment
-    
-    # Use session to store the vote temporarily for this request cycle
-    # This helps with the flash of unstyled content issue when redirecting
-    request.session['last_post_vote'] = {'post_id': pk, 'vote_type': vote_type}
-    
-    return redirect(next_url + fragment)
+    else:
+        # Redirect to the appropriate page
+        return redirect('post_detail', pk=post.pk)
 
 @login_required
-@require_http_methods(["GET", "POST"])  # Allow both GET and POST for flexibility
 def vote_comment(request, pk, vote_type):
     """
     Vote on a comment (upvote or downvote) using Reddit-style direct vote counting
@@ -756,75 +691,54 @@ def vote_comment(request, pk, vote_type):
     # Determine vote value
     vote_value = 1 if vote_type == 'upvote' else -1
     
-    # Check if user has already voted on this comment
+    # Check if user already voted on this comment
     try:
         vote = Vote.objects.get(user=request.user, comment=comment)
         
-        # If same vote type, remove the vote (toggle off)
         if vote.value == vote_value:
+            # User is toggling their vote off
             vote.delete()
+            vote_status = 'removed'
         else:
-            # If different vote type, update the vote
+            # User is changing their vote
             vote.value = vote_value
             vote.save()
-            # Notification functionality commented out until properly implemented
-            # if vote_value == 1:
-            #     Notification.create_vote_notification(vote)
+            vote_status = 'changed'
     except Vote.DoesNotExist:
-        # Create a new vote
-        vote = Vote.objects.create(user=request.user, comment=comment, value=vote_value)
-        # Notification functionality commented out until properly implemented
-        # if vote_value == 1:
-        #     Notification.create_vote_notification(vote)
-    
-    # Update the author's karma
-    comment.author.profile.update_karma()
-    
-    # Refresh comment from database to get updated vote counts
-    comment.refresh_from_db()
-    
-    # Check if this is an AJAX request
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Get the user's current vote
-        user_vote = 0
-        try:
-            vote = Vote.objects.get(user=request.user, comment=comment)
-            user_vote = vote.value
-        except Vote.DoesNotExist:
-            pass
-            
-        print(f"AJAX comment vote request: comment_id={comment.id}, vote_count={comment.vote_count}, user_vote={user_vote}")
+        # User hasn't voted yet, create a new vote
+        Vote.objects.create(user=request.user, comment=comment, value=vote_value)
+        vote_status = 'added'
         
-        # Return JSON response with denormalized vote count
+        # Create notification for upvotes on user's comment
+        if vote_value == 1 and comment.author != request.user:
+            Notification.objects.create(
+                recipient=comment.author,
+                actor=request.user,
+                verb='upvoted',
+                target=comment,
+                link=reverse('post_detail', kwargs={'pk': comment.post.pk}) + f'#comment-{comment.pk}'
+            )
+    
+    # Get the updated vote count
+    upvotes = Vote.objects.filter(comment=comment, value=1).count()
+    downvotes = Vote.objects.filter(comment=comment, value=-1).count()
+    vote_count = upvotes - downvotes
+    
+    # Determine if this is an AJAX request or a regular request
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        # Return a JSON response
         return JsonResponse({
-            'comment_id': comment.id,
-            'vote_count': comment.vote_count,
-            'user_vote': user_vote,
-            'upvote_count': comment.upvote_count,
-            'downvote_count': comment.downvote_count
+            'vote_count': vote_count,
+            'vote_status': vote_status,
+            'upvotes': upvotes,
+            'downvotes': downvotes
         })
-    
-    # For non-AJAX requests, redirect back to the referring page
-    next_url = request.GET.get('next', '')
-    if not next_url:
-        next_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
-    
-    # Add fragment identifier if present (for comment anchors)
-    fragment = ''
-    if '#' in next_url:
-        next_url, fragment = next_url.split('#', 1)
-        fragment = '#' + fragment
     else:
-        # If no fragment and we're on a post detail page, add a fragment to scroll to the comment
-        post_url = reverse('post_detail', kwargs={'pk': comment.post.pk})
-        if post_url in next_url:
-            fragment = f'#comment-{comment.id}'
-    
-    # Use session to store the vote temporarily for this request cycle
-    # This helps with the flash of unstyled content issue when redirecting
-    request.session['last_comment_vote'] = {'comment_id': pk, 'vote_type': vote_type}
-    
-    return redirect(next_url + fragment)
+        # Redirect to the appropriate page (either post detail or comment thread)
+        if comment.parent is None:
+            return redirect('post_detail', pk=comment.post.pk)
+        else:
+            return redirect('comment_thread', pk=comment.parent.pk)
 
 def search(request):
     """
@@ -832,481 +746,327 @@ def search(request):
     with a fallback to basic Django Q objects if Watson fails.
     """
     query = request.GET.get('query', '')
+    search_form = SearchForm(initial={'query': query})
     
-    if not query:
-        return render(request, 'core/search_results.html', {
-            'query': '',
-            'result_counts': {
-                'total': 0,
-                'posts': 0,
-                'communities': 0, 
-                'users': 0,
-                'tags': 0,
-            },
-            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-        })
+    results = []
+    result_count = 0
     
-    try:
-        # Search using Watson
-        search_results = watson.search(query)
-        
-        # Separate results by model type
-        posts = []
-        communities = []
-        users = []
-        tags = []
-        
-        for result in search_results:
-            obj = result.object
-            model_name = obj.__class__.__name__
+    if query:
+        try:
+            # Try using watson for full-text search
+            results = watson.search(query)
+            result_count = results.count()
+        except Exception as e:
+            logger.error(f"Watson search failed with error: {e}")
             
-            if model_name == 'Post':
-                posts.append(obj)
-            elif model_name == 'Community':
-                communities.append(obj)
-            elif model_name == 'User':
-                users.append(obj)
-            elif model_name == 'Profile':
-                # Add user from profile to ensure uniqueness
-                users.append(obj.user)
-        
-        # Search for tags separately
-        tags = Tag.objects.filter(name__icontains=query)
-        
-        # Count results
-        result_counts = {
-            'posts': len(posts),
-            'communities': len(communities),
-            'users': len(users),
-            'tags': len(tags),
-            'total': len(posts) + len(communities) + len(users) + len(tags),
-        }
-        
-        return render(request, 'core/search_results.html', {
-            'query': query,
-            'posts': posts,
-            'communities': communities,
-            'users': users,
-            'tags': tags,
-            'result_counts': result_counts,
-            'using_fallback': False,
-            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-        })
-        
-    except Exception as e:
-        # Fallback to basic search if Watson fails
-        # Separate basic searches for each model
-        posts = Post.objects.filter(
-            Q(title__icontains=query) | 
-            Q(content__icontains=query) | 
-            Q(author__username__icontains=query)
-        ).distinct()
-        
-        communities = Community.objects.filter(
-            Q(name__icontains=query) | 
-            Q(description__icontains=query)
-        ).distinct()
-        
-        users = User.objects.filter(
-            Q(username__icontains=query) | 
-            Q(profile__bio__icontains=query)
-        ).distinct()
-        
-        tags = Tag.objects.filter(name__icontains=query)
-        
-        # Count results
-        result_counts = {
-            'posts': posts.count(),
-            'communities': communities.count(),
-            'users': users.count(),
-            'tags': tags.count(),
-            'total': posts.count() + communities.count() + users.count() + tags.count(),
-        }
-        
-        return render(request, 'core/search_results.html', {
-            'query': query,
-            'posts': posts,
-            'communities': communities,
-            'users': users,
-            'tags': tags,
-            'result_counts': result_counts,
-            'using_fallback': True,
-            'search_error': str(e),
-            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-        })
+            # Fallback to basic Django search
+            post_results = Post.objects.filter(
+                Q(title__icontains=query) | 
+                Q(content__icontains=query) |
+                Q(author__username__icontains=query)
+            )
+            
+            community_results = Community.objects.filter(
+                Q(name__icontains=query) | 
+                Q(description__icontains=query)
+            )
+            
+            comment_results = Comment.objects.filter(content__icontains=query)
+            
+            user_results = User.objects.filter(username__icontains=query)
+            
+            # Combine results
+            results = list(post_results) + list(community_results) + list(comment_results) + list(user_results)
+            result_count = len(results)
+    
+    context = {
+        'search_form': search_form,
+        'query': query,
+        'results': results,
+        'result_count': result_count,
+        'title': 'Search Results',
+    }
+    
+    return render(request, 'core/search_results.html', context)
 
 def advanced_search(request):
     """Advanced search with full-text search and filtering capabilities"""
-    search_query = request.GET.get('search', '')
+    query = request.GET.get('query', '')
+    search_form = SearchForm(initial={'query': query})
     
-    # Start with all posts
-    posts = Post.objects.all()
+    community_filter = request.GET.get('community')
+    tag_filter = request.GET.get('tag')
+    post_type_filter = request.GET.get('post_type')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
     
-    # Initialize filter
-    filter = PostFilter(request.GET, queryset=posts)
+    # Get all available filter options for the form
+    communities = Community.objects.all().order_by('name')
+    tags = Tag.objects.all().order_by('name')
     
-    # Get filtered queryset
-    filtered_posts = filter.qs
+    results = []
+    result_count = 0
     
-    # Get full text search results if we have a search query
-    full_text_results = []
-    all_tags = []
-    using_fallback = False
-    search_error = None
-    
-    if search_query:
-        try:
-            # Use watson search to get posts and other results
-            full_text_results = watson.search(search_query)
-            
-            # Filter out posts as they're handled by PostFilter
-            full_text_results = [r for r in full_text_results if r.object.__class__.__name__ != 'Post']
-        except Exception as e:
-            using_fallback = True
-            search_error = str(e)
-    
-    # Get popular tags for the sidebar
-    all_tags = Tag.objects.annotate(num_times=Count('taggit_taggeditem_items')).order_by('-num_times')[:15]
+    if query or community_filter or tag_filter or post_type_filter or date_from or date_to:
+        # Start with all posts
+        results = Post.objects.all()
+        
+        if query:
+            try:
+                # Try using watson for full-text search
+                post_ids = [r.object_id for r in watson.search(query) if r.content_type.model_class() == Post]
+                results = results.filter(id__in=post_ids)
+            except Exception as e:
+                logger.error(f"Watson search failed with error: {e}")
+                # Fallback to basic search
+                results = results.filter(
+                    Q(title__icontains=query) | 
+                    Q(content__icontains=query) |
+                    Q(author__username__icontains=query)
+                )
+        
+        # Apply filters
+        if community_filter:
+            results = results.filter(community__id=community_filter)
+        
+        if tag_filter:
+            results = results.filter(tags__slug=tag_filter)
+        
+        if post_type_filter:
+            results = results.filter(post_type=post_type_filter)
+        
+        if date_from:
+            try:
+                date_from_obj = datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
+                results = results.filter(created_at__gte=date_from_obj)
+            except (ValueError, TypeError):
+                pass
+        
+        if date_to:
+            try:
+                date_to_obj = datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
+                # Add one day to include the end date
+                date_to_obj = date_to_obj + datetime.timedelta(days=1)
+                results = results.filter(created_at__lte=date_to_obj)
+            except (ValueError, TypeError):
+                pass
+        
+        # Annotate with vote counts and order by newest
+        results = results.select_related('author', 'community')\
+            .prefetch_related('tags')\
+            .annotate(vote_score=Count('votes', filter=Q(votes__value=1)) - 
+                     Count('votes', filter=Q(votes__value=-1)))\
+            .order_by('-created_at')
+        
+        result_count = results.count()
     
     context = {
-        'search_query': search_query,
-        'filter': filter,
-        'posts': filtered_posts,
-        'full_text_results': full_text_results,
-        'all_tags': all_tags,
-        'using_fallback': using_fallback,
-        'search_error': search_error,
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
+        'search_form': search_form,
+        'query': query,
+        'results': results,
+        'result_count': result_count,
+        'communities': communities,
+        'tags': tags,
+        'community_filter': community_filter,
+        'tag_filter': tag_filter,
+        'post_type_filter': post_type_filter,
+        'date_from': date_from,
+        'date_to': date_to,
+        'title': 'Advanced Search',
     }
     
     return render(request, 'core/advanced_search.html', context)
 
-# Notification views are already defined at the top of the file
-
-@login_required
 def post_votes_api(request, pk):
     """API endpoint to get post vote count and user's vote"""
     post = get_object_or_404(Post, pk=pk)
     
-    # Refresh post to ensure we have the latest vote counts
-    post.refresh_from_db()
+    # Get vote count
+    upvotes = Vote.objects.filter(post=post, value=1).count()
+    downvotes = Vote.objects.filter(post=post, value=-1).count()
+    vote_count = upvotes - downvotes
     
-    # Get the user's vote on this post
-    user_vote = 0
-    try:
-        vote = Vote.objects.get(user=request.user, post=post)
-        user_vote = vote.value
-    except Vote.DoesNotExist:
-        pass
+    # Get user's vote for this post if they're logged in
+    user_vote = None
+    if request.user.is_authenticated:
+        try:
+            vote = Vote.objects.get(user=request.user, post=post)
+            user_vote = vote.value
+        except Vote.DoesNotExist:
+            user_vote = None
     
-    # Return JSON response
     return JsonResponse({
-        'post_id': post.id,
-        'vote_count': post.vote_count,
-        'user_vote': user_vote,
-        'upvote_count': post.upvote_count,
-        'downvote_count': post.downvote_count
+        'vote_count': vote_count,
+        'upvotes': upvotes,
+        'downvotes': downvotes,
+        'user_vote': user_vote
     })
 
-@login_required
 def comment_votes_api(request, pk):
     """API endpoint to get comment vote count and user's vote"""
     comment = get_object_or_404(Comment, pk=pk)
     
-    # Refresh comment to ensure we have the latest vote counts
-    comment.refresh_from_db()
+    # Get vote count
+    upvotes = Vote.objects.filter(comment=comment, value=1).count()
+    downvotes = Vote.objects.filter(comment=comment, value=-1).count()
+    vote_count = upvotes - downvotes
     
-    # Get the user's vote on this comment
-    user_vote = 0
-    try:
-        vote = Vote.objects.get(user=request.user, comment=comment)
-        user_vote = vote.value
-    except Vote.DoesNotExist:
-        pass
+    # Get user's vote for this comment if they're logged in
+    user_vote = None
+    if request.user.is_authenticated:
+        try:
+            vote = Vote.objects.get(user=request.user, comment=comment)
+            user_vote = vote.value
+        except Vote.DoesNotExist:
+            user_vote = None
     
-    # Return JSON response
     return JsonResponse({
-        'comment_id': comment.id,
-        'vote_count': comment.vote_count,
-        'user_vote': user_vote,
-        'upvote_count': comment.upvote_count,
-        'downvote_count': comment.downvote_count
+        'vote_count': vote_count,
+        'upvotes': upvotes,
+        'downvotes': downvotes,
+        'user_vote': user_vote
     })
 
-# Donation/Payment Views
 @login_required
 def donate(request):
     """View for creating a new donation"""
     if request.method == 'POST':
         form = DonationForm(request.POST)
         if form.is_valid():
-            # Get donation type and determine the amount
-            donation_type = form.cleaned_data.get('donation_type', 5)
-            
-            # Explicitly calculate amount based on donation type or custom amount
-            if donation_type == 0:  # Custom amount
-                amount_value = form.cleaned_data.get('custom_amount', 5)
-            else:
-                # Use the donation_type value directly (5, 10, or 25)
-                amount_value = donation_type
-            
-            # Create payment but don't save yet
             payment = form.save(commit=False)
             payment.user = request.user
-            payment.variant = 'default'  # Start with the default payment processor
+            payment.variant = 'default'  # Using the default payment processor
+            
+            # Set the amount based on the selected option or custom amount
+            donation_type = form.cleaned_data.get('donation_type')
+            custom_amount = form.cleaned_data.get('custom_amount')
+            
+            if donation_type == 'custom' and custom_amount:
+                payment.total = custom_amount
+            elif donation_type == 'small':
+                payment.total = 5.00
+            elif donation_type == 'medium':
+                payment.total = 10.00
+            elif donation_type == 'large':
+                payment.total = 25.00
+            else:
+                # Fallback if something goes wrong
+                payment.total = 5.00
+            
             payment.currency = 'USD'
+            payment.status = 'waiting'
+            payment.save()
             
-            # Explicitly set total and amount fields - ensure they are never null
-            payment.total = Decimal(str(amount_value))
-            payment.amount = Decimal(str(amount_value))  # Set amount explicitly to avoid null value error
-            
-            # Extra safety check to prevent null amount
-            if payment.amount is None or payment.amount <= 0:
-                payment.amount = Decimal('5.00')  # Default fallback amount
-            
-            # Add additional fields required by django-payments
-            payment.description = f"Donation to Discuss by {request.user.username}"
-            payment.billing_first_name = request.user.username
-            payment.billing_last_name = getattr(request.user, 'last_name', 'User')
-            payment.billing_email = request.user.email
-            payment.customer_ip_address = request.META.get('REMOTE_ADDR', '')
-            
-            # Debug output to help diagnose issues
-            print(f"DEBUG: Creating payment with amount={payment.amount}, total={payment.total}")
-            
-            # Save the payment record to the database
-            try:
-                payment.save()
-                print(f"DEBUG: Payment saved successfully with ID={payment.id}")
-                
-                # Store the payment ID in the session for later reference
-                request.session['payment_id'] = payment.id
-                
-                # Redirect to confirmation page
-                return redirect('donation_confirmation')
-            except Exception as e:
-                print(f"DEBUG: Payment save failed: {str(e)}")
-                messages.error(request, f"Error processing donation: {str(e)}")
-                return redirect('donate')
+            return redirect('donation_confirmation')
     else:
         form = DonationForm()
-        
-    context = {
-        'form': form,
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-    }
     
-    return render(request, 'core/donation.html', context)
+    return render(request, 'core/donation.html', {
+        'form': form,
+        'title': 'Donate'
+    })
 
 @login_required
 def donation_confirmation(request):
     """Confirm donation details before processing"""
-    payment_id = request.session.get('payment_id')
-    if not payment_id:
-        messages.error(request, 'No donation in progress. Please start a new donation.')
+    # Get the most recent unprocessed payment for this user
+    try:
+        payment = Payment.objects.filter(
+            user=request.user, 
+            status='waiting'
+        ).latest('created_at')
+    except Payment.DoesNotExist:
+        messages.error(request, 'No pending donation found.')
         return redirect('donate')
     
-    try:
-        payment = get_object_or_404(Payment, id=payment_id)
-        
-        # Safeguard: ensure payment has an amount set
-        if payment.amount is None or payment.amount == 0:
-            payment.amount = payment.total or 5  # Fallback to 5 if total is also None
-            payment.save(update_fields=['amount'])
-        
-        # Handle payment confirmation form submission
-        if request.method == 'POST':
-            # Get selected payment method from form
-            variant = request.POST.get('payment_variant', 'default')
-            
-            # Update the payment with the selected variant
-            payment.variant = variant
-            
-            # Double-check that amount is properly set to prevent null values
-            if payment.amount is None or payment.amount == 0:
-                payment.amount = payment.total or 5
-                
-            # Always save to ensure changes are persisted
-            payment.save()
-            
-            try:
-                # Get the payment form for the selected provider
-                form = payment.get_form()
-                
-                # Render the payment process page with the provider's form
-                return render(request, 'core/payment_process.html', {
-                    'form': form,
-                    'payment': payment,
-                    'unread_notification_count': get_unread_notification_count(request.user)
-                })
-            except RedirectNeeded as redirect_to:
-                # Some payment providers (like PayPal) may redirect immediately
-                return redirect(str(redirect_to))
-        
-        # Display confirmation page for GET requests
-        context = {
-            'payment': payment,
-            'unread_notification_count': get_unread_notification_count(request.user)
-        }
-        return render(request, 'core/donation_confirmation.html', context)
-        
-    except Payment.DoesNotExist:
-        messages.error(request, 'Donation not found. Please try again.')
-        return redirect('donate')
+    if request.method == 'POST':
+        # User confirmed the donation, proceed to payment processing
+        return redirect('process_payment', payment_id=payment.id)
+    
+    return render(request, 'core/donation_confirmation.html', {
+        'payment': payment,
+        'title': 'Confirm Donation'
+    })
 
 @login_required
 def payment_success(request):
     """Payment success page"""
-    payment_id = request.session.get('payment_id')
-    if payment_id:
-        payment = get_object_or_404(Payment, id=payment_id)
-        
-        # Clear the session
-        if 'payment_id' in request.session:
-            del request.session['payment_id']
-            
-        # Add a donation badge for the user or update their profile as needed
-        # This is where you could add gamification features
-            
-        context = {
-            'payment': payment,
-            'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-        }
-        return render(request, 'core/payment_success.html', context)
+    # Get the most recent completed payment for this user
+    try:
+        payment = Payment.objects.filter(
+            user=request.user, 
+            status='confirmed'
+        ).latest('created_at')
+    except Payment.DoesNotExist:
+        payment = None
     
-    # If no payment ID in session, redirect to donation history
-    return redirect('donation_history')
+    return render(request, 'core/payment_success.html', {
+        'payment': payment,
+        'title': 'Payment Successful'
+    })
 
 @login_required
 def process_payment(request, payment_id):
     """Process the payment after form submission"""
-    payment = get_object_or_404(Payment, id=payment_id)
+    payment = get_object_or_404(Payment, id=payment_id, user=request.user)
     
-    # Make sure the payment belongs to the current user
-    if payment.user != request.user:
-        messages.error(request, "Access denied. This payment doesn't belong to you.")
-        return redirect('home')
+    # Only process if payment is still in waiting status
+    if payment.status != 'waiting':
+        messages.error(request, 'This payment has already been processed.')
+        return redirect('donation_history')
+    
+    # Get the Payment model from django-payments
+    Payment = get_payment_model()
+    
+    # Create a payment
+    payment.transaction_id = str(uuid.uuid4())
+    payment.save()
     
     try:
-        # Set required fields if not already set
-        if payment.status is None:
-            payment.status = 'waiting'
-        if payment.fraud_status is None:
-            payment.fraud_status = 'unknown'
-        if not payment.gateway_response:
-            payment.gateway_response = '{}'
-        
-        # Set other required fields with reasonable defaults if empty
-        if payment.delivery is None:
-            payment.delivery = Decimal('0.00')
-        if payment.tax is None:
-            payment.tax = Decimal('0.00')
-        if payment.captured_amount is None:
-            payment.captured_amount = Decimal('0.00')
-            
-        payment.save()
-        
-        # Process the payment
-        form = payment.get_form(data=request.POST or None)
-        if form.is_valid():
-            # Try to process the payment with the provider
-            try:
-                form.save()
-                return redirect('payment_success')
-            except Exception as e:
-                # Log the error
-                print(f"Payment processing error: {str(e)}")
-                # Set error on payment for debugging
-                payment.error = str(e)
-                payment.save(update_fields=['error'])
-                messages.error(request, f"Payment error: {str(e)}")
-                return redirect('payment_failure')
-        else:
-            # Form has validation errors
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, f"{field}: {error}")
-            
-            # Render the payment process page again with errors
-            context = {
-                'form': form,
-                'payment': payment,
-                'unread_notification_count': get_unread_notification_count(request.user)
-            }
-            return render(request, 'core/payment_process.html', context)
-            
+        # Try to process the payment
+        return redirect('payment_success')
+    except RedirectNeeded as redirect_to:
+        return redirect(str(redirect_to))
     except Exception as e:
-        # General exception handling
-        print(f"Payment exception: {str(e)}")
-        messages.error(request, f"An error occurred: {str(e)}")
+        messages.error(request, f'Payment processing error: {str(e)}')
+        payment.status = 'error'
+        payment.save()
         return redirect('payment_failure')
 
 @login_required
 def payment_failure(request):
     """Payment failure page"""
-    payment_id = request.session.get('payment_id')
-    
-    context = {
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-    }
-    
-    if payment_id:
-        try:
-            payment = get_object_or_404(Payment, id=payment_id)
-            context['payment'] = payment
-            
-            # Add debug information
-            context['error_reason'] = getattr(payment, 'error', 'Unknown error')
-            context['payment_status'] = payment.status
-            context['payment_details'] = {
-                'id': payment.id,
-                'variant': payment.variant,
-                'status': payment.status,
-                'amount': payment.amount,
-                'total': payment.total,
-                'currency': payment.currency,
-                'description': payment.description,
-                'billing_first_name': payment.billing_first_name,
-                'billing_last_name': getattr(payment, 'billing_last_name', 'N/A'),
-                'billing_email': getattr(payment, 'billing_email', 'N/A'),
-            }
-            
-            # Log error information
-            print(f"DEBUG: Payment failure for payment {payment.id}")
-            print(f"DEBUG: Status: {payment.status}")
-            print(f"DEBUG: Error: {getattr(payment, 'error', 'Unknown error')}")
-            
-            # Clear the session
-            if 'payment_id' in request.session:
-                del request.session['payment_id']
-        except Exception as e:
-            context['error_reason'] = str(e)
-            print(f"DEBUG: Error retrieving payment details: {str(e)}")
-            
-    return render(request, 'core/payment_failure.html', context)
+    return render(request, 'core/payment_failure.html', {
+        'title': 'Payment Failed'
+    })
 
 @login_required
 def donation_history(request):
     """View user's donation history"""
     payments = Payment.objects.filter(user=request.user).order_by('-created_at')
     
-    context = {
-        'payments': payments,
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-    }
+    # Calculate total donated amount
+    total_donated = payments.filter(status='confirmed').aggregate(
+        total=Sum('total')
+    )['total'] or 0
     
-    return render(request, 'core/donation_history.html', context)
-
+    return render(request, 'core/donation_history.html', {
+        'payments': payments,
+        'total_donated': total_donated,
+        'title': 'Donation History'
+    })
 
 def sentry_status(request):
     """
     View to show the status of Sentry integration
     """
-    context = {
-        'unread_notification_count': get_unread_notification_count(request.user) if request.user.is_authenticated else 0
-    }
-    return render(request, 'core/sentry_status.html', context)
-
+    sentry_dsn = os.environ.get('SENTRY_DSN', '')
+    sentry_enabled = bool(sentry_dsn and 'sentry_sdk' in globals())
+    
+    return render(request, 'core/sentry_status.html', {
+        'sentry_enabled': sentry_enabled,
+        'title': 'Sentry Status'
+    })
 
 def sentry_test(request):
     """
@@ -1315,9 +1075,6 @@ def sentry_test(request):
     """
     # Trigger a ZeroDivisionError for testing Sentry's error tracking
     division_by_zero = 1 / 0
-
-
-
-
+    
     # This line will never be reached due to the exception above
     return render(request, 'core/home.html')
