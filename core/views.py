@@ -12,7 +12,7 @@ import watson
 from payments import get_payment_model, RedirectNeeded
 from .models import Profile, Community, Post, Comment, Vote, Notification, Payment
 from .forms import (
-    UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
+    UserUpdateForm, ProfileUpdateForm,
     CommunityForm, TextPostForm, LinkPostForm, CommentForm,
     SearchForm, DonationForm
 )
@@ -88,24 +88,7 @@ def home(request, template='core/index.html', extra_context=None):
     
     return render(request, template, context)
 
-def register(request):
-    """
-    User registration view
-    """
-    if request.user.is_authenticated:
-        return redirect('home')
-        
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now log in.')
-            return redirect('login')
-    else:
-        form = UserRegisterForm()
-    
-    return render(request, 'core/register.html', {'form': form, 'title': 'Register'})
+
 
 def profile(request, username):
     """
