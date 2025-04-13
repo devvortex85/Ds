@@ -77,9 +77,12 @@ MIDDLEWARE = [
 SILKY_PYTHON_PROFILER = True  # Enable Python profiling
 SILKY_PYTHON_PROFILER_BINARY = True  # Enable binary profiling (for visualization)
 SILKY_META = True  # Collect metadata about requests
-SILKY_INTERCEPT_PERCENT = 100  # Intercept all requests when debugging
+SILKY_INTERCEPT_PERCENT = 10  # Only profile 10% of requests (reduce for production)
 SILKY_AUTHENTICATION = True  # Only allow authenticated users to access Silk
 SILKY_AUTHORISATION = True  # Only allow superusers to access Silk
+SILKY_MAX_RECORDED_REQUESTS = 50  # Limit stored requests to most recent 50
+SILKY_MAX_RECORDED_REQUESTS_CHECK_PERCENT = 100  # Check limits on every request
+SILKY_PYTHON_PROFILER_RESULT_PATH = 'profiles/'  # Store profiles in a subdirectory
 
 # Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']
