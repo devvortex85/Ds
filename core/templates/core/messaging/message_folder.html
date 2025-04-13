@@ -45,7 +45,7 @@
                                 </div>
                             </form>
                         </div>
-                        {% include 'postman/includes/message_list.html' with 
+                        {% include 'core/includes/postman/includes/message_list.html' with 
                             pm_messages=pm_messages 
                             action_url='postman:inbox' 
                             user=user 
@@ -53,7 +53,7 @@
                             enable_delete=True %} 
                     
                     {% elif folder_type == 'sent' or folder_type == 'archives' or folder_type == 'trash' %}
-                        {% include 'postman/includes/message_list.html' with 
+                        {% include 'core/includes/postman/includes/message_list.html' with 
                             pm_messages=pm_messages 
                             action_url=action_url 
                             user=user 
@@ -72,16 +72,16 @@
                         </div>
                         {% endif %}
                         
-                        {% include 'postman/includes/message_form.html' with 
+                        {% include 'core/includes/postman/includes/message_form.html' with 
                             form=form 
                             recipient=recipient 
                             subject=subject %}
                     
                     {% elif folder_type == 'view' %}
-                        {% include 'postman/includes/message_detail.html' with message=message user=user next_url=next_url reply_to_pk=reply_to_pk %}
+                        {% include 'core/includes/postman/includes/message_detail.html' with message=message user=user next_url=next_url reply_to_pk=reply_to_pk %}
                         
                         {% if message.thread_id %}
-                        {% include 'postman/includes/message_thread.html' with thread_messages=thread_messages user=user %}
+                        {% include 'core/includes/postman/includes/message_thread.html' with thread_messages=thread_messages user=user %}
                         {% endif %}
                     
                     {% endif %}
