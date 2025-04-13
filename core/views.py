@@ -217,13 +217,13 @@ def create_community(request):
     else:
         form = CommunityForm()
     
-    return render(request, 'core/community_page.html', {
+    return render(request, 'core/community/community_page.html', {
         'form': form,
         'title': 'Create Community',
         'page_type': 'create'
     })
 
-def community_detail(request, pk, template='core/community_detail.html', extra_context=None):
+def community_detail(request, pk, template='core/community/community_detail.html', extra_context=None):
     """
     View a community and its posts
     """
@@ -310,7 +310,7 @@ def create_text_post(request, community_id):
     else:
         form = TextPostForm()
     
-    return render(request, 'core/post_page.html', {
+    return render(request, 'core/posts/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'text',
@@ -347,7 +347,7 @@ def create_link_post(request, community_id):
     else:
         form = LinkPostForm()
     
-    return render(request, 'core/post_page.html', {
+    return render(request, 'core/posts/post_page.html', {
         'form': form,
         'community': community,
         'post_type': 'link',
@@ -438,7 +438,7 @@ def post_detail(request, pk):
         'title': post.title,
     }
     
-    return render(request, 'core/post_detail.html', context)
+    return render(request, 'core/posts/post_detail.html', context)
 
 def get_comment_children(comment, user, depth=0, max_depth=3):
     """
@@ -541,7 +541,7 @@ def comment_thread(request, pk):
         'title': f'Thread: {post.title}',
     }
     
-    return render(request, 'core/comment_thread.html', context)
+    return render(request, 'core/posts/comment_thread.html', context)
 
 @login_required
 def delete_post(request, pk):
