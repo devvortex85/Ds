@@ -7,35 +7,17 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <div class="card shadow">
-                {% include 'core/includes/payment_card_header.html' with title="Thank You for Your Support!" bg_class="bg-success" %}
-                <div class="card-body text-center">
-                    <div class="py-4">
-                        <i class="fas fa-heart fa-5x text-danger mb-3"></i>
-                        <h3>Your donation has been received</h3>
-
-                        {% if payment %}
-                            <div class="alert alert-success my-4">
-                                <p class="lead mb-0">
-                                    You donated <strong>${{ payment.total }}</strong> on 
-                                    {{ payment.created_at|date:"F j, Y" }}.
-                                </p>
-                            </div>
-                            
-                            {% include 'core/includes/payment_summary.html' with payment=payment title="Payment Details" show_id=True show_status=True show_transaction=True card_class="mb-4" use_card=True %}
-                        {% endif %}
-
-                        <p class="text-muted">
-                            Your generosity helps keep our community thriving. We're committed to making 
-                            Discuss the best discussion platform possible with your support.
-                        </p>
-                    </div>
-
-                    {% include 'core/includes/action_buttons.html' with 
-                        primary_link="home" primary_text="Return to Home" primary_icon="fas fa-home"
-                        secondary_link="donation_history" secondary_text="View Donation History" secondary_icon="fas fa-history" %}
-                </div>
-            </div>
+            {% include 'core/includes/payment_result.html' with 
+                success=True 
+                title="Thank You for Your Support!" 
+                message="Your donation has been received"
+                payment=payment
+                action_primary_link="home" 
+                action_primary_text="Return to Home" 
+                action_primary_icon="fas fa-home"
+                action_secondary_link="donation_history" 
+                action_secondary_text="View Donation History" 
+                action_secondary_icon="fas fa-history" %}
         </div>
     </div>
 </div>

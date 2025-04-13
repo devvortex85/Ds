@@ -1,0 +1,100 @@
+{% comment %}
+Consolidated payment result template for success/failure notifications
+Parameters:
+- success: Boolean indicating success (True) or failure (False)
+- title: Title text for the header
+- message: Main message to display
+- payment: Optional payment object to display details
+- error_reason: Optional error reason for failures
+- payment_details: Optional dictionary of payment details for debugging
+- action_primary_link: Primary action link URL
+- action_primary_text: Primary action button text
+- action_primary_icon: Primary action icon class
+- action_primary_class: Optional class for primary button
+- action_secondary_link: Secondary action link URL
+- action_secondary_text: Secondary action button text
+- action_secondary_icon: Secondary action icon class
+{% endcomment %}
+
+<div class="card shadow">
+    {% include 'core/includes/payment_card_header.html' with title=title bg_class=success|yesno:"bg-success,bg-danger" %}
+    <div class="card-body text-center">
+        <div class="py-4">
+            {% if success %}
+                <i class="fas fa-heart fa-5x text-danger mb-3"></i>
+            {% else %}
+                <i class="fas fa-times-circle fa-5x text-danger mb-3"></i>
+            {% endif %}
+            
+            <h3>{{ message }}</h3>
+            
+            {% if success and payment %}
+                <div class="alert alert-success my-4">
+                    <p class="lead mb-0">
+                        You donated <strong>${{ payment.total }}</strong> on 
+                        {{ payment.created_at|date:"F j, Y" }}.
+                    </p>
+                </div>
+                
+                {% include 'core/includes/payment_summary.html' with payment=payment title="Payment Details" show_id=True show_status=True show_transaction=True card_class="mb-4" use_card=True %}
+            {% endif %}
+            
+            {% if not success %}
+                <div class="alert alert-warning my-4">
+                    <p class="lead mb-0">
+                        Your donation could not be processed at this time.
+                    </p>
+                    {% if error_reason %}
+                    <p class="text-danger mt-2">
+                        <strong>Error reason:</strong> {{ error_reason }}
+                    </p>
+                    {% endif %}
+                </div>
+                
+                <p>
+                    This could be due to one of the following reasons:
+                </p>
+                
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">Insufficient funds in your account</li>
+                    <li class="list-group-item">Card information entered incorrectly</li>
+                    <li class="list-group-item">Your bank declined the transaction</li>
+                    <li class="list-group-item">Technical issues with our payment processor</li>
+                </ul>
+            {% endif %}
+            
+            {% if not success and payment_details %}
+            <div class="mt-4 text-start">
+                <details>
+                    <summary class="text-primary">Show payment details (for debugging)</summary>
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tbody>
+                                    {% for key, value in payment_details.items %}
+                                    <tr>
+                                        <th>{{ key }}</th>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <p class="text-muted">
+                Your generosity helps keep our community thriving. We're committed to making 
+                Discuss the best discussion platform possible with your support.
+            </p>
+            {% endif %}
+        </div>
+
+        {% include 'core/includes/action_buttons.html' with 
+            primary_link=action_primary_link primary_text=action_primary_text primary_icon=action_primary_icon primary_class=action_primary_class|default:"btn-primary"
+            secondary_link=action_secondary_link secondary_text=action_secondary_text secondary_icon=action_secondary_icon %}
+    </div>
+</div>
