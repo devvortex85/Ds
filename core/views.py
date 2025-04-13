@@ -50,11 +50,14 @@ def notifications_list(request):
 def mark_notification_read(request, pk):
     """View to mark a notification as read"""
     notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
-    notification.read = True
+    notification.is_read = True
     notification.save()
     
-    if notification.link:
-        return redirect(notification.link)
+    # Check first if post exists, then check comment
+    if notification.post:
+        return redirect('post_detail', pk=notification.post.id)
+    elif notification.comment:
+        return redirect('post_detail', pk=notification.comment.post.id)
     
     return redirect('notifications_list')
 
