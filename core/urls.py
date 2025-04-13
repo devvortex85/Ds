@@ -44,8 +44,7 @@ urlpatterns = [
     path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
     
     # Messaging is handled in main urls.py with namespace='postman'
-    # The postman_urls variable was undefined, commented out for now
-    # path('messages/', include(postman_urls)),
+    # See core.messaging_urls and discuss.urls.py for implementation
     
     # Donations
     path('donate/', views.donate, name='donate'),  # Function name is donate, not donation_view
