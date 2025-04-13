@@ -26,10 +26,8 @@
         {% endfor %}
     {% else %}
         <!-- No comments yet -->
-        {% with content_block %}
-            <p class="text-muted mb-0 text-center">No comments yet. Be the first to comment!</p>
+        {% with content_block="<p class='text-muted mb-0 text-center'>No comments yet. Be the first to comment!</p>" %}
+            {% include 'core/includes/card_layout.html' with content=content_block %}
         {% endwith %}
-        
-        {% include 'core/includes/card_layout.html' with content=content_block %}
     {% endif %}
 </div>
