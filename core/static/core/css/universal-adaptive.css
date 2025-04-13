@@ -809,7 +809,7 @@ article.comment,
     justify-content: center !important;
 }
 
-/* Tags - add more specific selectors */
+/* Tags - enhanced specific selectors with max specificity and !important */
 .post-tags .badge,
 .tag-list .badge,
 .badge.bg-light,
@@ -837,7 +837,17 @@ span.badge,
 .community-tags .badge,
 .tag-cloud .badge,
 .post-footer .badge,
-.list-item-tags .badge {
+.card .badge,
+.post-item .badge,
+.comment-item .badge,
+.tags .badge,
+body .badge,
+article .badge,
+.card-body .badge,
+.post-content .badge,
+.card-text .badge,
+.list-item-tags .badge,
+html body .badge {
     font-size: calc(0.75rem * var(--adaptive-scale)) !important;
     padding: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale)) !important;
     border-radius: calc(0.25rem * var(--adaptive-scale)) !important;
@@ -845,10 +855,13 @@ span.badge,
     margin-bottom: calc(0.25rem * var(--adaptive-scale)) !important;
     display: inline-flex !important;
     align-items: center !important;
-    max-width: calc(100% * var(--adaptive-scale)) !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    min-height: calc(24px * var(--adaptive-scale)) !important;
+    vertical-align: middle !important;
 }
 
 /* Links in posts and comments */
