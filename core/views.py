@@ -40,7 +40,7 @@ def notifications_list(request):
     notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
     unread_count = get_unread_notification_count(request.user)
     
-    return render(request, 'core/notifications.html', {
+    return render(request, 'core/notifications_list.html', {
         'notifications': notifications,
         'unread_count': unread_count,
         'title': 'Notifications'
