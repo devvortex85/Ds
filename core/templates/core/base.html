@@ -237,7 +237,7 @@
                 <div class="user-menu">
                     {% if user.is_authenticated %}
                         <!-- Notifications -->
-                        <a class="nav-link position-relative" href="{% url 'notifications_list' %}" aria-label="Notifications">
+                        <a class="nav-link position-relative" href="{% url 'notification_list' %}" aria-label="Notifications">
                             <i class="bi bi-bell adaptive-icon" aria-hidden="true"></i>
                             {% if unread_notification_count > 0 %}
                                 <span class="badge bg-danger badge-notification" aria-label="{{ unread_notification_count }} unread notifications">
