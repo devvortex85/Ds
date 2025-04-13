@@ -1,0 +1,24 @@
+{# 
+This partial template renders the comment reply form
+It's used in both reddit_comments.html and comment_thread.html
+#}
+
+{% if user.is_authenticated %}
+<div id="reply-form-{{ comment.id }}" class="reply-form" aria-hidden="true">
+    <form action="{% url 'add_comment' post_id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        <div class="form-group">
+            <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+        </div>
+        <div class="reply-form-actions">
+            <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
+                    data-comment-id="{{ comment.id }}"
+                    aria-controls="reply-form-{{ comment.id }}">
+                Cancel
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+        </div>
+    </form>
+</div>
+{% endif %}
