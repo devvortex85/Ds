@@ -8,27 +8,13 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Complete Your Payment</h2>
-                </div>
+                {% include 'core/includes/payment_card_header.html' with title="Complete Your Payment" %}
                 <div class="card-body">
                     <div class="alert alert-info mb-4">
                         <p class="mb-0">Please complete your payment information below.</p>
                     </div>
                     
-                    <div class="payment-summary mb-4">
-                        <h4>Payment Summary</h4>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Amount:</th>
-                                <td>${{ payment.total|floatformat:2 }} USD</td>
-                            </tr>
-                            <tr>
-                                <th>Payment Method:</th>
-                                <td>{{ payment.variant|title }}</td>
-                            </tr>
-                        </table>
-                    </div>
+                    {% include 'core/includes/payment_summary.html' with payment=payment title="Payment Summary" show_method=True %}
                     
                     <div class="payment-form">
                         <h4>Payment Details</h4>
@@ -89,11 +75,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <small class="text-muted">
-                        <i class="fas fa-lock"></i> Your payment information is secure and encrypted.
-                    </small>
-                </div>
+                {% include 'core/includes/payment_card_footer.html' with message="<i class='fas fa-lock'></i> Your payment information is secure and encrypted." %}
             </div>
         </div>
     </div>

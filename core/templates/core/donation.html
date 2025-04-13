@@ -23,36 +23,13 @@
                     <form method="post" class="mt-4">
                         {% csrf_token %}
                         
-                        <div class="form-group mb-3">
-                            <label for="{{ form.donation_type.id_for_label }}" class="form-label">
-                                <strong>Donation Amount</strong>
-                            </label>
-                            {{ form.donation_type }}
-                            {% if form.donation_type.errors %}
-                            <div class="text-danger mt-1">
-                                {{ form.donation_type.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+                        {% include 'core/includes/form_field.html' with field=form.donation_type label_text="Donation Amount" label_class="fw-bold" %}
                         
                         <div id="custom-amount-group" class="form-group mb-3" style="display: none;">
-                            <label for="{{ form.custom_amount.id_for_label }}" class="form-label">
-                                <strong>Custom Amount ($)</strong>
-                            </label>
-                            {{ form.custom_amount }}
-                            {% if form.custom_amount.errors %}
-                            <div class="text-danger mt-1">
-                                {{ form.custom_amount.errors }}
-                            </div>
-                            {% endif %}
+                            {% include 'core/includes/form_field.html' with field=form.custom_amount label_text="Custom Amount ($)" label_class="fw-bold" %}
                         </div>
                         
-                        <div class="form-group mb-3">
-                            <label for="{{ form.description.id_for_label }}" class="form-label">
-                                <strong>Message (Optional)</strong>
-                            </label>
-                            {{ form.description }}
-                        </div>
+                        {% include 'core/includes/form_field.html' with field=form.description label_text="Message (Optional)" label_class="fw-bold" %}
                         
                         <div class="d-grid mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">Continue to Payment</button>

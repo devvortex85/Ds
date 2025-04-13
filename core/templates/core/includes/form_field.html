@@ -1,0 +1,34 @@
+{% comment %}
+  Template for rendering form fields with associated labels, help text, and error messages
+  
+  Parameters:
+  - field: The form field to render (required)
+  - label_class: Additional CSS classes for the label (optional)
+  - field_class: Additional CSS classes for the field (optional)
+  - no_label: Set to True to hide the label (optional)
+  
+  Usage:
+  {% include 'core/includes/form_field.html' with field=form.username label_class="fw-bold" %}
+{% endcomment %}
+
+<div class="mb-3">
+    {% if not no_label %}
+    <label for="{{ field.id_for_label }}" class="form-label {% if label_class %}{{ label_class }}{% endif %}">
+        {% if label_text %}{{ label_text }}{% else %}{{ field.label }}{% endif %}
+    </label>
+    {% endif %}
+    
+    {{ field }}
+    
+    {% if field.help_text %}
+    <div class="form-text">{{ field.help_text }}</div>
+    {% endif %}
+    
+    {% if field.errors %}
+    <div class="{% if use_invalid_feedback %}invalid-feedback{% else %}text-danger mt-1{% endif %}">
+        {% for error in field.errors %}
+            {{ error }}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

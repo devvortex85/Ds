@@ -8,9 +8,7 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h2 class="my-2"><i class="fas fa-check-circle me-2"></i>Thank You for Your Support!</h2>
-                </div>
+                {% include 'core/includes/payment_card_header.html' with title="Thank You for Your Support!" bg_class="bg-success" %}
                 <div class="card-body text-center">
                     <div class="py-4">
                         <i class="fas fa-heart fa-5x text-danger mb-3"></i>
@@ -42,7 +40,7 @@
                                             <strong>Status:</strong>
                                         </div>
                                         <div class="col-md-6">
-                                            <span class="badge bg-success">{{ payment.status }}</span>
+                                            {% include 'core/includes/payment_status_badge.html' with status=payment.status %}
                                         </div>
                                     </div>
                                     {% if payment.transaction_id %}
@@ -65,14 +63,9 @@
                         </p>
                     </div>
 
-                    <div class="mt-4">
-                        <a href="{% url 'home' %}" class="btn btn-primary me-2">
-                            <i class="fas fa-home me-1"></i> Return to Home
-                        </a>
-                        <a href="{% url 'donation_history' %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-history me-1"></i> View Donation History
-                        </a>
-                    </div>
+                    {% include 'core/includes/action_buttons.html' with 
+                        primary_link="home" primary_text="Return to Home" primary_icon="fas fa-home"
+                        secondary_link="donation_history" secondary_text="View Donation History" secondary_icon="fas fa-history" %}
                 </div>
             </div>
         </div>

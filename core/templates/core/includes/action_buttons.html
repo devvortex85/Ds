@@ -1,0 +1,35 @@
+{% comment %}
+  Template for displaying consistent action buttons
+  
+  Parameters:
+  - primary_link: Primary button link URL (optional)
+  - primary_text: Primary button text (optional, default: "Return to Home")
+  - primary_icon: Primary button icon class (optional, default: "fas fa-home")
+  - secondary_link: Secondary button link URL (optional)
+  - secondary_text: Secondary button text (optional)
+  - secondary_icon: Secondary button icon class (optional)
+  - container_class: Additional classes for the container (optional, default: "mt-4")
+  - primary_class: Additional classes for primary button (optional, default: "btn-primary")
+  - secondary_class: Additional classes for secondary button (optional, default: "btn-outline-secondary")
+  
+  Usage:
+  {% include 'core/includes/action_buttons.html' with 
+     primary_link="home" primary_text="Return to Home"
+     secondary_link="donation_history" secondary_text="View Donation History" %}
+{% endcomment %}
+
+<div class="{{ container_class|default:'mt-4' }}">
+    {% if primary_link %}
+        <a href="{% url primary_link %}" class="btn {{ primary_class|default:'btn-primary' }} me-2">
+            {% if primary_icon %}<i class="{{ primary_icon|default:'fas fa-home' }} me-1" aria-hidden="true"></i> {% endif %}
+            {{ primary_text|default:"Return to Home" }}
+        </a>
+    {% endif %}
+    
+    {% if secondary_link %}
+        <a href="{% url secondary_link %}" class="btn {{ secondary_class|default:'btn-outline-secondary' }}">
+            {% if secondary_icon %}<i class="{{ secondary_icon }} me-1" aria-hidden="true"></i> {% endif %}
+            {{ secondary_text }}
+        </a>
+    {% endif %}
+</div>
