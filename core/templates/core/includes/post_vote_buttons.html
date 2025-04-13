@@ -7,6 +7,8 @@ Parameters:
 - compact: Boolean for compact display (default: False)
 {% endcomment %}
 
+{% load dict_filters %}
+
 <!-- Votes section -->
 <div class="vote-column {% if not compact %}me-2{% else %}me-1{% endif %}" aria-label="Voting controls">
     {% if user.is_authenticated %}
