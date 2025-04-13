@@ -1,42 +1,42 @@
 {% comment %}
-  Template for displaying comment reply action button and form.
-
+  Template for displaying the comment reply form inline
+  
   Parameters:
-  - comment: The comment to which a reply is being made
-  - post: The post to which the comment belongs
+  - comment: The comment to reply to (required)
+  - post: The post the comment belongs to (required if no comment provided)
   
   Usage:
+  {% include 'core/includes/comment_reply_form.html' with comment=comment %}
+  or
   {% include 'core/includes/comment_reply_form.html' with post=post %}
 {% endcomment %}
 
 <div class="comment-actions">
-  {% if user.is_authenticated %}
-  <button type="button" class="comment-action-btn reply-toggle" 
-          data-comment-id="{{ comment.id }}"
-          aria-controls="reply-form-{{ comment.id }}"
-          aria-expanded="false">
-      <i class="bi bi-reply-fill" aria-hidden="true"></i> Reply
-  </button>
-  {% endif %}
-</div>
+    <button class="comment-reply-toggle btn btn-sm btn-outline-secondary" 
+            data-comment-id="{% if comment %}{{ comment.id }}{% endif %}"
+            aria-expanded="false"
+            aria-controls="reply-form-{% if comment %}{{ comment.id }}{% else %}new{% endif %}">
+        <i class="bi bi-reply-fill me-1" aria-hidden="true"></i> Reply
+    </button>
 
-<!-- Reply form (hidden by default) -->
-{% if user.is_authenticated %}
-<div id="reply-form-{{ comment.id }}" class="reply-form" aria-hidden="true">
-  <form action="{% url 'add_comment' post.id %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="parent_id" value="{{ comment.id }}">
-    <div class="form-group">
-      <textarea name="content" class="form-control" rows="3" placeholder="What are your thoughts?" required></textarea>
+    <div class="comment-reply-form collapse" id="reply-form-{% if comment %}{{ comment.id }}{% else %}new{% endif %}">
+        {% if user.is_authenticated %}
+            <form method="post" action="{% if comment %}{% url 'comment_reply' comment.id %}{% else %}{% url 'comment_create' post.id %}{% endif %}" class="mt-2">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea name="content" rows="3" class="form-control" placeholder="Write your reply..." required aria-label="Your reply"></textarea>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-sm btn-outline-secondary me-2 reply-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <div class="alert alert-secondary mt-2" role="alert">
+                <a href="{% url 'login' %}?next={{ request.path }}" class="alert-link">Log in</a> to reply to this comment.
+            </div>
+        {% endif %}
     </div>
-    <div class="reply-form-actions">
-      <button type="button" class="btn btn-outline-secondary btn-sm cancel-reply"
-              data-comment-id="{{ comment.id }}"
-              aria-controls="reply-form-{{ comment.id }}">
-          Cancel
-      </button>
-      <button type="submit" class="btn btn-primary btn-sm">Reply</button>
-    </div>
-  </form>
 </div>
-{% endif %}

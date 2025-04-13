@@ -1,47 +1,36 @@
 {% comment %}
-Consolidated comment voting buttons template
-Parameters:
-- comment: The comment object to vote on
-- user_comment_votes: Dictionary of user votes on comments (optional)
-- return_url: URL to return after vote (default: request.path)
+  Template for displaying the vote buttons for a comment
+  
+  Parameters:
+  - comment: The comment to display vote buttons for (required)
+  - user_comment_votes: Dictionary of user's votes (optional)
+  
+  Usage:
+  {% include 'core/includes/comment_vote_buttons.html' with comment=comment %}
 {% endcomment %}
 
 {% load dict_tags %}
 
-{% if user.is_authenticated %}
-<a href="{% url 'vote_comment' comment.id 'upvote' %}?next={{ return_url|default:request.path }}#comment-{{ comment.id }}" 
-   class="vote-btn upvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == 1 %}active voted{% endif %}"
-   data-comment-id="{{ comment.id }}" 
-   data-vote-type="upvote"
-   aria-label="Upvote"
-   role="button"
-   tabindex="0">
-    <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-    <span class="sr-only">Upvote</span>
-</a>
-{% else %}
-<a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to upvote">
-    <i class="bi bi-arrow-up-short" aria-hidden="true"></i>
-    <span class="sr-only">Login to upvote</span>
-</a>
-{% endif %}
-
-<div class="vote-count" id="comment-{{ comment.id }}-votes" aria-live="polite" aria-label="Comment score: {{ comment.vote_count }}">{{ comment.vote_count }}</div>
-
-{% if user.is_authenticated %}
-<a href="{% url 'vote_comment' comment.id 'downvote' %}?next={{ return_url|default:request.path }}#comment-{{ comment.id }}" 
-   class="vote-btn downvote-btn comment-vote-btn {% if user_comment_votes and comment.id in user_comment_votes and user_comment_votes|get_item:comment.id == -1 %}active voted{% endif %}"
-   data-comment-id="{{ comment.id }}" 
-   data-vote-type="downvote"
-   aria-label="Downvote"
-   role="button"
-   tabindex="0">
-    <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-    <span class="sr-only">Downvote</span>
-</a>
-{% else %}
-<a href="{% url 'account_login' %}" class="vote-btn" aria-label="Login to downvote">
-    <i class="bi bi-arrow-down-short" aria-hidden="true"></i>
-    <span class="sr-only">Login to downvote</span>
-</a>
-{% endif %}
+<div class="vote-buttons vote-buttons-comment" data-id="{{ comment.id }}" data-type="comment">
+    <button class="vote-button upvote-button {% dict_get user_comment_votes comment.id as user_vote %}{% if user_vote == 1 %}active{% endif %}" 
+            data-vote="up" 
+            data-id="{{ comment.id }}" 
+            data-type="comment" 
+            aria-label="Upvote"
+            title="Upvote this comment">
+        <i class="bi bi-arrow-up-circle-fill" aria-hidden="true"></i>
+    </button>
+    
+    <div class="vote-count" aria-live="polite" aria-atomic="true">
+        {{ comment.vote_count }}
+    </div>
+    
+    <button class="vote-button downvote-button {% if user_vote == -1 %}active{% endif %}" 
+            data-vote="down" 
+            data-id="{{ comment.id }}" 
+            data-type="comment" 
+            aria-label="Downvote"
+            title="Downvote this comment">
+        <i class="bi bi-arrow-down-circle-fill" aria-hidden="true"></i>
+    </button>
+</div>

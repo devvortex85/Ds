@@ -36,48 +36,36 @@
       
       <!-- Parent comment context -->
       {% if comment.parent %}
-      <div class="card mb-3">
-        <div class="card-header">
-          <h2 class="h6 mb-0">Parent Comment</h2>
-        </div>
-        <div class="card-body">
-          <article class="comment-item parent-comment-context">
-            <div class="comment-meta small text-muted mb-1">
-              {% if comment.parent.author.profile.avatar %}
-                <img src="{{ comment.parent.author.profile.avatar.url }}" alt="{{ comment.parent.author.username }}'s avatar" class="avatar avatar-sm me-1" width="16" height="16">
-              {% else %}
-                <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
-              {% endif %}
-              <a href="{% url 'profile' comment.parent.author.username %}" class="comment-author me-1">{{ comment.parent.author.username }}</a>
-              
-              {% if comment.parent.author.profile.country %}
-              <img src="{{ comment.parent.author.profile.country.flag }}" alt="{{ comment.parent.author.profile.country.name }}" class="country-flag me-1" width="16" height="11"> 
-              {% endif %}
-              
-              {{ comment.parent.author.profile.karma|reputation_badge }}
-              <span class="mx-1">•</span>
-              <span>{{ comment.parent.created_at|timesince }} ago</span>
-            </div>
-            
-            <div class="comment-body">
-              {{ comment.parent.content|linebreaks }}
-            </div>
-          </article>
-        </div>
-      </div>
+      {% with content_block %}
+          {% include 'core/includes/comment_component.html' with 
+              comment=comment.parent 
+              show_reply_form=False
+              is_compact=True %}
+      {% endwith %}
+      
+      {% include 'core/includes/card_layout.html' with 
+          title="Parent Comment" 
+          content=content_block 
+          card_class="mb-3" %}
       {% endif %}
       
       <!-- Main comment thread -->
-      <div class="card mb-4">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h2 class="h5 mb-0">Comment Thread</h2>
-        </div>
-        <div class="card-body p-0">
+      {% with content_block %}
           <div class="comments-container" aria-label="Comments section">
-            {% include 'core/includes/comment_thread_structure.html' with comment=comment descendants=descendants max_depth=5 level_adjustment="-2" %}
+              {% include 'core/includes/comment_thread_component.html' with 
+                  comment=comment 
+                  descendants=descendants 
+                  max_depth=5 
+                  level_adjustment="-2" %}
           </div>
-        </div>
-      </div>
+      {% endwith %}
+      
+      {% include 'core/includes/card_layout.html' with 
+          title="Comment Thread" 
+          content=content_block 
+          body_class="p-0"
+          card_class="mb-4"
+          header_class="bg-primary text-white" %}
       
       <!-- Return to post link -->
       <div class="text-center mb-4">

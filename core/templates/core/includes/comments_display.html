@@ -23,14 +23,14 @@
     <!-- Comments list with reddit-style nesting -->
     {% if comments %}
         {% for root_comment in comments %}
-            {% include 'core/includes/comment_thread_structure.html' with comment=root_comment %}
+            {% include 'core/includes/comment_thread_component.html' with comment=root_comment %}
         {% endfor %}
     {% else %}
         <!-- No comments yet -->
-        <div class="card">
-            <div class="card-body text-center">
-                <p class="text-muted mb-0">No comments yet. Be the first to comment!</p>
-            </div>
-        </div>
+        {% with content_block %}
+            <p class="text-muted mb-0 text-center">No comments yet. Be the first to comment!</p>
+        {% endwith %}
+        
+        {% include 'core/includes/card_layout.html' with content=content_block %}
     {% endif %}
 </div>
