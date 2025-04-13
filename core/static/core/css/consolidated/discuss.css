@@ -495,6 +495,108 @@ a:hover {
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
+/* Header Row - Main layout for the navbar */
+.header-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0.2rem 0 !important;
+  height: 32px !important;
+  position: relative !important;
+}
+
+/* Left side with logo and donation link */
+.header-left {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100px !important;
+  z-index: 3 !important;
+}
+
+/* Center: Search container */
+.search-container {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  max-width: 280px !important;
+  display: flex !important;
+  align-items: center !important;
+  z-index: 2 !important;
+}
+
+.search-container .search-form {
+  width: 100% !important;
+}
+
+.search-container .input-group {
+  height: 26px !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+  max-height: 26px !important;
+  box-sizing: border-box !important;
+}
+
+.search-container .form-control,
+.search-container .search-input {
+  background-color: #2c2c2c !important;
+  border: 1px solid #333 !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  max-height: 26px !important;
+  font-size: 0.8rem !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  padding: 0.15rem 0.5rem !important;
+  flex: 1 !important;
+}
+
+.search-container .standalone-search {
+  border-radius: 4px !important;
+  text-align: center !important;
+}
+
+/* User menu area */
+.user-menu {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 10px !important;
+  width: 100px !important;
+  z-index: 3 !important;
+}
+
+.user-menu .nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.25rem !important;
+  position: relative !important;
+  color: #aaa !important;
+  text-decoration: none !important;
+}
+
+.user-menu .nav-link:hover,
+.user-menu .nav-link:focus {
+  color: #fff !important;
+}
+
+/* Badge notifications */
+.badge-notification {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  transform: translate(50%, -50%) !important;
+  font-size: 0.65rem !important;
+  padding: 0.15rem 0.35rem !important;
+}
+
 .navbar-brand {
   display: inline-block;
   padding-top: var(--space-1);
