@@ -13,19 +13,19 @@
 
 <!-- Stripe payment method selection -->
 <div class="payment-method-option mb-4" id="payment-method-stripe">
-    <div class="card">
-        <div class="card-header bg-light">
-            <div class="form-check">
-                <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
-                       id="stripe-method" value="stripe">
-                <label class="form-check-label fw-bold" for="stripe-method">
-                    <i class="bi bi-credit-card me-2"></i> Pay with Credit Card (via Stripe)
-                </label>
-            </div>
+    {% with header_content %}
+        <div class="form-check">
+            <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
+                   id="stripe-method" value="stripe">
+            <label class="form-check-label fw-bold" for="stripe-method">
+                <i class="bi bi-credit-card me-2"></i> Pay with Credit Card (via Stripe)
+            </label>
         </div>
-        
+    {% endwith %}
+    
+    {% with body_content %}
         {% if show_card_info|default:True %}
-        <div class="card-body payment-method-details" id="stripe-details">
+        <div class="payment-method-details" id="stripe-details">
             <div class="alert alert-info mb-3">
                 <small><i class="bi bi-info-circle me-1"></i> Secure payment processing with Stripe. Your card details are encrypted and never stored on our servers.</small>
             </div>
@@ -45,7 +45,14 @@
             </div>
         </div>
         {% endif %}
-    </div>
+    {% endwith %}
+    
+    {% include 'core/includes/card_layout.html' with 
+        content=body_content 
+        header_class="bg-light"
+        card_class="" 
+        content_block_id=""
+        title=header_content %}
 </div>
 
 {% if stripe_js %}

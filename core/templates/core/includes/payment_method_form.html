@@ -24,24 +24,32 @@
         
         <!-- Default test payment method -->
         <div class="payment-method-option mb-3" id="payment-method-default">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <div class="form-check">
-                        <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
-                               id="default-method" value="default" checked>
-                        <label class="form-check-label fw-bold" for="default-method">
-                            <i class="bi bi-credit-card me-2"></i> Credit Card (Test Mode)
-                        </label>
-                    </div>
+            {% with header_content %}
+                <div class="form-check">
+                    <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
+                           id="default-method" value="default" checked>
+                    <label class="form-check-label fw-bold" for="default-method">
+                        <i class="bi bi-credit-card me-2"></i> Credit Card (Test Mode)
+                    </label>
                 </div>
+            {% endwith %}
+            
+            {% with body_content %}
                 {% if show_test_note|default:True %}
-                <div class="card-body payment-method-details" id="default-details">
+                <div class="payment-method-details" id="default-details">
                     <div class="alert alert-info">
                         <small><i class="bi bi-info-circle me-1"></i> For testing, use credit card number <code>4242424242424242</code> with any future expiration date and any 3-digit CVC.</small>
                     </div>
                 </div>
                 {% endif %}
-            </div>
+            {% endwith %}
+            
+            {% include 'core/includes/card_layout.html' with 
+                content=body_content 
+                header_class="bg-light"
+                card_class="" 
+                content_block_id=""
+                title=header_content %}
         </div>
         
         <!-- Stripe payment method -->
@@ -49,22 +57,30 @@
         
         <!-- PayPal payment method -->
         <div class="payment-method-option mb-3" id="payment-method-paypal">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <div class="form-check">
-                        <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
-                               id="paypal-method" value="paypal">
-                        <label class="form-check-label fw-bold" for="paypal-method">
-                            <i class="fab fa-paypal me-2"></i> Pay with PayPal
-                        </label>
-                    </div>
+            {% with header_content %}
+                <div class="form-check">
+                    <input class="form-check-input payment-method-radio" type="radio" name="payment_variant" 
+                           id="paypal-method" value="paypal">
+                    <label class="form-check-label fw-bold" for="paypal-method">
+                        <i class="fab fa-paypal me-2"></i> Pay with PayPal
+                    </label>
                 </div>
-                <div class="card-body payment-method-details" id="paypal-details">
+            {% endwith %}
+            
+            {% with body_content %}
+                <div class="payment-method-details" id="paypal-details">
                     <div class="alert alert-info">
                         <small><i class="bi bi-info-circle me-1"></i> You'll be redirected to PayPal to complete your payment securely.</small>
                     </div>
                 </div>
-            </div>
+            {% endwith %}
+            
+            {% include 'core/includes/card_layout.html' with 
+                content=body_content 
+                header_class="bg-light"
+                card_class="" 
+                content_block_id=""
+                title=header_content %}
         </div>
     </div>
     {% else %}
