@@ -90,8 +90,7 @@ class DonationForm(forms.ModelForm):
         fields = ['donation_type', 'description']
         widgets = {
             'donation_type': forms.Select(attrs={
-                'class': 'form-select',
-                'onchange': 'toggleCustomAmount()'
+                'class': 'form-select'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
