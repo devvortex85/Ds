@@ -1,0 +1,513 @@
+/*
+ * Unified Theme CSS for Discuss
+ * Consolidates all theme-related styles:
+ * - Dark theme styling
+ * - Slate theme customizations
+ * - Color variables and theme settings
+ */
+
+/* ===== COLOR VARIABLES AND THEME SETTINGS ===== */
+/* From styles.css */
+:root {
+    /* Base colors */
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    
+    /* Dark theme colors */
+    --dark-bg: #121212;
+    --dark-surface: #1e1e1e;
+    --dark-card: #242424;
+    --dark-border: #333333;
+    --dark-text-primary: #e0e0e0;
+    --dark-text-secondary: #aaaaaa;
+    --dark-text-muted: #888888;
+    --dark-hover: #2c2c2c;
+    
+    /* Original light colors - kept for reference */
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --body-bg: var(--dark-bg);
+    
+    /* Nesting colors - adjusted for dark theme */
+    --nesting-color-0: #3281ff; /* primary/blue - brightened */
+    --nesting-color-1: #27af6b; /* success/green - brightened */
+    --nesting-color-2: #e74c3c; /* danger/red - brightened */
+    --nesting-color-3: #ffce3a; /* warning/yellow - brightened */
+    --nesting-color-4: #b133d0; /* purple - brightened */
+    --nesting-color-5: #22c7df; /* info/teal - brightened */
+}
+
+/* From slate-customizations.css */
+:root {
+    --slate-bg: #272B30;
+    --slate-darkbg: #1c1e22;
+    --slate-lightbg: #32383e;
+    --slate-text: #c8c8c8;
+    --slate-primary: #7a8288;
+    --slate-accent: #3a3f44;
+    --slate-highlight: #3e444c;
+    --slate-border: #3a3f44;
+    --slate-link: #fff;
+    --slate-success: #62c462;
+    --slate-warning: #f89406;
+    --slate-danger: #ee5f5b;
+    --slate-info: #5bc0de;
+}
+
+/* ===== DARK THEME STYLING ===== */
+/* From dark-theme.css */
+body {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #e0e0e0 !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Container backgrounds */
+.container, .container-fluid {
+    background-color: transparent !important;
+}
+
+/* Card styling */
+.card {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.card-header, .card-footer {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Form elements */
+.form-control, .form-select {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #1e1e1e !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+    color: #e0e0e0 !important;
+}
+
+.form-control::placeholder {
+    color: #888 !important;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: #333 !important;
+    border-color: #444 !important;
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Text colors */
+.text-muted {
+    color: #888 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #e0e0e0 !important;
+}
+
+/* Links */
+a {
+    color: #0d6efd !important;
+}
+
+a:hover {
+    color: #3281ff !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+}
+
+.dropdown-item {
+    color: #e0e0e0 !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: #2c2c2c !important;
+    color: #fff !important;
+}
+
+/* List groups */
+.list-group-item {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.list-group-item-action:hover {
+    background-color: #2c2c2c !important;
+}
+
+/* Mobile header */
+.mobile-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.mobile-header-left, .mobile-header-right {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.mobile-header-center {
+    flex: 1 !important;
+    max-width: 160px !important;
+    margin: 0 0.5rem !important;
+}
+
+/* Tables */
+.table {
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+.table td, .table th {
+    border-color: #333 !important;
+}
+
+/* Badge styling */
+.badge.bg-light {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Alerts */
+.alert {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: #fff !important;
+}
+
+/* Modal styling */
+.modal-content {
+    background-color: #242424 !important;
+    border-color: #333 !important;
+}
+
+.modal-header, .modal-footer {
+    border-color: #333 !important;
+}
+
+.modal-header .close {
+    color: #e0e0e0 !important;
+}
+
+/* Reply form styling */
+.reply-form {
+    background-color: #242424 !important;
+    border: 1px solid #333 !important;
+}
+
+.reply-form textarea {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Reputation badges */
+.reputation-badge {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Comment styling */
+.nested-reply {
+    border-bottom-color: #333 !important;
+}
+
+/* Vote styling */
+.vote-btn {
+    color: #888 !important;
+}
+
+.vote-btn:hover {
+    color: #e0e0e0 !important;
+}
+
+.upvote-btn.voted {
+    color: #198754 !important;
+}
+
+.downvote-btn.voted {
+    color: #dc3545 !important;
+}
+
+/* Custom mobile adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.3rem 0.5rem !important;
+    }
+    
+    .card {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .card-body {
+        padding: 0.5rem !important;
+    }
+    
+    .navbar .input-group .form-control {
+        height: 26px !important;
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    
+    .navbar .input-group .btn {
+        height: 26px !important;
+        width: 26px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Smaller buttons */
+    .btn {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.4rem !important;
+        height: auto !important;
+    }
+    
+    /* Fix icons to be smaller with no outline */
+    .bi {
+        font-size: 0.95rem !important;
+        width: auto !important;
+        height: auto !important;
+        line-height: 1 !important;
+    }
+    
+    /* Change donate icon to euro */
+    .donate-icon::before {
+        content: "€" !important;
+    }
+}
+
+/* ===== SLATE THEME CUSTOMIZATIONS ===== */
+/* From slate-customizations.css */
+
+/* General Page Styling */
+body {
+    background-color: var(--slate-bg) !important;
+    color: var(--slate-text) !important;
+}
+
+/* Card styling */
+.card {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.card-header, .card-footer {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.navbar-dark .navbar-brand, .navbar-dark .navbar-nav .nav-link {
+    color: var(--slate-text) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+    color: #fff !important;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: var(--slate-primary) !important;
+    border-color: var(--slate-highlight) !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--slate-highlight) !important;
+    border-color: var(--slate-accent) !important;
+}
+
+.btn-secondary {
+    background-color: var(--slate-accent) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+    background-color: var(--slate-highlight) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(122, 130, 136, 0.25) !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.dropdown-item {
+    color: var(--slate-text) !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--slate-highlight) !important;
+    color: #fff !important;
+}
+
+/* Alerts */
+.alert-primary {
+    background-color: var(--slate-highlight) !important;
+    border-color: var(--slate-primary) !important;
+    color: var(--slate-text) !important;
+}
+
+.alert-secondary {
+    background-color: var(--slate-accent) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.alert-success {
+    background-color: rgba(98, 196, 98, 0.1) !important;
+    border-color: var(--slate-success) !important;
+    color: var(--slate-success) !important;
+}
+
+.alert-danger {
+    background-color: rgba(238, 95, 91, 0.1) !important;
+    border-color: var(--slate-danger) !important;
+    color: var(--slate-danger) !important;
+}
+
+.alert-warning {
+    background-color: rgba(248, 148, 6, 0.1) !important;
+    border-color: var(--slate-warning) !important;
+    color: var(--slate-warning) !important;
+}
+
+.alert-info {
+    background-color: rgba(91, 192, 222, 0.1) !important;
+    border-color: var(--slate-info) !important;
+    color: var(--slate-info) !important;
+}
+
+/* List groups */
+.list-group-item {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.list-group-item-action:hover, .list-group-item-action:focus {
+    background-color: var(--slate-highlight) !important;
+    color: #fff !important;
+}
+
+/* Table styling */
+.table {
+    color: var(--slate-text) !important;
+}
+
+.table-dark {
+    background-color: var(--slate-darkbg) !important;
+}
+
+.table thead th {
+    border-color: var(--slate-border) !important;
+}
+
+.table tbody td {
+    border-color: var(--slate-border) !important;
+}
+
+/* Specific custom styles for our application */
+.welcome-section {
+    background-color: var(--slate-highlight) !important;
+    border-color: var(--slate-border) !important;
+    color: var(--slate-text) !important;
+}
+
+.post-card {
+    background-color: var(--slate-darkbg) !important;
+    border-color: var(--slate-border) !important;
+}
+
+.post-title a {
+    color: var(--slate-text) !important;
+}
+
+.post-title a:hover {
+    color: #fff !important;
+}
+
+.comment-card {
+    background-color: var(--slate-darkbg) !important;
+    border-left: 3px solid var(--slate-primary) !important;
+}
+
+.user-profile-header {
+    background-color: var(--slate-accent) !important;
+    border-color: var(--slate-border) !important;
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+    .btn, .card, .form-control, .nav-link {
+        border: 1px solid !important;
+    }
+}

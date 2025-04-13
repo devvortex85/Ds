@@ -17,19 +17,21 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Adaptive sizing system styles -->
+    <!-- Core CSS Files - Consolidated for better maintainability -->
+    <!-- Foundation sizing system -->
     <link href="{% static 'core/css/adaptive-sizing.css' %}" rel="stylesheet">
     
-    <!-- Universal adaptive styling for all elements -->
+    <!-- All adaptive styling, accessibility, flags and layout fixes -->
     <link href="{% static 'core/css/universal-adaptive.css' %}" rel="stylesheet">
     
-    <!-- Single unified CSS file for all navigation, avatars, and layout fixes -->
+    <!-- Navigation styling -->
     <link href="{% static 'core/css/navbar-unified.css' %}" rel="stylesheet">
     
-    <!-- Essential component styles -->
-    <!-- All vote styles now in universal-adaptive.css -->
-    <!-- All comment styles are now in reddit-comments.css -->
+    <!-- Comment styling -->
     <link href="{% static 'core/css/reddit-comments.css' %}" rel="stylesheet">
+    
+    <!-- Theme colors and customizations - consolidated file -->
+    <link href="{% static 'core/css/unified-theme.css' %}" rel="stylesheet">
     
     <!-- Custom CSS -->
     <style>
