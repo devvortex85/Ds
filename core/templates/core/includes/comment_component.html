@@ -15,7 +15,6 @@ Usage:
 {% include 'core/includes/comment_component.html' with comment=comment %}
 {% endcomment %}
 
-{% load dict_tags %}
 {% load core_tags %}
 
 <div class="comment-component {% if is_compact %}compact{% endif %}" id="comment-{{ comment.id }}">

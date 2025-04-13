@@ -9,7 +9,7 @@
   {% include 'core/includes/comment_vote_buttons.html' with comment=comment %}
 {% endcomment %}
 
-{% load dict_tags %}
+{% load core_tags %}
 
 <div class="vote-buttons vote-buttons-comment" data-id="{{ comment.id }}" data-type="comment">
     <button class="vote-button upvote-button {% dict_get user_comment_votes comment.id as user_vote %}{% if user_vote == 1 %}active{% endif %}" 
