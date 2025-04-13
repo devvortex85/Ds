@@ -12,77 +12,62 @@
     {% endif %}
 </div>
 
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">Browse Communities</h5>
-    </div>
-    <div class="card-body p-0">
-        {% if communities %}
-            <div class="list-group list-group-flush">
-                {% for community in communities %}
-                    {% include 'core/includes/community_item.html' with community=community show_actions=True %}
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="p-4 text-center">
-                <p>No communities found.</p>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'create_community' %}" class="btn btn-primary">Create the first community</a>
-                {% else %}
-                    <a href="{% url 'account_login' %}" class="btn btn-primary">Login to create a community</a>
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
-</div>
+{% with content_block %}
+    {% with empty_message="No communities found." empty_action_url=user.is_authenticated|yesno:"create_community,account_login" empty_action_text=user.is_authenticated|yesno:"Create the first community,Login to create a community" %}
+        {% include 'core/includes/list_group.html' with 
+            items=communities 
+            item_template='core/includes/community_item.html' 
+            empty_message=empty_message
+            empty_action_url=empty_action_url
+            empty_action_text=empty_action_text
+            item_wrapper_class="list-group-item" %}
+    {% endwith %}
+{% endwith %}
+
+{% include 'core/includes/card_layout.html' with 
+    title="Browse Communities" 
+    content=content_block 
+    body_class="p-0" %}
 {% endblock %}
 
 {% block sidebar %}
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">About Communities</h5>
-    </div>
-    <div class="card-body">
-        <p>Communities are groups where users can post, comment, and discuss shared interests.</p>
-        
-        <h6 class="mt-3">Community Guidelines</h6>
-        <ul>
-            <li>Be respectful to other members</li>
-            <li>Follow community-specific rules</li>
-            <li>Post relevant content</li>
-            <li>Avoid duplicate posts</li>
-        </ul>
-        
-        {% if user.is_authenticated %}
-            <a href="{% url 'create_community' %}" class="btn btn-primary w-100 mt-3">
-                <i class="fas fa-plus-circle me-1"></i> Create Your Own
-            </a>
-        {% else %}
-            <a href="{% url 'account_login' %}" class="btn btn-primary w-100 mt-3">Login to Create</a>
-        {% endif %}
-    </div>
-</div>
+{% with content_block %}
+    <p>Communities are groups where users can post, comment, and discuss shared interests.</p>
+    
+    <h6 class="mt-3">Community Guidelines</h6>
+    <ul>
+        <li>Be respectful to other members</li>
+        <li>Follow community-specific rules</li>
+        <li>Post relevant content</li>
+        <li>Avoid duplicate posts</li>
+    </ul>
+    
+    {% if user.is_authenticated %}
+        <a href="{% url 'create_community' %}" class="btn btn-primary w-100 mt-3">
+            <i class="fas fa-plus-circle me-1"></i> Create Your Own
+        </a>
+    {% else %}
+        <a href="{% url 'account_login' %}" class="btn btn-primary w-100 mt-3">Login to Create</a>
+    {% endif %}
+{% endwith %}
+
+{% include 'core/includes/card_layout.html' with 
+    title="About Communities" 
+    content=content_block 
+    card_class="mb-4" %}
 
 {% if user.is_authenticated %}
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">My Communities</h5>
-    </div>
-    <div class="card-body p-0">
-        {% if user.communities.all %}
-            <div class="list-group list-group-flush">
-                {% for community in user.communities.all %}
-                    <div class="list-group-item list-group-item-action">
-                        {% include 'core/includes/community_item.html' with community=community show_actions=False compact=True %}
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="p-3">
-                <p class="mb-0">You haven't joined any communities yet.</p>
-            </div>
-        {% endif %}
-    </div>
-</div>
+{% with content_block %}
+    {% include 'core/includes/list_group.html' with 
+        items=user.communities.all 
+        item_template='core/includes/community_item.html' 
+        empty_message="You haven't joined any communities yet."
+        item_wrapper_class="list-group-item list-group-item-action" %}
+{% endwith %}
+
+{% include 'core/includes/card_layout.html' with 
+    title="My Communities" 
+    content=content_block 
+    body_class="p-0" %}
 {% endif %}
 {% endblock %}
