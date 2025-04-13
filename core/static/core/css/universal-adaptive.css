@@ -17,67 +17,87 @@
 }
 
 /* ===== ADAPTIVE SIZING FOUNDATION ===== */
-/* Base adaptive variables - also set in JS for dynamic updates */
+/* Modern fluid typography and spacing system based on typographic scale */
 :root {
-    --adaptive-scale: 1;
-    --mobile-scale: 0.85;
-    --tablet-scale: 0.92;
-    --desktop-scale: 1;
-    --large-desktop-scale: 1.1;
+    /* Base font size settings for different devices */
+    --base-font-size-mobile: 14px;   /* Base size for mobile */
+    --base-font-size-tablet: 15px;   /* Base size for tablets */
+    --base-font-size-desktop: 16px;  /* Base size for desktop */
     
-    /* Spacing variables */
-    --base-spacing: calc(0.5rem * var(--adaptive-scale));
-    --spacing-xs: calc(0.25rem * var(--adaptive-scale));
-    --spacing-sm: calc(0.5rem * var(--adaptive-scale));
-    --spacing-md: calc(1rem * var(--adaptive-scale));
-    --spacing-lg: calc(1.5rem * var(--adaptive-scale));
-    --spacing-xl: calc(2rem * var(--adaptive-scale));
+    /* Automatically set the base font size depending on viewport width using clamp */
+    font-size: clamp(
+        var(--base-font-size-mobile), 
+        calc(var(--base-font-size-mobile) + 0.25vw),  
+        var(--base-font-size-desktop)
+    );
     
-    /* Typography variables */
-    --font-size-xs: calc(0.7rem * var(--adaptive-scale));
-    --font-size-sm: calc(0.85rem * var(--adaptive-scale));
-    --font-size-md: calc(1rem * var(--adaptive-scale));
-    --font-size-lg: calc(1.25rem * var(--adaptive-scale));
-    --font-size-xl: calc(1.5rem * var(--adaptive-scale));
+    /* Scale ratio for typographic harmony (1.2 = minor third scale) */
+    --scale-ratio: 1.2;
+    
+    /* Root adaptive scale (this makes it easier to adjust everything at once) */
+    --adaptive-scale: 0.9;  /* Global scale factor - reduce from 1 to make everything smaller */
+    
+    /* Typography scale using the ratio */
+    --font-size-xs: calc(0.75rem * var(--adaptive-scale));                       /* Extra small text */
+    --font-size-sm: calc(0.875rem * var(--adaptive-scale));                      /* Small text */
+    --font-size-md: calc(1rem * var(--adaptive-scale));                          /* Base/body text */
+    --font-size-lg: calc(1rem * var(--scale-ratio) * var(--adaptive-scale));     /* h4, h5, h6 */
+    --font-size-xl: calc(1rem * var(--scale-ratio) * var(--scale-ratio) * var(--adaptive-scale)); /* h3 */
+    --font-size-2xl: calc(1rem * pow(var(--scale-ratio), 3) * var(--adaptive-scale)); /* h2 */
+    --font-size-3xl: calc(1rem * pow(var(--scale-ratio), 4) * var(--adaptive-scale)); /* h1 */
+    
+    /* Spacing variables based on the same scale for consistency */
+    --space-unit: 0.25rem;  /* Base unit - 4px at 16px base size */
+    --spacing-xs: calc(var(--space-unit) * var(--adaptive-scale));                     /* 4px - tiny spacing */
+    --spacing-sm: calc(var(--space-unit) * 2 * var(--adaptive-scale));                 /* 8px - small spacing */
+    --spacing-md: calc(var(--space-unit) * 4 * var(--adaptive-scale));                 /* 16px - standard spacing */
+    --spacing-lg: calc(var(--space-unit) * 6 * var(--adaptive-scale));                 /* 24px - large spacing */
+    --spacing-xl: calc(var(--space-unit) * 8 * var(--adaptive-scale));                 /* 32px - extra large spacing */
+    --spacing-2xl: calc(var(--space-unit) * 12 * var(--adaptive-scale));               /* 48px - 2x extra large */
+    
+    /* Border radius - using the same scale */
+    --radius-sm: calc(var(--space-unit) * var(--adaptive-scale));
+    --radius-md: calc(var(--space-unit) * 2 * var(--adaptive-scale));
+    --radius-lg: calc(var(--space-unit) * 3 * var(--adaptive-scale));
     
     /* Form element sizes */
-    --input-height: calc(38px * var(--adaptive-scale));
-    --input-font-size: calc(0.9rem * var(--adaptive-scale));
-    --input-padding: calc(0.4rem * var(--adaptive-scale)) calc(0.6rem * var(--adaptive-scale));
-    --textarea-height: calc(80px * var(--adaptive-scale));
-    --label-font-size: calc(0.9rem * var(--adaptive-scale));
-    --helper-font-size: calc(0.85rem * var(--adaptive-scale));
+    --input-height: calc(2.5rem * var(--adaptive-scale));
+    --input-font-size: var(--font-size-md);
+    --input-padding: calc(var(--spacing-sm)) calc(var(--spacing-md));
+    --textarea-height: calc(5rem * var(--adaptive-scale));
+    --label-font-size: var(--font-size-sm);
+    --helper-font-size: var(--font-size-xs);
     
-    /* Post and content sizes */
-    --post-title-size: calc(1.4rem * var(--adaptive-scale));
-    --post-meta-size: calc(0.85rem * var(--adaptive-scale));
-    --post-content-size: calc(1rem * var(--adaptive-scale));
-    --comment-content-size: calc(0.95rem * var(--adaptive-scale));
-    --comment-meta-size: calc(0.8rem * var(--adaptive-scale));
+    /* Post and content-specific sizes */
+    --post-title-size: var(--font-size-xl);
+    --post-meta-size: var(--font-size-sm);
+    --post-content-size: var(--font-size-md);
+    --comment-content-size: var(--font-size-md);
+    --comment-meta-size: var(--font-size-xs);
     
-    /* Components sizes */
-    --icon-size-xs: calc(0.7rem * var(--adaptive-scale));
-    --icon-size-sm: calc(0.9rem * var(--adaptive-scale));
-    --icon-size-md: calc(1.1rem * var(--adaptive-scale));
-    --icon-size-lg: calc(1.3rem * var(--adaptive-scale));
+    /* Component sizes */
+    --icon-size-xs: calc(1rem * var(--adaptive-scale));
+    --icon-size-sm: calc(1.25rem * var(--adaptive-scale));
+    --icon-size-md: calc(1.5rem * var(--adaptive-scale));
+    --icon-size-lg: calc(2rem * var(--adaptive-scale));
     
-    /* Touch targets */
-    --touch-target-size: calc(44px * var(--adaptive-scale));
-    --min-touch-target: calc(32px * var(--adaptive-scale));
+    /* Touch targets - minimum 44px for accessibility */
+    --touch-target-size: max(44px, calc(2.75rem * var(--adaptive-scale)));
+    --min-touch-target: max(32px, calc(2rem * var(--adaptive-scale)));
     
     /* Tag and badge sizes */
-    --tag-font-size-xs: calc(0.65rem * var(--adaptive-scale));
-    --tag-font-size-sm: calc(0.75rem * var(--adaptive-scale));
-    --tag-font-size-md: calc(0.8rem * var(--adaptive-scale));
+    --tag-font-size-xs: var(--font-size-xs);
+    --tag-font-size-sm: var(--font-size-sm);
+    --tag-font-size-md: var(--font-size-md);
     --tag-padding-xs: calc(0.15rem * var(--adaptive-scale)) calc(0.3rem * var(--adaptive-scale));
     --tag-padding-sm: calc(0.2rem * var(--adaptive-scale)) calc(0.4rem * var(--adaptive-scale));
     --tag-padding-md: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale));
     
     /* Button and control sizes */
-    --btn-padding-xs: calc(0.15rem * var(--adaptive-scale)) calc(0.3rem * var(--adaptive-scale));
-    --btn-padding-sm: calc(0.25rem * var(--adaptive-scale)) calc(0.5rem * var(--adaptive-scale));
-    --btn-padding-md: calc(0.375rem * var(--adaptive-scale)) calc(0.75rem * var(--adaptive-scale));
-    --btn-padding-lg: calc(0.5rem * var(--adaptive-scale)) calc(1rem * var(--adaptive-scale));
+    --btn-padding-xs: var(--spacing-xs) var(--spacing-sm);
+    --btn-padding-sm: var(--spacing-sm) var(--spacing-md);
+    --btn-padding-md: var(--spacing-sm) var(--spacing-lg);
+    --btn-padding-lg: var(--spacing-md) var(--spacing-xl);
     
     /* Flag sizes */
     --flag-width-mobile: calc(16px * var(--adaptive-scale));
@@ -89,23 +109,23 @@
     
     /* Vote control sizes */
     --vote-btn-size-mobile: calc(28px * var(--adaptive-scale));
-    --vote-btn-size-tablet: calc(32px * var(--adaptive-scale));
+    --vote-btn-size-tablet: calc(32px * var(--adaptive-scale)); 
     --vote-btn-size-desktop: calc(36px * var(--adaptive-scale));
-    --vote-icon-size-mobile: calc(1.2rem * var(--adaptive-scale));
-    --vote-icon-size-tablet: calc(1.4rem * var(--adaptive-scale));
-    --vote-icon-size-desktop: calc(1.5rem * var(--adaptive-scale));
+    --vote-icon-size-mobile: calc(1rem * var(--adaptive-scale));
+    --vote-icon-size-tablet: calc(1.25rem * var(--adaptive-scale));
+    --vote-icon-size-desktop: calc(1.4rem * var(--adaptive-scale));
 }
 
 /* ===== TEXT SIZING FOR ALL ELEMENTS ===== */
-/* Headings */
+/* Headings - using modern typographic scale */
 h1, .h1, 
 .page-title,
 .main-title,
 .section-title-xl,
 .post-title-xl {
-    font-size: calc(1.5rem * var(--adaptive-scale)) !important;
-    line-height: 1.3 !important;
-    margin-bottom: calc(0.75rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-3xl) !important;
+    line-height: 1.2 !important;
+    margin-bottom: var(--spacing-md) !important;
     font-weight: 700 !important;
 }
 
@@ -117,9 +137,9 @@ h2, .h2,
 .section-title-lg,
 .post-title-lg,
 .card-header h2 {
-    font-size: calc(1.3rem * var(--adaptive-scale)) !important;
-    line-height: 1.3 !important;
-    margin-bottom: calc(0.5rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-2xl) !important;
+    line-height: 1.25 !important;
+    margin-bottom: var(--spacing-sm) !important;
     font-weight: 600 !important;
 }
 
@@ -128,9 +148,9 @@ h3, .h3,
 .subtitle,
 .section-title-md,
 .post-title-md {
-    font-size: calc(1.15rem * var(--adaptive-scale)) !important;
-    line-height: 1.4 !important;
-    margin-bottom: calc(0.5rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-xl) !important;
+    line-height: 1.3 !important;
+    margin-bottom: var(--spacing-sm) !important;
     font-weight: 600 !important;
 }
 
@@ -140,9 +160,9 @@ h6, .h6,
 .panel-title,
 .section-title-sm,
 .post-title-sm {
-    font-size: calc(1rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-lg) !important;
     line-height: 1.4 !important;
-    margin-bottom: calc(0.5rem * var(--adaptive-scale)) !important;
+    margin-bottom: var(--spacing-sm) !important;
     font-weight: 600 !important;
 }
 
@@ -182,7 +202,7 @@ i,
 .text-danger,
 .text-warning,
 .text-info {
-    font-size: calc(1rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-md) !important;
     line-height: 1.5 !important;
 }
 
@@ -203,7 +223,7 @@ blockquote,
 .markdown-content,
 .content-text,
 article {
-    margin-bottom: calc(0.75rem * var(--adaptive-scale)) !important;
+    margin-bottom: var(--spacing-md) !important;
 }
 
 /* Meta text */
@@ -229,9 +249,9 @@ small,
 .text-secondary,
 figcaption,
 .caption {
-    font-size: calc(0.85rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-sm) !important;
     line-height: 1.4 !important;
-    margin-bottom: calc(0.5rem * var(--adaptive-scale)) !important;
+    margin-bottom: var(--spacing-sm) !important;
 }
 
 /* Extra small text */
@@ -242,7 +262,7 @@ figcaption,
 .meta-xs,
 sup, 
 sub {
-    font-size: calc(0.75rem * var(--adaptive-scale)) !important;
+    font-size: var(--font-size-xs) !important;
     line-height: 1.3 !important;
 }
 

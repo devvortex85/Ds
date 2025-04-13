@@ -30,7 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the adaptive sizing system
     initAdaptiveSystem();
     
-    // Apply initial sizing
+    // Set initial adaptive scale based on screen size
+    setAdaptiveScale();
+    
+    // Apply initial adaptive sizing to elements
     applyAdaptiveSizing();
     
     // Add responsive layout adjustments
@@ -57,8 +60,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000);
     
-    // Handle window resize events for responsive adjustments
-    window.addEventListener('resize', debounce(applyResponsiveLayout, 250));
+    // Handle window resize events for responsive adjustments and scaling
+    window.addEventListener('resize', debounce(function() {
+        // Update scale based on new viewport size
+        setAdaptiveScale();
+        // Apply updated adaptive sizing
+        applyAdaptiveSizing();
+        // Make responsive layout adjustments
+        applyResponsiveLayout();
+    }, 250));
 });
 
 /**
@@ -579,26 +589,37 @@ function applyAdaptiveSizing() {
 
 /**
  * Set the adaptive scale based on screen size
+ * Uses a more nuanced approach with fluid scaling between breakpoints
  */
 function setAdaptiveScale() {
     let adaptiveScale;
+    const viewportWidth = window.innerWidth;
     
-    // Determine scale based on viewport width
-    if (window.innerWidth < 576) {
-        // Mobile phones
+    // Base scale for different device sizes
+    // These create a smooth transition between device sizes rather than jumps
+    if (viewportWidth < 576) {
+        // Mobile phones - smaller scale for better proportions
         adaptiveScale = 0.85;
-    } else if (window.innerWidth < 768) {
-        // Large phones and small tablets
-        adaptiveScale = 0.9;
-    } else if (window.innerWidth < 992) {
-        // Tablets
-        adaptiveScale = 0.92;
-    } else if (window.innerWidth < 1200) {
-        // Desktops
+    } else if (viewportWidth < 768) {
+        // Large phones and small tablets - calculate fluid scale between 0.85 and 0.9
+        const ratio = (viewportWidth - 576) / (768 - 576);
+        adaptiveScale = 0.85 + (ratio * 0.05);
+    } else if (viewportWidth < 992) {
+        // Tablets - calculate fluid scale between 0.9 and 0.92
+        const ratio = (viewportWidth - 768) / (992 - 768);
+        adaptiveScale = 0.9 + (ratio * 0.02);
+    } else if (viewportWidth < 1200) {
+        // Smaller desktops - gradually increase to full scale
+        const ratio = (viewportWidth - 992) / (1200 - 992);
+        adaptiveScale = 0.92 + (ratio * 0.08);
+    } else if (viewportWidth < 1600) {
+        // Standard desktops - full scale
         adaptiveScale = 1;
     } else {
-        // Large desktops
-        adaptiveScale = 1.1;
+        // Large desktops - slightly larger, but not too much
+        // Using Math.min to cap the scale for extremely large screens
+        const maxScale = 1.05; // Reduced from 1.1 to keep proportions better balanced
+        adaptiveScale = Math.min(1 + ((viewportWidth - 1600) / 2000) * 0.05, maxScale);
     }
     
     // Set the CSS variable
