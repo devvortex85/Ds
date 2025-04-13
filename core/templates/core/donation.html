@@ -12,29 +12,7 @@
                 <div class="card-body">
                     <p class="lead">Your donations help us keep the lights on and improve the platform for everyone.</p>
                     
-                    {% if messages %}
-                    <div class="alert alert-danger">
-                        {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <form method="post" class="mt-4">
-                        {% csrf_token %}
-                        
-                        {% include 'core/includes/form_field.html' with field=form.donation_type label_text="Donation Amount" label_class="fw-bold" %}
-                        
-                        <div id="custom-amount-group" class="form-group mb-3" style="display: none;">
-                            {% include 'core/includes/form_field.html' with field=form.custom_amount label_text="Custom Amount ($)" label_class="fw-bold" %}
-                        </div>
-                        
-                        {% include 'core/includes/form_field.html' with field=form.description label_text="Message (Optional)" label_class="fw-bold" %}
-                        
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">Continue to Payment</button>
-                        </div>
-                    </form>
+                    {% include 'core/includes/donation_form.html' with form=form messages=messages %}
                 </div>
                 {% include 'core/includes/payment_card_footer.html' with message="Payments are secure and processed via our payment provider." %}
             </div>
