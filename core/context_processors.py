@@ -1,5 +1,6 @@
 from taggit.models import Tag
 from django.db.models import Count
+from .models import Profile
 
 def notification_count(request):
     """
@@ -56,4 +57,23 @@ def popular_tags(request):
     return {
         'all_tags': tags,
         'default_tag_names': default_tag_names,
+    }
+
+
+def user_profile(request):
+    """
+    Add user profile to the template context for all views
+    """
+    user_profile = None
+    
+    if request.user.is_authenticated:
+        try:
+            # Get or create the user's profile
+            user_profile, created = Profile.objects.get_or_create(user=request.user)
+        except Exception as e:
+            # If there's any error, default to None
+            user_profile = None
+    
+    return {
+        'user_profile': user_profile,
     }

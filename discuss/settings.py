@@ -113,12 +113,15 @@ SILKY_PYTHON_PROFILER_RESULT_PATH = 'profiles/'  # Store profiles in a subdirect
 # Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1', '0.0.0.0']
 
-# CSRF Settings for Replit
+# CSRF Settings for Replit and runtime domains
 CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',  # Trust all Replit domains
     'https://*.replit.app',
     'http://localhost:5000',
     'http://127.0.0.1:5000',
+    'https://*.prod-runtime.all-hands.dev',  # Trust all runtime domains
+    'https://work-1-ptgxkbyltkudhche.prod-runtime.all-hands.dev',
+    'https://work-2-ptgxkbyltkudhche.prod-runtime.all-hands.dev',
 ]
 
 ROOT_URLCONF = 'discuss.urls'
@@ -140,6 +143,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.notification_count',
                 'core.context_processors.popular_tags',
+                'core.context_processors.user_profile',
             ],
         },
     },

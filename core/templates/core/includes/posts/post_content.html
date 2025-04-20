@@ -4,9 +4,11 @@
   Parameters:
   - post: The post to display content for (required)
   - show_link_preview: Whether to show the link preview (default: True)
+  - truncate: Whether to truncate the content (default: False)
+  - word_limit: Number of words to show if truncated (default: 50)
   
   Usage:
-  {% include 'core/includes/post_content.html' with post=post %}
+  {% include 'core/includes/posts/post_content.html' with post=post %}
 {% endcomment %}
 
 {% if post.post_type == 'link' and show_link_preview|default:True %}
@@ -22,6 +24,14 @@
 
 {% if post.content %}
     <div class="post-content mb-3">
-        {{ post.content|linebreaks }}
+        {% if truncate %}
+            {% load core_tags %}
+            {{ post.content|truncatewords_html:word_limit|linebreaks }}
+            {% if post.content|wordcount > word_limit %}
+                <a href="{% url 'post_detail' post.id %}" class="read-more">Read more...</a>
+            {% endif %}
+        {% else %}
+            {{ post.content|linebreaks }}
+        {% endif %}
     </div>
 {% endif %}

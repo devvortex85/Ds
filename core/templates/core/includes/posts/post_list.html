@@ -18,7 +18,7 @@
                         <i class="bi bi-chat-text" aria-hidden="true"></i> {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
                     </a>
                     
-                    {% include 'core/includes/social_share_buttons.html' with post=post %}
+                    {% include 'core/includes/components/social_share_buttons.html' with post=post request=request %}
                     
                     {% if user.is_authenticated and user == post.author %}
                     <a href="{% url 'delete_post' post.id %}" 
@@ -29,7 +29,7 @@
                     </a>
                     {% endif %}
                     
-                    {% include 'core/includes/post_tags.html' with post=post %}
+                    {% include 'core/includes/posts/post_tags.html' with post=post %}
                 </div>
             </div>
         </div>

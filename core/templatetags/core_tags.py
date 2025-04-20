@@ -2,6 +2,7 @@ from django import template
 from django.db.models import Q, Count
 from django.utils.safestring import mark_safe
 from django.forms import widgets
+from django.template.defaultfilters import truncatewords_html as django_truncatewords_html
 from core.models import Profile
 import os
 
@@ -241,3 +242,15 @@ def reputation_badge(user_or_karma):
         return mark_safe(f'<span class="badge {badge_class} ms-1">{level}</span>')
     except (Profile.DoesNotExist, AttributeError, TypeError):
         return ""
+
+
+@register.filter
+def truncatewords_html(value, arg):
+    """
+    Truncate HTML string to the specified number of words.
+    This is a wrapper around Django's built-in truncatewords_html filter.
+    
+    Usage:
+    {{ html_content|truncatewords_html:50 }}
+    """
+    return django_truncatewords_html(value, arg)
