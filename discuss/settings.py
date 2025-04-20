@@ -21,6 +21,37 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']  # Allow all hosts for testing
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://work-1-ptgxkbyltkudhche.prod-runtime.all-hands.dev',
+    'https://work-2-ptgxkbyltkudhche.prod-runtime.all-hands.dev',
+]
+
+# For development, disable CSRF protection
+if DEBUG:
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        # Commented out for development
+        # 'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'allauth.account.middleware.AccountMiddleware',
+    ]
+else:
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'allauth.account.middleware.AccountMiddleware',
+    ]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,18 +91,13 @@ INSTALLED_APPS = [
     'silk',  # Advanced request profiling
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Required by django-allauth
-    'silk.middleware.SilkyMiddleware',  # Django Silk profiling middleware
-]
+# MIDDLEWARE is defined above based on DEBUG setting
+if DEBUG:
+    # Add debug middleware
+    MIDDLEWARE.extend([
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+        'silk.middleware.SilkyMiddleware',  # Django Silk profiling middleware
+    ])
 
 # Silk configuration
 SILKY_PYTHON_PROFILER = True  # Enable Python profiling

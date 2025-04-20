@@ -79,7 +79,7 @@ def get_comment_children(comment, user, depth=0, max_depth=3):
 
 def post_detail(request, pk):
     """
-    View a post and its comments with Reddit-style nested comments
+    View a post and its comments with Reddit-style nested comments using MPTT
     """
     post = get_object_or_404(Post, pk=pk)
     
@@ -100,7 +100,7 @@ def post_detail(request, pk):
     else:
         post.user_vote = None
     
-    # Get all comments for this post
+    # Get root comments for this post using MPTT
     comments = Comment.objects.filter(post=post, parent=None).order_by('created_at')
     
     # Create comment form if user is logged in
@@ -131,7 +131,7 @@ def post_detail(request, pk):
     else:
         comment_form = None
     
-    # Update denormalized vote counts for comments
+    # Update denormalized vote counts for comments and add user votes
     for comment in comments:
         # Update denormalized vote counts
         upvotes = comment.votes.filter(value=1).count()
@@ -149,9 +149,6 @@ def post_detail(request, pk):
                 comment.user_vote = None
         else:
             comment.user_vote = None
-        
-        # Get child comments - store as an attribute without trying to assign to the related manager
-        setattr(comment, 'child_comments', get_comment_children(comment, request.user, depth=0, max_depth=3))
     
     # For testing purposes, simplify the context to avoid recursion issues
     if 'test' in sys.modules:

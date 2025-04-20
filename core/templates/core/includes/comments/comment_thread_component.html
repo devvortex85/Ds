@@ -34,70 +34,31 @@ Usage:
         {% endif %}
         
         <div class="nested-comments" aria-label="Replies to this comment">
-            {% if descendants %}
-                {% for node in descendants %}
-                    <article class="comment-item nested">
-                        {% include 'core/includes/comments/comment_component.html' with 
-                            comment=node 
-                            show_indentation=True 
-                            level_adjustment=level_adjustment|default:0 %}
-                    </article>
-                    
-                    <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
-                    {% with max_depth=max_depth|default:5 %}
-                        {% if max_depth and node.level >= max_depth and node.child_comments %}
-                            <div class="deep-nesting-indicator">
-                                <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
-                                    <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
-                                    Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endfor %}
-            {% elif child_comments %}
-                {% for node in child_comments %}
-                    <article class="comment-item nested">
-                        {% include 'core/includes/comments/comment_component.html' with 
-                            comment=node 
-                            show_indentation=True 
-                            level_adjustment=level_adjustment|default:0 %}
-                    </article>
-                    
-                    <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
-                    {% with max_depth=max_depth|default:5 %}
-                        {% if max_depth and node.level >= max_depth and node.child_comments %}
-                            <div class="deep-nesting-indicator">
-                                <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
-                                    <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
-                                    Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endfor %}
-            {% else %}
-                {% for node in comment.get_descendants %}
-                    <article class="comment-item nested">
-                        {% include 'core/includes/comments/comment_component.html' with 
-                            comment=node 
-                            show_indentation=True 
-                            level_adjustment=level_adjustment|default:0 %}
-                    </article>
-                    
-                    <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
-                    {% with max_depth=max_depth|default:5 %}
-                        {% if max_depth and node.level >= max_depth and node.child_comments %}
-                            <div class="deep-nesting-indicator">
-                                <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
-                                    <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
-                                    Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endfor %}
-            {% endif %}
+            {% load mptt_tags %}
+            {% recursetree comment.get_children %}
+                <article class="comment-item nested">
+                    {% include 'core/includes/comments/comment_component.html' with 
+                        comment=node 
+                        show_indentation=True 
+                        level_adjustment=level_adjustment|default:0 %}
+                </article>
+                
+                <!-- For comments that reach the maximum nesting depth, show "Continue Thread" link -->
+                {% with max_depth=max_depth|default:5 %}
+                    {% if max_depth and node.level >= max_depth and not node.is_leaf_node %}
+                        <div class="deep-nesting-indicator">
+                            <a href="{% url 'comment_thread' node.id %}" class="continue-thread-link">
+                                <i class="bi bi-arrow-right-circle-fill me-1" aria-hidden="true"></i>
+                                Continue this thread ({{ node.get_descendant_count }} more repl{% if node.get_descendant_count != 1 %}ies{% else %}y{% endif %})
+                            </a>
+                        </div>
+                    {% elif not node.is_leaf_node %}
+                        <div class="nested-children">
+                            {{ children }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            {% endrecursetree %}
         </div>
     {% endif %}
 </div>
