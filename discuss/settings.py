@@ -19,7 +19,7 @@ SECRET_KEY = 'django-insecure-5asdj4^2_uy(k6)6v2+_q@ij!&ld*ndf3-_z$wr9zqcr2$1p&1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '.replit.dev', '.repl.co']
+ALLOWED_HOSTS = ['*']  # Allow all hosts for testing
 
 # Application definition
 
@@ -130,7 +130,7 @@ import dj_database_url
 # Use DATABASE_URL environment variable if available, otherwise fall back to SQLite
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
         conn_max_age=600,
         conn_health_checks=True,
     )

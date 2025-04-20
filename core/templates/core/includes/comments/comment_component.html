@@ -41,7 +41,7 @@ Usage:
     <div class="comment-wrapper">
         <!-- Vote controls -->
         <div class="vote-column">
-            {% include 'core/includes/comment_vote_buttons.html' with comment=comment user_comment_votes=user_comment_votes %}
+            {% include 'core/includes/comments/comment_vote_buttons.html' with comment=comment user_comment_votes=user_comment_votes %}
         </div>
         
         <!-- Comment content -->
@@ -78,7 +78,7 @@ Usage:
             
             <!-- Reply form -->
             {% if show_reply_form|default:True %}
-                {% include 'core/includes/comment_form.html' with comment=comment post=comment.post is_reply=True inline=True %}
+                {% include 'core/includes/forms/comment_form.html' with comment=comment post=comment.post is_reply=True inline=True %}
             {% endif %}
             
             <!-- Collapsed thread count -->
