@@ -1,0 +1,161 @@
+Collecting django
+  Downloading Django-5.2-py3-none-any.whl.metadata (4.1 kB)
+Requirement already satisfied: pillow in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (11.1.0)
+Collecting django-el-pagination
+  Downloading django_el_pagination-4.1.2-py3-none-any.whl.metadata (5.5 kB)
+Collecting django-debug-toolbar
+  Downloading django_debug_toolbar-5.1.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting django-cacheops
+  Downloading django_cacheops-7.2-py2.py3-none-any.whl.metadata (30 kB)
+Collecting django-filter
+  Downloading django_filter-25.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting djangorestframework
+  Downloading djangorestframework-3.16.0-py3-none-any.whl.metadata (11 kB)
+Collecting django-watson
+  Downloading django_watson-1.6.3-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting django-allauth
+  Downloading django_allauth-65.7.0.tar.gz (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 48.3 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting django-markdownx
+  Downloading django_markdownx-4.0.7-py2.py3-none-any.whl.metadata (3.9 kB)
+Requirement already satisfied: requests in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (2.32.3)
+Collecting dj-database-url
+  Downloading dj_database_url-2.3.0-py3-none-any.whl.metadata (12 kB)
+Collecting psycopg2-binary
+  Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting django-avatar
+  Downloading django_avatar-8.0.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting django-countries
+  Downloading django_countries-7.6.1-py3-none-any.whl.metadata (31 kB)
+Collecting django-taggit
+  Downloading django_taggit-6.1.0-py3-none-any.whl.metadata (3.5 kB)
+Collecting django-mptt
+  Downloading django_mptt-0.17.0-py3-none-any.whl.metadata (5.3 kB)
+Collecting django-payments
+  Downloading django_payments-3.0.1-py3-none-any.whl.metadata (4.1 kB)
+Collecting sentry-sdk
+  Downloading sentry_sdk-2.26.1-py2.py3-none-any.whl.metadata (10 kB)
+Collecting django-social-share
+  Downloading django_social_share-2.3.0-py2.py3-none-any.whl.metadata (7.0 kB)
+Collecting django-postman
+  Downloading django_postman-4.5-py3-none-any.whl.metadata (4.3 kB)
+Collecting django-bootstrap5
+  Downloading django_bootstrap5-25.1-py3-none-any.whl.metadata (5.8 kB)
+Collecting django-extensions
+  Downloading django_extensions-4.1-py3-none-any.whl.metadata (6.1 kB)
+Collecting django-silk
+  Downloading django_silk-5.3.2-py3-none-any.whl.metadata (19 kB)
+Requirement already satisfied: stripe in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (12.0.0)
+Collecting trafilatura
+  Downloading trafilatura-2.0.0-py3-none-any.whl.metadata (12 kB)
+Collecting asgiref>=3.8.1 (from django)
+  Downloading asgiref-3.8.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.3.1 (from django)
+  Downloading sqlparse-0.5.3-py3-none-any.whl.metadata (3.9 kB)
+Requirement already satisfied: redis>=3.0.0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from django-cacheops) (5.2.1)
+Collecting funcy>=1.8 (from django-cacheops)
+  Downloading funcy-2.0-py2.py3-none-any.whl.metadata (5.9 kB)
+Collecting Markdown (from django-markdownx)
+  Downloading markdown-3.8-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from requests) (3.4.1)
+Requirement already satisfied: idna<4,>=2.5 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from requests) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from requests) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from requests) (2025.1.31)
+Requirement already satisfied: typing-extensions>=3.10.0.0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from dj-database-url) (4.12.2)
+Collecting django-appconf>=1.0.5 (from django-avatar)
+  Downloading django_appconf-1.1.0-py3-none-any.whl.metadata (5.2 kB)
+Collecting dnspython>=2.3.0 (from django-avatar)
+  Downloading dnspython-2.7.0-py3-none-any.whl.metadata (5.8 kB)
+Collecting django-js-asset (from django-mptt)
+  Downloading django_js_asset-3.1.2-py3-none-any.whl.metadata (6.4 kB)
+Collecting django-phonenumber-field>=5.0.0 (from django-phonenumber-field[phonenumberslite]>=5.0.0->django-payments)
+  Downloading django_phonenumber_field-8.1.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting autopep8 (from django-silk)
+  Downloading autopep8-2.3.2-py2.py3-none-any.whl.metadata (16 kB)
+Collecting gprof2dot>=2017.09.19 (from django-silk)
+  Downloading gprof2dot-2025.4.14-py3-none-any.whl.metadata (19 kB)
+Collecting courlan>=1.3.2 (from trafilatura)
+  Downloading courlan-1.3.2-py3-none-any.whl.metadata (17 kB)
+Collecting htmldate>=1.9.2 (from trafilatura)
+  Downloading htmldate-1.9.3-py3-none-any.whl.metadata (10 kB)
+Collecting justext>=3.0.1 (from trafilatura)
+  Downloading justext-3.0.2-py2.py3-none-any.whl.metadata (7.3 kB)
+Requirement already satisfied: lxml>=5.3.0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from trafilatura) (5.3.1)
+Requirement already satisfied: babel>=2.16.0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from courlan>=1.3.2->trafilatura) (2.17.0)
+Collecting tld>=0.13 (from courlan>=1.3.2->trafilatura)
+  Downloading tld-0.13-py2.py3-none-any.whl.metadata (9.4 kB)
+Collecting phonenumberslite>=7.0.2 (from django-phonenumber-field[phonenumberslite]>=5.0.0->django-payments)
+  Downloading phonenumberslite-9.0.3-py2.py3-none-any.whl.metadata (11 kB)
+Collecting dateparser>=1.1.2 (from htmldate>=1.9.2->trafilatura)
+  Downloading dateparser-1.2.1-py3-none-any.whl.metadata (29 kB)
+Requirement already satisfied: python-dateutil>=2.9.0.post0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from htmldate>=1.9.2->trafilatura) (2.9.0.post0)
+Requirement already satisfied: pycodestyle>=2.12.0 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from autopep8->django-silk) (2.13.0)
+Collecting pytz>=2024.2 (from dateparser>=1.1.2->htmldate>=1.9.2->trafilatura)
+  Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+Requirement already satisfied: regex!=2019.02.19,!=2021.8.27,>=2015.06.24 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from dateparser>=1.1.2->htmldate>=1.9.2->trafilatura) (2024.11.6)
+Collecting tzlocal>=0.2 (from dateparser>=1.1.2->htmldate>=1.9.2->trafilatura)
+  Downloading tzlocal-5.3.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting lxml_html_clean (from lxml[html_clean]>=4.4.2->justext>=3.0.1->trafilatura)
+  Downloading lxml_html_clean-0.4.2-py3-none-any.whl.metadata (2.4 kB)
+Requirement already satisfied: six>=1.5 in /openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages (from python-dateutil>=2.9.0.post0->htmldate>=1.9.2->trafilatura) (1.17.0)
+Downloading Django-5.2-py3-none-any.whl (8.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 178.3 MB/s eta 0:00:00
+Downloading django_el_pagination-4.1.2-py3-none-any.whl (32 kB)
+Downloading django_debug_toolbar-5.1.0-py3-none-any.whl (261 kB)
+Downloading django_cacheops-7.2-py2.py3-none-any.whl (45 kB)
+Downloading django_filter-25.1-py3-none-any.whl (94 kB)
+Downloading djangorestframework-3.16.0-py3-none-any.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 168.4 MB/s eta 0:00:00
+Downloading django_watson-1.6.3-py2.py3-none-any.whl (27 kB)
+Downloading django_markdownx-4.0.7-py2.py3-none-any.whl (44 kB)
+Downloading dj_database_url-2.3.0-py3-none-any.whl (7.8 kB)
+Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 212.5 MB/s eta 0:00:00
+Downloading django_avatar-8.0.1-py3-none-any.whl (67 kB)
+Downloading django_countries-7.6.1-py3-none-any.whl (864 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 864.5/864.5 kB 139.9 MB/s eta 0:00:00
+Downloading django_taggit-6.1.0-py3-none-any.whl (75 kB)
+Downloading django_mptt-0.17.0-py3-none-any.whl (120 kB)
+Downloading django_payments-3.0.1-py3-none-any.whl (150 kB)
+Downloading sentry_sdk-2.26.1-py2.py3-none-any.whl (340 kB)
+Downloading django_social_share-2.3.0-py2.py3-none-any.whl (14 kB)
+Downloading django_postman-4.5-py3-none-any.whl (265 kB)
+Downloading django_bootstrap5-25.1-py3-none-any.whl (26 kB)
+Downloading django_extensions-4.1-py3-none-any.whl (232 kB)
+Downloading django_silk-5.3.2-py3-none-any.whl (1.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 204.9 MB/s eta 0:00:00
+Downloading trafilatura-2.0.0-py3-none-any.whl (132 kB)
+Downloading asgiref-3.8.1-py3-none-any.whl (23 kB)
+Downloading courlan-1.3.2-py3-none-any.whl (33 kB)
+Downloading django_appconf-1.1.0-py3-none-any.whl (6.4 kB)
+Downloading django_phonenumber_field-8.1.0-py3-none-any.whl (65 kB)
+Downloading dnspython-2.7.0-py3-none-any.whl (313 kB)
+Downloading funcy-2.0-py2.py3-none-any.whl (30 kB)
+Downloading gprof2dot-2025.4.14-py3-none-any.whl (37 kB)
+Downloading htmldate-1.9.3-py3-none-any.whl (31 kB)
+Downloading justext-3.0.2-py2.py3-none-any.whl (837 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 837.9/837.9 kB 161.4 MB/s eta 0:00:00
+Downloading sqlparse-0.5.3-py3-none-any.whl (44 kB)
+Downloading autopep8-2.3.2-py2.py3-none-any.whl (45 kB)
+Downloading django_js_asset-3.1.2-py3-none-any.whl (5.9 kB)
+Downloading markdown-3.8-py3-none-any.whl (106 kB)
+Downloading dateparser-1.2.1-py3-none-any.whl (295 kB)
+Downloading phonenumberslite-9.0.3-py2.py3-none-any.whl (472 kB)
+Downloading tld-0.13-py2.py3-none-any.whl (263 kB)
+Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+Downloading tzlocal-5.3.1-py3-none-any.whl (18 kB)
+Downloading lxml_html_clean-0.4.2-py3-none-any.whl (14 kB)
+Building wheels for collected packages: django-allauth
+  Building wheel for django-allauth (pyproject.toml): started
+  Building wheel for django-allauth (pyproject.toml): finished with status 'done'
+  Created wheel for django-allauth: filename=django_allauth-65.7.0-py3-none-any.whl size=1773874 sha256=dc1b929b5c2442da4a826bc4447ba86a80d83bc2435f5caef73d13323673c9b7
+  Stored in directory: /root/.cache/pip/wheels/46/63/66/71a1be7c0179b2dbcebe728446972499efa910fb66ee51b5a6
+Successfully built django-allauth
+Installing collected packages: pytz, phonenumberslite, funcy, django-watson, django-social-share, tzlocal, tld, sqlparse, sentry-sdk, psycopg2-binary, Markdown, lxml_html_clean, gprof2dot, dnspython, autopep8, asgiref, django-countries, django, dateparser, courlan, justext, htmldate, djangorestframework, django-taggit, django-silk, django-postman, django-phonenumber-field, django-markdownx, django-js-asset, django-filter, django-extensions, django-el-pagination, django-debug-toolbar, django-cacheops, django-bootstrap5, django-appconf, django-allauth, dj-database-url, trafilatura, django-mptt, django-avatar, django-payments
+Successfully installed Markdown-3.8 asgiref-3.8.1 autopep8-2.3.2 courlan-1.3.2 dateparser-1.2.1 dj-database-url-2.3.0 django-5.2 django-allauth-65.7.0 django-appconf-1.1.0 django-avatar-8.0.1 django-bootstrap5-25.1 django-cacheops-7.2 django-countries-7.6.1 django-debug-toolbar-5.1.0 django-el-pagination-4.1.2 django-extensions-4.1 django-filter-25.1 django-js-asset-3.1.2 django-markdownx-4.0.7 django-mptt-0.17.0 django-payments-3.0.1 django-phonenumber-field-8.1.0 django-postman-4.5 django-silk-5.3.2 django-social-share-2.3.0 django-taggit-6.1.0 django-watson-1.6.3 djangorestframework-3.16.0 dnspython-2.7.0 funcy-2.0 gprof2dot-2025.4.14 htmldate-1.9.3 justext-3.0.2 lxml_html_clean-0.4.2 phonenumberslite-9.0.3 psycopg2-binary-2.9.10 pytz-2025.2 sentry-sdk-2.26.1 sqlparse-0.5.3 tld-0.13 trafilatura-2.0.0 tzlocal-5.3.1
