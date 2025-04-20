@@ -20,7 +20,7 @@ Usage:
 <div class="comment-thread" id="thread-{{ comment.id }}" data-comment-id="{{ comment.id }}">
     <!-- Root comment -->
     <article class="comment-item">
-        {% include 'core/includes/comment_component.html' with 
+        {% include 'core/includes/comments/comment_component.html' with 
             comment=comment 
             show_collapse_indicator=True 
             show_collapsed_count=show_collapsed_count|default:True %}
@@ -37,7 +37,7 @@ Usage:
             {% if descendants %}
                 {% for node in descendants %}
                     <article class="comment-item nested">
-                        {% include 'core/includes/comment_component.html' with 
+                        {% include 'core/includes/comments/comment_component.html' with 
                             comment=node 
                             show_indentation=True 
                             level_adjustment=level_adjustment|default:0 %}
@@ -58,7 +58,7 @@ Usage:
             {% elif child_comments %}
                 {% for node in child_comments %}
                     <article class="comment-item nested">
-                        {% include 'core/includes/comment_component.html' with 
+                        {% include 'core/includes/comments/comment_component.html' with 
                             comment=node 
                             show_indentation=True 
                             level_adjustment=level_adjustment|default:0 %}
@@ -79,7 +79,7 @@ Usage:
             {% else %}
                 {% for node in comment.get_descendants %}
                     <article class="comment-item nested">
-                        {% include 'core/includes/comment_component.html' with 
+                        {% include 'core/includes/comments/comment_component.html' with 
                             comment=node 
                             show_indentation=True 
                             level_adjustment=level_adjustment|default:0 %}

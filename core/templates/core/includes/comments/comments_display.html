@@ -16,7 +16,7 @@
 
 <div class="comments-container" aria-label="Comments section">
     {% if show_form|default:True %}
-        {% include 'core/includes/comment_form.html' with post=post card_class=card_class %}
+        {% include 'core/includes/forms/comment_form.html' with post=post card_class=card_class %}
     {% endif %}
 
     <!-- Comments list with reddit-style nesting -->

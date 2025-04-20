@@ -16,16 +16,16 @@
             <div class="d-flex post-item">
                 <!-- Voting -->
                 <div class="me-3">
-                    {% include 'core/includes/post_vote_buttons.html' with post=post user_post_vote=user_post_vote %}
+                    {% include 'core/includes/posts/post_vote_buttons.html' with post=post user_post_vote=user_post_vote %}
                 </div>
                 
                 <!-- Post Content -->
                 <div class="post-content flex-grow-1">
-                    {% include 'core/includes/post_header.html' with post=post %}
+                    {% include 'core/includes/posts/post_header.html' with post=post %}
                     
-                    {% include 'core/includes/post_content.html' with post=post %}
+                    {% include 'core/includes/posts/post_content.html' with post=post %}
                     
-                    {% include 'core/includes/post_tags.html' with post=post %}
+                    {% include 'core/includes/posts/post_tags.html' with post=post %}
                     
                     <div class="post-actions d-flex flex-wrap mt-3">
                         {% if user.is_authenticated %}
@@ -40,7 +40,7 @@
                             </a>
                         {% endif %}
                         
-                        {% include 'core/includes/social_share_buttons.html' with post=post request=request %}
+                        {% include 'core/includes/components/social_share_buttons.html' with post=post request=request %}
                         
                         {% if user == post.author %}
                             <a href="{% url 'delete_post' post.id %}" 
@@ -62,7 +62,7 @@
             <h2 id="comments-heading" class="h5 card-title mb-0">Comments ({{ total_comments_count }})</h2>
         </div>
         <div class="card-body p-0">
-            {% include 'core/includes/comments_display.html' with post=post comments=comments %}
+            {% include 'core/includes/comments/comments_display.html' with post=post comments=comments %}
         </div>
     </section>
 </div>

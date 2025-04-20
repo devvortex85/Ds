@@ -1,17 +1,17 @@
 {% load el_pagination_tags core_tags %}
 
-{% paginate posts %}
-{% for post in posts %}
+{% paginate post_list %}
+{% for post in post_list %}
 <article class="card mb-3 post-card post-item" id="post-{{ post.id }}">
     <div class="card-body p-2">
         <div class="d-flex">
-            {% include 'core/includes/post_vote_buttons.html' with post=post user_post_votes=user_post_votes hashtag="post-"|add:post.id|stringformat:"s" %}
+            {% include 'core/includes/posts/post_vote_buttons.html' with post=post user_post_votes=user_post_votes hashtag="post-"|add:post.id|stringformat:"s" %}
             
             <!-- Content section -->
             <div class="post-content flex-grow-1">
-                {% include 'core/includes/post_header.html' with post=post prefix_community=True %}
+                {% include 'core/includes/posts/post_header.html' with post=post prefix_community=True %}
                 
-                {% include 'core/includes/post_content.html' with post=post truncate=True word_limit=50 %}
+                {% include 'core/includes/posts/post_content.html' with post=post truncate=True word_limit=50 %}
                 
                 <div class="post-actions small mt-2">
                     <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-primary me-2" aria-label="View comments">
